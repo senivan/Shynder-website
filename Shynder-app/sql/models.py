@@ -10,10 +10,10 @@ class User(Base):
     __tablename__ = "Users"
     id = Column(Integer, primary_key=True)
     email = Column(String, nullable=False)
-    _password = Column(String, nullable=False)
+    ppassword = Column(String)
     username = Column(String, nullable=False)
     age = Column(Integer, nullable=False)
-    _description = Column(String, nullable=False)
+    ddescription = Column(String, nullable=False)
     test_results = Column(String, nullable=False)
     matches = relationship("Match", back_populates="user1", foreign_keys='Match.user1_id')
 

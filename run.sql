@@ -3,10 +3,10 @@
 create table if not exists Users(
     id integer primary key,
     email text not null,
-    _password text not null,
+    ppassword text not null,
     username text not null,
     age integer not null,
-    _description text not null,
+    ddescription text not null,
     test_results text not null
 );
 

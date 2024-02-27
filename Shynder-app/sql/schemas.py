@@ -15,12 +15,12 @@ class Match(MatchBase):
 
 class UserBase(BaseModel):
     username : str
-    description: str | None = None
+    ddescription: str | None = None
     age: int
     email : str
 
 class UserCreate(UserBase):
-    password : str #hashed password
+    ppassword : str #hashed password
     test_results : str
 
 class User(UserBase):

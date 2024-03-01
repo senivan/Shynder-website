@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/user_profile/sudo_style.css">
+</head>
+<body>
+    <div class="hamburger">
+        <img src="/static/small_logo.png" class="menuIcon">
+        <img src="/static/big_logo.png" class="closeIcon"> 
+    </div>
+    <div class="menu">
+        <div class="menuItem">Home</div>
+        <div class="menuItem">Profile</div>
+        <div class="menuItem">Messages</div>
+        <div class="menuItem">Logout</div>
+    </div>
+    <div class="content">
+        <h1>My profile</h1>
+        <h3 class="username" onclick="edit_username()">Username: </h3>
+        <h3 class="email">Email: </h3>
+        <div class="password"></div>
+        <div class="about_me">
+            <h3>About me</h3>
+            <p></p>
+        </div>
+        <h3 class="age">Age: </h3>
+        <h3 class="password">password</h3>
+        <div class="sudo_actions">
+            <!-- <button class="edit">Edit information</button> -->
+            <button class="delete" onclick="delete_event()">Delete account</button>
+            <form class="form">
+                <input type="text" class="username_input" placeholder="New username">
+                <input type="text" class="email_input" placeholder="New email">
+                <input type="password" class="password_input" placeholder="New password">
+                <input type="text" class="about_me_input" placeholder="New about me">
+                <input type="text" class="age_input" placeholder="New age">
+            </form>
+            <button class="submit" onclick="submit_event()">Submit</button>
+        </div>
+    </div>
+    <script src="/static/user_profile/sudo_script.js"></script>
+  </body>
+</html>

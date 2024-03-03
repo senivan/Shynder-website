@@ -25,7 +25,7 @@ def get_db():
 @app.get("/", response_class=HTMLResponse)
 async def root():
     html_con = ""
-    with open("./static/login/login.html", "r", encoding="utf-8") as file:
+    with open("./static/login/login_page.html", "r", encoding="utf-8") as file:
         html_con = '\n'.join(file.readlines())
     return html_con
 
@@ -72,7 +72,7 @@ async def home():
 async def logout(session_id:str):
     if session_id in active_users:
         del active_users[session_id]
-    with open("./static/login.html", "r", encoding="utf-8") as file:
+    with open("./static/login/login_page.html", "r", encoding="utf-8") as file:
         html_con = '\n'.join(file.readlines())
     return html_con
 
@@ -123,7 +123,7 @@ async def delete_user(session_id:str):
         db = get_db().__next__()
         db_wrapper.delete_user(db, active_users[session_id.encode('utf-8')].id)
         del active_users[session_id.encode('utf-8')]
-    with open("./static/login/login.html", "r", encoding="utf-8") as file:
+    with open("./static/login/login_page.html", "r", encoding="utf-8") as file:
         html_con = '\n'.join(file.readlines())
     return html_con
 

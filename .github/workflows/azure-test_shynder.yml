@@ -78,6 +78,7 @@ jobs:
       - name: 'Launch venv'
         run: |
           source venv/bin/activate
+          pip install -r requirements.txt
       - name: 'Start uvicorn server'
         run: |
           cd Shynder-app

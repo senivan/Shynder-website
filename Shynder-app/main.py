@@ -2,18 +2,17 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, FileResponse
 from sql import models, schemas, db_wrapper
 import random
-import os
 from fastapi.staticfiles import StaticFiles
 from sql.database import SessionLocal, engine
 import bcrypt
+import os
 
 
+port = 80
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 active_users = {"1".encode('utf-8'): schemas.UserCreate(username="test", ddescription="test", age=1, email="test", ppassword="test", test_results="test")}
 app.mount('/static', StaticFiles(directory='static', html=True), name='static')
-
-
 
 def get_db():
     db = SessionLocal()
@@ -31,7 +30,7 @@ async def root():
 
 @app.get("/favicon.ico")
 async def favicon():
-    return FileResponse("./static/small_small.png")
+    return FileResponse("/static/small_small.png")
 
 def hash_bcr(password):
     pass_bytes = password.encode('utf-8')
@@ -141,3 +140,7 @@ async def get_all_active_users():
 async def get_user_by_email(email:str):
     db = get_db().__next__()
     return db_wrapper.get_user_by_email(db, email)
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=port, reload=False)

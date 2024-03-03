@@ -79,8 +79,6 @@ jobs:
         run: |
           source venv/bin/activate
           pip install -r requirements.txt
-      - name: 'Start uvicorn server'
-        run: |
           cd Shynder-app
           python3 main.py
           

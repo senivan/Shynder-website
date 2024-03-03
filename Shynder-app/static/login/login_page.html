@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Form</title>
+<title>Centered Image with Text and Input Field</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center ; */
+    /* justify-content: center; */
+    height: 10%;
+    margin: 0;
+    line-height: 1.2; /* Increase line spacing */
+    /* background-color: #f0f0f0; */
+  }
+
+  img {
+    margin-top: 2%; 
+    width: 80%;
+    height: auto;
+    max-width: 40%;
+    margin-bottom: 2%; /* Increase distance between image and next element */
+    display:block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  
+  #text {
+    position: absolute;
+    top: calc(30%); /* Position below the logo */
+    left: 40%; /* Align with the beginning of the logo */
+    transform: translateX(-50%); 
+    margin-bottom: 2%;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    width: 18%;
+    height: 8%;
+    margin-bottom: 3%; /* Increase distance between input fields */
+    padding: 0.25%;
+    border: none;
+    border-bottom: 1px solid rgb(63, 59, 59); 
+    box-sizing: border-box;
+    background: none; 
+    outline: none;
+  }
+
+  button {
+    width: 20%;
+    height: 40px;
+    background-color: #61ae61;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 2%; /* Increase distance between button and next element */
+  }
+
+  button:hover {
+    background-color: #45a049;
+  }
+</style>
+</head>
+<body>
+
+<img src= "logo.png" alt="HTML5 Icon">
+
+
+
+<p style="color: rgba(31, 30, 30, 0.82); margin-left:37%;  margin-top: 2%;">Ім’я користувача або емейл </p>
+<input type="text" style = "margin-left:37%;" onclick="myFunction()">
+
+<p style="color: rgba(31, 30, 30, 0.82);  margin-left:37%; margin-top: -0.8%;">Пароль</p>
+<input type="password"  style = "margin-left:37%;" onclick="myFunction()">
+
+<button type="button" style = "margin-left:37%;" onclick="myFunction()">Увійти</button>
+
+<p style="text-align: +200px; margin-left:30%; color: rgba(31, 30, 30, 0.82);   margin-top: 2%;">Ще не маєте акаунту?</p>
+<button type="button" style = "margin-left:37%; margin-top: 2%;" onclick="redirectToSecondPage()">Зареєструватися</button>
+
+
+
+
+<script>
+  function redirectToSecondPage() {
+    window.location.href = "registration_page.html"; // Replace "second_page.html" with the URL of your second page
+  }
+</script>
+
+
+</body>
+</html>

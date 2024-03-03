@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Form</title>
+<title>Centered Image with Text and Input Field</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center ; */ */
+    /* justify-content: center; */ */
+    /* height: 100vh; */
+    margin: 0;
+    line-height: 0.3; /* Increase line spacing */
+    /* background-color: #f0f0f0; */
+  }
+
+  img {
+    margin-top: 3%
+    width: 80%;
+    height: auto;
+    max-width: 40%;
+    display:block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3%; 
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    width: 18%;
+    height: 8%;
+    margin-bottom: 1%;
+    padding: 0.25%;
+    border: none;
+    border-bottom: 1px solid rgb(142, 28, 28); 
+    box-sizing: border-box;
+    background: none; 
+    outline: none;
+  }
+  svg {
+    display: block;
+    margin: 0 auto; /* Center the SVG horizontally */
+    margin-bottom: -0.5%;
+    margin-top: -2%;
+  }
+
+  button {
+    width: 20%;
+    height: 40px;
+    background-color: #913cdc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    /* margin-bottom: 40px; Increase distance between button and next element */
+  }
+
+  button:hover {
+    background-color: #811ed7;
+  }
+</style>
+</head>
+<body>
+
+
+<!-- <circle cx="100" cy="50000" r="10000" fill =  "rgb(124, 209,98)" /> -->
+<!--  -->
+    <!-- <svg width="400" height="100" > -->
+        <!-- <line x1="50" y1="50" x2="450" y2="50" style="stroke: rgb(111, 42, 196); stroke-width: 2;" /> -->
+      <!--  -->
+        <circle cx="100" cy="50" r="10" fill =  "rgb(124, 209,98)" />
+        <!-- <circle cx="200" cy="50" r="10" fill= "rgb(198, 191,191)" /> -->
+        <!-- <circle cx="300" cy="50" r="10" fill= "rgb(198, 191,191)" /> -->
+        <!-- <circle cx="400" cy="50" r="10" fill= "rgb(198, 191,191)" /> -->
+      <!--  -->
+      <!-- </svg> -->
+
+
+<img src="C:\Users\mary2\Downloads\untitled-html\public\external\image3403-f83-200h.png" alt="HTML5 Icon">
+
+<p style="margin-left:37%;  color: rgba(31, 30, 30, 0.82);">Ваше ім’я</p>
+<input type="text" style = margin-left:37%;  onclick="myFunction()">
+
+
+<p style="margin-left:37%;  color: rgba(31, 30, 30, 0.82);">Ім’я користувача</p>
+<input type="text" style =  margin-left:37%;  onclick="myFunction()">
+
+
+<p style="margin-left:37%; color: rgba(31, 30, 30, 0.82);">UCU email </p>
+<input type="text" style = margin-left:37%; onclick="myFunction()">
+
+
+<p style="margin-left:37%; color: rgba(31, 30, 30, 0.82);">Пароль</p>
+<input type="password"  style = "margin-left:37%;" onclick="myFunction()">
+
+
+<p style="color: rgba(31, 30, 30, 0.82); margin-left:37%; ">Підтвердити пароль</p>
+<input type="password"  style = "margin-left:37%;" onclick="myFunction()">
+
+<button type="button"   style = "margin-left:41%; margin-top:3%" onclick="redirectToSecondPage()">Зареєструватися</button>
+
+<!-- <p style="text-align: +200px; color: rgba(31, 30, 30, 0.82);">Ще не маєте акаунту?</p> -->
+<!-- <button type="button" onclick="myFunction()">Зареєструватися</button> -->
+
+<script>
+  function redirectToSecondPage() {
+    window.location.href = "test_page.html"; // Replace "second_page.html" with the URL of your second page
+  }
+</script>
+
+
+
+</body>
+</html>

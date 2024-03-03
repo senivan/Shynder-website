@@ -8,7 +8,7 @@ import bcrypt
 import os
 
 
-port = 80
+port = 8000
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 active_users = {"1".encode('utf-8'): schemas.UserCreate(username="test", ddescription="test", age=1, email="test", ppassword="test", test_results="test")}

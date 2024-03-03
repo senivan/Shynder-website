@@ -141,3 +141,7 @@ async def get_all_active_users():
 async def get_user_by_email(email:str):
     db = get_db().__next__()
     return db_wrapper.get_user_by_email(db, email)
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000, workers=4)

@@ -41,3 +41,13 @@ def delete_user(db: Session, user_id: int):
     db.query(models.User).where(models.User.id == user_id).delete()
     db.commit()
     return {"message": "User deleted"}
+
+def update_user(db: Session, user_id: int, **kwargs):
+    db.query(models.User).where(models.User.id == user_id).update(kwargs)
+    db.commit()
+    return {"message": "User updated"}
+
+def update_match(db: Session, match_id: int, **kwargs):
+    db.query(models.Match).where(models.Match.id == match_id).update(kwargs)
+    db.commit()
+    return {"message": "Match updated"}

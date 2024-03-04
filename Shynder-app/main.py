@@ -10,7 +10,7 @@ import bcrypt
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
-active_users = {"1".encode('utf-8'): schemas.UserCreate(username="test", ddescription="test", age=1, email="test", ppassword="test", test_results="test")}
+active_users = {"1".encode('utf-8'):db_wrapper.get_user_by_email(SessionLocal(), "bykov.pn@ucu.edu.ua")}
 app.mount('/static', StaticFiles(directory='static', html=True), name='static')
 
 
@@ -111,8 +111,8 @@ async def update_user(session_id:str, username:str, ddescription:str, age:int, e
     if session_id.encode('utf-8') in active_users:
         db = get_db().__next__()
         user = active_users[session_id.encode('utf-8')]
-        db_wrapper.delete_user(db, active_users[session_id.encode('utf-8')].id)
-        active_users[session_id.encode('utf-8')] = db_wrapper.create_user(db, schemas.UserCreate(username=username, ddescription=ddescription, age=age, email=email, ppassword=hash_bcr(ppassword), test_results=user.test_results))
+        db_wrapper.update_user(db, user.id, username=username, ddescription=ddescription, age=age, email=email, ppassword=hash_bcr(ppassword))
+        active_users[session_id.encode('utf-8')] = db_wrapper.get_user_by_email(db, email)
     with open("./static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
         html_con = '\n'.join(file.readlines())
     return html_con
@@ -142,6 +142,8 @@ async def get_user_by_email(email:str):
     db = get_db().__next__()
     return db_wrapper.get_user_by_email(db, email)
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000, reload=False)
+
+
+# if __name__ == "__main__":
+#     import uvicorn
+    # uvicorn.run(app, host="0.0.0.0", port=8000, reload=False, workers=3)

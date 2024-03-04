@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet", href="/static/chats/chats.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="/static/user_profile/style.css"> -->
+</head>
+<body>
+    
+    <div class="container">   
+        
+        <div class="chats_tab">
+            <div class="hamburger">
+                <img src="/static/small_logo.png" class="menuIcon">
+                <img src="/static/big_logo.png" class="closeIcon"> 
+            </div>
+            <div class="menu">
+                <div class="menuItem">Home</div>
+                <div class="menuItem">Profile</div>
+                <div class="menuItem">Messages</div>
+                <div class="menuItem">Logout</div>
+            </div> 
+            <hr class="line"></hr>
+            <div class="chats">
+                <div class="chat">
+                    <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" class="avatar">
+                    <div class="chat_info">
+                        <p class="name">John Doe</p>
+                        <p class="last_message">Hey, how are you?</p>
+                    </div>
+                </div>
+                <div class="chat">
+                    <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" class="avatar">
+                    <div class="chat_info">
+                        <h2 class="name">John Doe</h2>
+                        <p class="last_message">Hey, how are you?</p>
+                    </div>
+                </div>
+                <div class="chat">
+                    <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" class="avatar">
+                    <div class="chat_info">
+                        <h2 class="name">John Doe</h2>
+                        <p class="last_message">Hey, how are you?</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="messages_tab">
+            <div class="messages" id="messages">
+                <div class="your_message">
+                    <div class="message_info">
+                        <p class="text">Hey, how are you?fhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgkfhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgkfhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgkfhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgkfhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgkfhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgkfhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgkfhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgkfhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgkfhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgkfhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgkfhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgkfhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgkfhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgkfhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgkfhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgkfhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgkfhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgkfhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgkfhdfdshfkhfghjfdghfjkfsdhbfgdjfskfhgdjkl;fjhkgjsla;jfhgjksljfhgkjdsfldfjdslkjfdlskfldskjflkdsjflksdjflkjsdlfkdjslfkjdlsfkjdslkfjlsdjflsdkjflksdjflksdfdsfhkldshfklsdhfldhskfhjlfjsdlfkjdslfjdslkfjlskdjflkdskjflsl;jhjdsjfhgklsfhgdkslfhvfdklsfhgdklshfgksljfgdhskfhkskslhfhjgkshljfgjshkaldjfhjkhfgk</p>
+                        <span class="time">12:00</span>
+                    </div>
+                    <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" class="your_msg_avatar">
+                    
+                </div>
+            <div class="send_message">
+                <input type="text" class="message_input" placeholder="Type a message...">
+                <img src="/static/icons8-sent-96.png" class="send_button" onclick="send_click">
+            </div>
+        </div>
+    </div>
+    <script src="/static/chats/chat.js"></script>
+</body>

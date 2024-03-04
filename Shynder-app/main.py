@@ -142,7 +142,11 @@ async def get_user_by_email(email:str):
     db = get_db().__next__()
     return db_wrapper.get_user_by_email(db, email)
 
-
+@app.get("/chats_page/", response_class=HTMLResponse)
+async def chats_page():
+    with open("./static/chats/chats.html", "r", encoding="utf-8") as file:
+        html_con = '\n'.join(file.readlines())
+    return html_con
 
 if __name__ == "__main__":
     import uvicorn

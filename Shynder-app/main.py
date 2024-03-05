@@ -7,7 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from sql.database import SessionLocal, engine
 import bcrypt
 from fastapi import WebSocket, WebSocketDisconnect
-
+import json
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -66,10 +66,13 @@ class Message:
         self.command = command
         self.time = time
     def to_json(self):
-        return {"sender": self.sender, "receiver": self.receiver, "messege": self.messege, "command": self.command}
+        encoder = json.encoder.JSONEncoder()
+        return encoder.encode(self)
     @staticmethod
-    def from_json(json):
-        return Message(json["sender"], json["receiver"], json["messege"], json["command"])
+    def from_json(_json):
+        decoder = json.decoder.JSONDecoder()
+        decoded = decoder.decode(_json)
+        return Message(sender=decoded['sender'], receiver=decoded['receiver'], messege=decoded['messege'], time=decoded['time'], command=decoded['command'])
 
 manager = ConnectionManager()
 

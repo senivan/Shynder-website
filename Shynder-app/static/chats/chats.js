@@ -100,6 +100,7 @@ function send_click() {
     const your_text = document.createElement("p");
     const your_time = document.createElement("span");
     const your_msg_avatar = document.createElement("img");
+    user_email = "sen.pn@ucu.edu.ua"
     messages.classList.add("your_message");
     your_message_info.classList.add("your_message_info");
     your_text.classList.add("your_text");
@@ -115,7 +116,7 @@ function send_click() {
     
     document.getElementById("messages").appendChild(messages);
     input.value = "";
-    websocket.send({"sender": user_session_id, "receiver":"sen.pn@ucu.edu.ua", "text": your_text,"time": your_time, "command":"send"});
+    websocket.send(JSON.stringify({"sender": user_session_id, "receiver":user_email , "messege": message,"time": your_time.innerHTML, "command":"send"}));
   }
 }
 

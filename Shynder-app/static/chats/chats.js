@@ -9,7 +9,7 @@ user_session_id = '1';
 var websocket = new WebSocket('ws://127.0.0.1:8000/chats_websocket/'+user_session_id);
 
 // MessageJson{
-//   "sender":session_id,
+//   "sender":email,
 //   "receiver":email,
 //   "text":message,
 //   "time":time,
@@ -30,6 +30,10 @@ function toggleMenu() {
 
 function send_message(event) {
   websocket.send("test");
+}
+
+websocket.onmessage = function(event) {
+  console.log(event.data);
 }
 
 function toggleChat(event) {

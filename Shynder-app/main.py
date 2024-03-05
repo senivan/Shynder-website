@@ -41,20 +41,22 @@ class ConnectionManager:
     async def process_data(self, message: 'Message', websocket: WebSocket):
         if message.command == "send":
             receiver = db_wrapper.get_user_by_email(get_db().__next__(), message.receiver)
-            match_id = db_wrapper.get_match_id(self.active_sockets[websocket][0].id, receiver.id)
+            print(receiver.id, self.active_sockets[websocket][0].id)
+            match_id = db_wrapper.get_match_id(get_db().__next__(), self.active_sockets[websocket][0].id, receiver.id)
             if match_id is None:
                 raise ValueError("Match not found")
-            
+            print(self.active_sockets)
             if receiver in [self.active_sockets[socket][0] for socket in self.active_sockets]:
                 for socket in self.active_sockets:
                     if self.active_sockets[socket][0] == receiver:
                         await self.send_personal_message(message.messege, socket)
             try:
-                with open("/chat_logs/" + match_id + ".txt", "a") as file:
-                    file.write(message.messege)
-            except OSError:
-                with open("/chat_logs/" + match_id + ".txt", "w") as file:
-                    file.write(message.messege)
+                with open("chat_logs/" + str(match_id) + ".txt", "a") as file:
+                    file.write(message.to_json() + "\n")
+            except FileNotFoundError:
+                file = open("chat_logs/" + str(match_id) + ".txt", "w")
+                file.write(message.to_json() + "\n")
+                file.close()
         elif message.command == "get_all":
             pass
 
@@ -67,7 +69,7 @@ class Message:
         self.time = time
     def to_json(self):
         encoder = json.encoder.JSONEncoder()
-        return encoder.encode(self)
+        return encoder.encode(self.__dict__)
     @staticmethod
     def from_json(_json):
         decoder = json.decoder.JSONDecoder()
@@ -208,6 +210,12 @@ async def chats_page():
     with open("./static/chats/chats.html", "r", encoding="utf-8") as file:
         html_con = '\n'.join(file.readlines())
     return html_con
+
+@app.get("/match/")
+async def match(user1_id:int, user2_id:int):
+    db = get_db().__next__()
+    db_wrapper.create_match(db, schemas.MatchCreate(user1_id=user1_id, user2_id=user2_id))
+    return {"message": "Success"}
 
 @app.websocket("/chats_websocket/{session_id}")
 async def chats_websocket(websocket: WebSocket, session_id:str):

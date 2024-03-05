@@ -76,6 +76,7 @@ function toggleChat(event) {
               messages.appendChild(messageDiv);
             });
           });
+          
       }
     } else {
       chat.classList.remove("showChat");
@@ -114,6 +115,7 @@ function send_click() {
     
     document.getElementById("messages").appendChild(messages);
     input.value = "";
+    websocket.send({"sender": user_session_id, "receiver":"sen.pn@ucu.edu.ua", "text": your_text,"time": your_time, "command":"send"});
   }
 }
 

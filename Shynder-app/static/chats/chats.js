@@ -5,7 +5,7 @@ const closeIcon= document.querySelector(".closeIcon");
 const menuIcon = document.querySelector(".menuIcon");
 const chat = document.querySelector(".chat");
 
-user_session_id = '1';
+user_session_id = '2';
 var websocket = new WebSocket('ws://127.0.0.1:8000/chats_websocket/'+user_session_id);
 
 // MessageJson{
@@ -15,6 +15,70 @@ var websocket = new WebSocket('ws://127.0.0.1:8000/chats_websocket/'+user_sessio
 //   "time":time,
 //   "command":"send"
 // }
+
+user_email = '';
+fetch(`/get_active_user/?session_id=${user_session_id}`)
+  .then(response => response.json())
+  .then(data => {
+    user_email = data.email;
+    console.log('User email:', user_email);
+  })
+  .catch(error => {
+    console.error('Error retrieving user email:', error);
+  });
+
+websocket.onmessage = function(event) {
+  messag = JSON.parse(event.data)
+  let user = "other"
+  if (user_email == messag.receiver){
+    user = "other"
+  }else{
+    user = "your"
+  }
+  if (messag) {
+    const messages = document.createElement("div");
+    const your_message_info = document.createElement("div");
+    const your_text = document.createElement("p");
+    const your_time = document.createElement("span");
+    const your_msg_avatar = document.createElement("img");
+    user_email = "sen.pn@ucu.edu.ua"
+    messages.classList.add(user + "_message");
+    your_message_info.classList.add(user + "_message_info");
+    your_text.classList.add(user + "_text");
+    your_time.classList.add(user + "_time");
+    your_msg_avatar.classList.add(user + "_msg_avatar");
+    your_text.innerHTML = messag.messege;
+    your_time.innerHTML = messag.time;
+    your_msg_avatar.src = "https://www.w3schools.com/howto/img_avatar.png";
+    if (user == "other"){
+      messages.appendChild(your_msg_avatar);
+      messages.appendChild(your_message_info);
+    }else{
+      messages.appendChild(your_message_info);
+      messages.appendChild(your_msg_avatar);
+    }
+    your_message_info.appendChild(your_text);
+    your_message_info.appendChild(your_time);
+    
+    document.getElementById("messages").appendChild(messages);
+  }
+}
+
+// for (const jsonFile of json_list) {
+              //   if (jsonFile["sender"] === user_email) {
+              //     messageDiv.classList.add("your_message");
+              //     messageInfo.classList.add("your_message_info");
+              //     text.classList.add("your_text");
+              //     time.classList.add("your_time");
+              //     msg_avatar.classList.add("your_msg_avatar");
+              //   }else{
+              //     messageDiv.classList.add("other_message");
+              //     messageInfo.classList.add("other_message_info");
+              //     text.classList.add("other_text");
+              //     time.classList.add("other_time");
+              //     msg_avatar.classList.add("other_msg_avatar");
+              //   }
+              // }
 
 function toggleMenu() {
   if (menu.classList.contains("showMenu")) {
@@ -30,10 +94,6 @@ function toggleMenu() {
 
 function send_message(event) {
   websocket.send("test");
-}
-
-websocket.onmessage = function(event) {
-  console.log(event.data);
 }
 
 function toggleChat(event) {
@@ -78,9 +138,9 @@ function toggleChat(event) {
               messageInfo.appendChild(text);
               messageInfo.appendChild(time);
               messages.appendChild(messageDiv);
+              // get all mesaages from server
             });
-          });
-          
+          }); 
       }
     } else {
       chat.classList.remove("showChat");
@@ -123,18 +183,6 @@ function send_click() {
     websocket.send(JSON.stringify({"sender": user_session_id, "receiver":user_email , "messege": message,"time": your_time.innerHTML, "command":"send"}));
   }
 }
-
-// function open_chat() {
-//   const chat = document.querySelector(".chat");
-//   chat.classList.add("showChat");
-//   chat.classList.add("highlight");
-//   chat.style.backgroundColor = "#9A7BEC";
-//   chat.style.color = "white";
-//   chat.addEventListener("hover", function () {
-//     chat.style.backgroundColor = "#9A7BEC";
-//     chat.style.color = "white";
-//   });
-// }
 
 var input = document.querySelector(".message_input");
 input.addEventListener("keypress", function(event) {

@@ -6,7 +6,15 @@ const menuIcon = document.querySelector(".menuIcon");
 const chat = document.querySelector(".chat");
 
 user_session_id = '1';
-websocket = new WebSocket("/chats_websocket/{"+user_session_id+"}");
+var websocket = new WebSocket('ws://127.0.0.1:8000/chats_websocket/'+user_session_id);
+
+// MessageJson{
+//   "sender":session_id,
+//   "receiver":email,
+//   "text":message,
+//   "time":time,
+//   "command":"send"
+// }
 
 function toggleMenu() {
   if (menu.classList.contains("showMenu")) {
@@ -18,6 +26,10 @@ function toggleMenu() {
     closeIcon.style.display = "block";
     menuIcon.style.display = "none";
   }
+}
+
+function send_message(event) {
+  websocket.send("test");
 }
 
 function toggleChat(event) {

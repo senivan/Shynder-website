@@ -1,0 +1,345 @@
+.hamburger {
+  position: fixed;
+  z-index: 100;
+  top: 10px;
+  left: 10px;
+  padding: 4px;
+  cursor: pointer;
+  /* width: 300px;
+  height: 300px; */
+
+}
+*{
+  font-family: rubik;
+}
+body{
+  background-color: #ccbcf4;
+  font-family: rubik;
+}
+.closeIcon {
+  display: none;
+}
+
+.menu {
+  position: fixed;
+  transform: translateX(-100%);
+  transition: transform 0.2s;
+  top: -100px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+  background: white;
+  color: #6f59aa;
+  list-style: none;
+  padding-top: 500px;
+  width: 530px;
+  height: 100vh;
+}
+
+.showMenu {
+  transform: translateX(0);
+}
+.hamburger .menuIcon {
+  width: 100px;  
+  height: 100px; 
+  position: relative; 
+  top: -8px; 
+  left: 0px; 
+}
+
+.hamburger .closeIcon {
+  width: 120%; 
+  height: 100%; 
+  position: absolute;
+  align-items: center;
+  position: relative; 
+  left: 27px;  */
+}
+
+
+.menuItem{
+padding: 20px;
+font-size: 20px;
+border-bottom: 1px solid #6f59aa;
+text-align: center;
+cursor: pointer;
+transition: 0.2s;
+font-family: rubik;
+font-weight: 500;
+}
+
+
+
+
+
+.homepagedesctop-container {
+  width: 100%;
+  display: flex;
+  overflow: auto;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+}
+.homepagedesctop-homepagedesctop {
+  width: 100%;
+  height: 1024px;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  align-items: flex-start;
+  flex-shrink: 0;
+  background-color: rgba(255, 255, 255, 1);
+}
+.homepagedesctop-homepage {
+  top: 70px;
+  left: 553px;
+  width: 732px;
+  height: 866px;
+  display: flex;
+  overflow: hidden;
+  position: absolute;
+  align-items: flex-start;
+  flex-shrink: 0;
+  background-color: rgba(255, 255, 255, 1);
+}
+.homepagedesctop-rectangle1 {
+  position: absolute;
+  top: 100.70271301269531px;
+  left: 217.7816162109375px;
+
+}
+
+.homepagedesctop-frame {
+  width: 364px;
+  height: 660px;
+}
+.homepagedesctop-frame7 {
+  gap: 10px;
+  top: 30px;
+  left: 20px;
+  width: 155px;
+  height: 130px;
+  display: flex;
+  padding: 10px;
+  position: absolute;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 10px;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 1);
+}
+.homepagedesctop-text {
+  color: rgb(17, 0, 0);
+  width: 300px;
+  height: auto;
+  font-size: 20px;
+  font-style: Medium;
+  text-align: left;
+  font-family: Inter;
+  font-weight: 500;
+  line-height: normal;
+  font-stretch: normal;
+  text-decoration: none;
+}
+.homepagedesctop-frame4 {
+  gap: 10px;
+  top: 384px;
+  left: 11px;
+  width: 340px;
+  height: 157px;
+  display: flex;
+  padding: 10px;
+  position: absolute;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 10px;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 1);
+}
+.homepagedesctop-text06 {
+  color: rgb(17, 0, 0);
+  width: 400px;
+  height: auto;
+  font-size: 20px;
+  font-style: Medium;
+  text-align: center;
+  font-family: Inter;
+  font-weight: 500;
+  line-height: normal;
+  font-stretch: normal;
+  text-decoration: none;
+}
+.homepagedesctop-button {
+  width: 160px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 100px;
+  background-color: white;
+  position: absolute;
+  top: 546px;
+  left: 15px;
+}
+
+.homepagedesctop-button:hover {
+  background-color: purple;
+  cursor: pointer;
+}
+
+.homepagedesctop-text08 {
+  color: rgba(231, 14, 14, 1);
+  font-size: 45px; /* Increased font size */
+  font-weight: bold;
+}
+
+.homepagedesctop-button1 {
+  width: 160px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 100px;
+  background-color: white;
+  position: absolute;
+  top: 546px;
+  left: 191px;
+}
+
+.homepagedesctop-button1:hover {
+  background-color: purple;
+  cursor: pointer;
+}
+
+.homepagedesctop-text13 {
+  color: rgba(231, 14, 14, 1);
+  font-size: 45px; /* Increased font size */
+  font-weight: bold;
+}
+.homepagedesctop-frame8 {
+  gap: 10px;
+  top: 17px;
+  left: 181px;
+  width: 174px;
+  display: flex;
+  padding: 10px;
+  position: absolute;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.homepagedesctop-teen21 {
+  width: 154px;
+  height: 136px;
+  border-radius: 32px;
+}
+.homepagedesctop-frame3 {
+  gap: 10px;
+  top: 282.2701110839844px;
+  left: 231px;
+  width: 340px;
+  height: 188px;
+  display: flex;
+  padding: 10px;
+  position: absolute;
+  align-items: flex-start;
+  flex-shrink: 0;
+  border-radius: 10px;
+  flex-direction: column;
+  background-color: rgba(255, 251, 251, 1);
+}
+.homepagedesctop-frame2 {
+  gap: 10px;
+  width: 330px;
+  display: flex;
+  padding: 27px 10px 30px;
+  align-items: center;
+  flex-shrink: 0;
+  justify-content: center;
+}
+.homepagedesctop-text18 {
+  color: rgb(17, 0, 0);
+  width: 300px;
+  height: auto;
+  font-size: 30px;
+  font-style: Regular;
+  text-align: left;
+  font-family: "Inter";
+  font-weight: 400;
+  line-height: normal;
+  font-stretch: normal;
+  text-decoration: none;
+}
+.homepagedesctop-button2 {
+  gap: 10px;
+  top: 207px;
+  left: 0px;
+  width: 446px;
+  height: 85px;
+  display: flex;
+  padding: 10px;
+  position: absolute;
+  align-items: center;
+  flex-shrink: 0;
+  justify-content: center;
+  background-color: rgba(201, 121, 204, 1);
+}
+.homepagedesctop-text19 {
+  color: rgba(0, 0, 0, 1);
+  width: 375px;
+  height: auto;
+  font-size: 48px;
+  font-style: Regular;
+  text-align: left;
+  font-family: Inter;
+  font-weight: 400;
+  line-height: normal;
+  font-stretch: normal;
+  text-decoration: none;
+}
+.homepagedesctop-button3 {
+  gap: 10px;
+  top: 289px;
+  left: 0px;
+  width: 446px;
+  height: 85px;
+  display: flex;
+  padding: 10px;
+  position: absolute;
+  align-items: center;
+  flex-shrink: 0;
+  justify-content: center;
+  background-color: rgba(202, 122, 204, 1);
+}
+.homepagedesctop-text21 {
+  top: 10px;
+  left: 97px;
+  color: rgba(0, 0, 0, 1);
+  width: 252px;
+  height: auto;
+  position: absolute;
+  font-size: 48px;
+  font-style: Regular;
+  text-align: left;
+  font-family: Inter;
+  font-weight: 400;
+  line-height: normal;
+  font-stretch: normal;
+  text-decoration: none;
+}
+.homepagedesctop-rectangle6 {
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 109px;
+  position: absolute;
+}
+.homepagedesctop-rectangle8 {
+  top: 0px;
+  left: 446px;
+  width: 22px;
+  height: 1024px;
+  position: absolute;
+}

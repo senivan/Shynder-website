@@ -52,7 +52,7 @@ class ConnectionManager:
                 for socket in self.active_sockets:
                     print(self.active_sockets[socket][0].email, receiver.email)
                     if self.active_sockets[socket][0].email == receiver.email:
-                        await self.send_personal_message(message.messege, socket)
+                        await self.send_personal_message(message.to_json(), socket)
             try:
                 with open("chat_logs/" + str(match_id) + ".txt", "a") as file:
                     file.write(message.to_json() + "\n")

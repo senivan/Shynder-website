@@ -5,7 +5,7 @@ const closeIcon= document.querySelector(".closeIcon");
 const menuIcon = document.querySelector(".menuIcon");
 const chat = document.querySelector(".chat");
 
-user_session_id = '2';
+user_session_id = '1';
 var websocket = new WebSocket('ws://127.0.0.1:8000/chats_websocket/'+user_session_id);
 
 // MessageJson{
@@ -15,6 +15,10 @@ var websocket = new WebSocket('ws://127.0.0.1:8000/chats_websocket/'+user_sessio
 //   "time":time,
 //   "command":"send"
 // }
+
+websocket.onopen = function(event) {
+  websocket.send(JSON.stringify({"sender": user_email, "receiver":"sen.pn@ucu.edu.ua", "messege": "test","time": "10:00", "command":"get_all"}));
+};
 
 user_email = '';
 fetch(`/get_active_user/?session_id=${user_session_id}`)
@@ -26,22 +30,25 @@ fetch(`/get_active_user/?session_id=${user_session_id}`)
   .catch(error => {
     console.error('Error retrieving user email:', error);
   });
-
 websocket.onmessage = function(event) {
   messag = JSON.parse(event.data)
-  let user = "other"
+  console.log(messag)
+  let user = ""
+  console.log(user_email)
   if (user_email == messag.receiver){
+    console.log("other")
     user = "other"
   }else{
     user = "your"
   }
+  // console.log(user)
   if (messag) {
     const messages = document.createElement("div");
     const your_message_info = document.createElement("div");
     const your_text = document.createElement("p");
     const your_time = document.createElement("span");
     const your_msg_avatar = document.createElement("img");
-    user_email = "sen.pn@ucu.edu.ua"
+    _user_email = "sen.pn@ucu.edu.ua"
     messages.classList.add(user + "_message");
     your_message_info.classList.add(user + "_message_info");
     your_text.classList.add(user + "_text");
@@ -201,4 +208,3 @@ chats.forEach(function (chat) {
 });
 // chat.addEventListener("click", toggleChat);
 hamburger.addEventListener("click", toggleMenu);
-websocket.send()

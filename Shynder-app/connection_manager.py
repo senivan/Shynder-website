@@ -1,5 +1,6 @@
 from fastapi import WebSocket, WebSocketDisconnect, BackgroundTasks
-import sql
+from sql import db_wrapper
+
 import httpx
 
 
@@ -26,8 +27,8 @@ class ConnectionManager:
     
     async def process_data(self, message: Message, websocket: WebSocket):
         if message.command == "send":
-            receiver = sql.get_user_by_email(message.receiver)
-            match_id = sql.get_match_id(self.active_sockets[websocket][0].id, receiver.id)
+            receiver = db_wrapper.get_user_by_email(message.receiver)
+            match_id = db_wrapper.get_match_id(self.active_sockets[websocket][0].id, receiver.id)
             if match_id is None:
                 raise ValueError("Match not found")
             if receiver in [self.active_sockets[socket][0] for socket in self.active_sockets]:

@@ -51,3 +51,6 @@ def update_match(db: Session, match_id: int, **kwargs):
     db.query(models.Match).where(models.Match.id == match_id).update(kwargs)
     db.commit()
     return {"message": "Match updated"}
+
+def get_match_id(db: Session, user1_id: int, user2_id: int):
+    return db.query(models.Match).where(models.Match.user1_id == user1_id and models.Match.user2_id == user2_id).first().id

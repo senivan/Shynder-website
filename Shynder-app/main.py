@@ -45,10 +45,13 @@ class ConnectionManager:
             match_id = db_wrapper.get_match_id(get_db().__next__(), self.active_sockets[websocket][0].id, receiver.id)
             if match_id is None:
                 raise ValueError("Match not found")
-            print(self.active_sockets)
-            if receiver in [self.active_sockets[socket][0] for socket in self.active_sockets]:
+            # print(self.active_sockets)
+            print(receiver.email)
+            print(f"Receivers: {[self.active_sockets[socket][0].email for socket in self.active_sockets]}")
+            if receiver.email in [self.active_sockets[socket][0].email for socket in self.active_sockets]:
                 for socket in self.active_sockets:
-                    if self.active_sockets[socket][0] == receiver:
+                    print(self.active_sockets[socket][0].email, receiver.email)
+                    if self.active_sockets[socket][0].email == receiver.email:
                         await self.send_personal_message(message.messege, socket)
             try:
                 with open("chat_logs/" + str(match_id) + ".txt", "a") as file:

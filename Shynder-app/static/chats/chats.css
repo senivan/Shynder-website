@@ -118,7 +118,7 @@ background-color: #9A7BEC!important;
   font-weight: 500;
 }
 
-.avatar {
+.chat_avatar {
 padding-top: 1%;
 padding-left: 1%;
 width: 15%;
@@ -282,7 +282,7 @@ font-family: rubik;
 font-weight: 500;
 font-size: 15px;
 max-width: 70%;
-min-width: 20%;
+/* min-width: 20%; */
 word-break: break-all;
 overflow-wrap: break-word;
 

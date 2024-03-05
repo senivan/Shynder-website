@@ -30,13 +30,40 @@ fetch(`/get_active_user/?session_id=${user_session_id}`)
   .catch(error => {
     console.error('Error retrieving user email:', error);
   });
-websocket.onmessage = function(event) {
+websocket.onmessage = async function(event) {
   messag = JSON.parse(event.data)
-  console.log(messag);
-  if (messag.command == "get_all_matches"){
-    for(match in messag.matches){
-      user1 = fetch('/get_user_by_id/?user_id='+match.user1_id)
-      user2 = fetch('/get_user_by_id/?user_id='+match.user2_id)
+  console.log(messag instanceof Array);
+  if (messag instanceof Array){
+    for (const match of messag){
+      user1 = ""
+      user2 = ""
+      await fetch('/get_user_by_id/?user_id='+match.user1_id).then(response => response.json()).then(data => {user1 = data; console.log(user1);});
+      await fetch('/get_user_by_id/?user_id='+match.user2_id).then(response => response.json()).then(data => user2 = data);
+      const chat = document.createElement("div");
+      const chat_avatar = document.createElement("img");
+      const chat_info = document.createElement("div");
+      const name = document.createElement("p");
+      const last_message = document.createElement("p");
+      chat.classList.add("chat");
+      chat_avatar.classList.add("chat_avatar");
+      chat_avatar.src = "https://www.w3schools.com/howto/img_avatar.png";
+      chat_info.classList.add("chat_info");
+      name.classList.add("name");
+      last_message.classList.add("last_message");
+      if (user1.email == user_email){
+        chat.setAttribute("chat_id", user2.email);
+        name.innerHTML = user2.username;
+      }else{
+        chat.setAttribute("chat_id", user1.email);
+        name.innerHTML = user1.username;
+      }
+      last_message.innerHTML = "Last message";
+      chat.appendChild(chat_avatar);
+      chat.appendChild(chat_info);
+      chat_info.appendChild(name);
+      chat_info.appendChild(last_message);
+      chat.addEventListener("click", toggleChat);
+      document.querySelector(".chats").appendChild(chat);
     }
   }else if (messag.command == "send"){
   let user = ""
@@ -125,32 +152,32 @@ function toggleChat(event) {
       messages.innerHTML = "";
       if (chat.classList.contains("showChat")) {
         const chat_id = chat.getAttribute("chat_id");
-        websocket.send(chat_id);
-        fetch("/chats/"+chat_id+"/messages")
-          .then(response => response.json())
-          .then(data => {
-            data.forEach(function (message) {
-              const messageDiv = document.createElement("div");
-              const messageInfo = document.createElement("div");
-              const text = document.createElement("p");
-              const time = document.createElement("span");
-              const msg_avatar = document.createElement("img");
-              messageDiv.classList.add("message");
-              messageInfo.classList.add("message_info");
-              text.classList.add("text");
-              time.classList.add("time");
-              msg_avatar.classList.add("msg_avatar");
-              text.innerHTML = message.text;
-              time.innerHTML = message.time;
-              msg_avatar.src = message.avatar;
-              messageDiv.appendChild(msg_avatar);
-              messageDiv.appendChild(messageInfo);
-              messageInfo.appendChild(text);
-              messageInfo.appendChild(time);
-              messages.appendChild(messageDiv);
-              // get all mesaages from server
-            });
-          }); 
+        websocket.send(JSON.stringify({"sender": user_email, "receiver": "sen.pn@ucu.edu.ua" , "messege": "test","time": "10:00", "command":"get_all"}));
+        // fetch("/chats/"+chat_id+"/messages")
+        //   .then(response => response.json())
+        //   .then(data => {
+        //     data.forEach(function (message) {
+        //       const messageDiv = document.createElement("div");
+        //       const messageInfo = document.createElement("div");
+        //       const text = document.createElement("p");
+        //       const time = document.createElement("span");
+        //       const msg_avatar = document.createElement("img");
+        //       messageDiv.classList.add("message");
+        //       messageInfo.classList.add("message_info");
+        //       text.classList.add("text");
+        //       time.classList.add("time");
+        //       msg_avatar.classList.add("msg_avatar");
+        //       text.innerHTML = message.text;
+        //       time.innerHTML = message.time;
+        //       msg_avatar.src = message.avatar;
+        //       messageDiv.appendChild(msg_avatar);
+        //       messageDiv.appendChild(messageInfo);
+        //       messageInfo.appendChild(text);
+        //       messageInfo.appendChild(time);
+        //       messages.appendChild(messageDiv);
+        //       // get all mesaages from server
+        //     });
+        //   }); 
       }
     } else {
       chat.classList.remove("showChat");

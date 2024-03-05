@@ -61,7 +61,11 @@ class ConnectionManager:
                 file.write(message.to_json() + "\n")
                 file.close()
         elif message.command == "get_all":
-            pass
+            match_id = db_wrapper.get_match_id(get_db().__next__(), self.active_sockets[websocket][0].id, db_wrapper.get_user_by_email(get_db().__next__(), message.receiver).id)
+            with open("chat_logs/" + str(match_id) + ".txt", "r") as file:
+                for line in file.readlines():
+                    await self.send_personal_message(line, websocket)
+        
 
 class Message:
     def __init__(self, sender:str, receiver:str, messege:str,time, command:str = ""):

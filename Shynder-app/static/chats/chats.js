@@ -20,6 +20,23 @@ websocket.onopen = function(event) {
   websocket.send(JSON.stringify({"sender": user_email, "receiver":"sen.pn@ucu.edu.ua", "messege": "test","time": "10:00", "command":"get_all_matches"}));
 };
 
+function home_click() {
+  window.location.href = "/home";
+}
+// Waiting for cookie
+// function profile_click() {
+//   window.location.href = "/profile/1";
+// }
+
+function chats_click() {
+  window.location.href = "/chats_page";
+}
+
+// Waiting for cookie
+// function logout_click() {
+//   window.location.href = "/logout";
+// }
+
 user_email = '';
 fetch(`/get_active_user/?session_id=${user_session_id}`)
   .then(response => response.json())

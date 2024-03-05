@@ -65,6 +65,14 @@ class ConnectionManager:
             with open("chat_logs/" + str(match_id) + ".txt", "r") as file:
                 for line in file.readlines():
                     await self.send_personal_message(line, websocket)
+        elif message.command == "get_all_matches":
+            print(self.active_sockets[websocket][0].id)
+            matches = db_wrapper.get_all_matches(get_db().__next__(), self.active_sockets[websocket][0].id)
+            res_matches = []
+            for match in matches:
+                res_matches.append(match.as_dict())
+                res_matches[-1]['command'] = "get_all_matches"
+            await self.send_personal_message(json.dumps(res_matches), websocket)
         
 
 class Message:
@@ -229,7 +237,15 @@ async def chats_websocket(websocket: WebSocket, session_id:str):
     print("Accepted connection")
     await manager.accept_connection(websocket, session_id)
 
-    
+@app.get("/get_match/")
+async def get_match(match_id:int):
+    db = get_db().__next__()
+    return db_wrapper.get_match(db, match_id)
+
+@app.get("/get_user_by_id/")
+async def get_user_by_id(user_id:int):
+    db = get_db().__next__()
+    return db_wrapper.get_user(db, user_id)
 
 if __name__ == "__main__":
     import uvicorn

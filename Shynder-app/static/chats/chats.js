@@ -17,7 +17,7 @@ var websocket = new WebSocket('ws://127.0.0.1:8000/chats_websocket/'+user_sessio
 // }
 
 websocket.onopen = function(event) {
-  websocket.send(JSON.stringify({"sender": user_email, "receiver":"sen.pn@ucu.edu.ua", "messege": "test","time": "10:00", "command":"get_all"}));
+  websocket.send(JSON.stringify({"sender": user_email, "receiver":"sen.pn@ucu.edu.ua", "messege": "test","time": "10:00", "command":"get_all_matches"}));
 };
 
 user_email = '';
@@ -32,16 +32,19 @@ fetch(`/get_active_user/?session_id=${user_session_id}`)
   });
 websocket.onmessage = function(event) {
   messag = JSON.parse(event.data)
-  console.log(messag)
+  console.log(messag);
+  if (messag.command == "get_all_matches"){
+    for(match in messag.matches){
+      user1 = fetch('/get_user_by_id/?user_id='+match.user1_id)
+      user2 = fetch('/get_user_by_id/?user_id='+match.user2_id)
+    }
+  }else if (messag.command == "send"){
   let user = ""
-  console.log(user_email)
   if (user_email == messag.receiver){
-    console.log("other")
     user = "other"
   }else{
     user = "your"
   }
-  // console.log(user)
   if (messag) {
     const messages = document.createElement("div");
     const your_message_info = document.createElement("div");
@@ -68,7 +71,7 @@ websocket.onmessage = function(event) {
     your_message_info.appendChild(your_time);
     
     document.getElementById("messages").appendChild(messages);
-  }
+  }}
 }
 
 // for (const jsonFile of json_list) {

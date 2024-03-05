@@ -18,6 +18,9 @@ def get_match(db: Session, match_id: int):
 def get_matches(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Match).offset(skip).limit(limit).all()
 
+def get_all_matches(db: Session, user_id:int):
+    return db.query(models.Match).where(models.Match.user1_id == user_id).all() + db.query(models.Match).where(models.Match.user2_id == user_id).all()
+
 def create_user(db: Session, user: schemas.UserCreate):
     db_user = models.User(**user.model_dump())
     db.add(db_user)

@@ -7,7 +7,7 @@ const chat = document.querySelector(".chat");
 
 user_session_id = '1';
 var websocket = new WebSocket('ws://127.0.0.1:8000/chats_websocket/'+user_session_id);
-
+var receivers = [];
 // MessageJson{
 //   "sender":email,
 //   "receiver":email,
@@ -79,9 +79,11 @@ websocket.onmessage = async function(event) {
       if (user1.email == user_email){
         chat.setAttribute("chat_id", user2.email);
         name.innerHTML = user2.username;
+        receivers.push(user2.email);
       }else{
         chat.setAttribute("chat_id", user1.email);
         name.innerHTML = user1.username;
+        receivers.push(user1.email);
       }
       last_message.innerHTML = "Last message";
       chat.appendChild(chat_avatar);
@@ -155,9 +157,9 @@ function toggleMenu() {
   }
 }
 
-function send_message(event) {
-  websocket.send("test");
-}
+// function send_message(event) {
+//   websocket.send("test");
+// }
 
 function toggleChat(event) {
   const clickedChat = event.target;
@@ -177,8 +179,8 @@ function toggleChat(event) {
       // open the chat
       messages.innerHTML = "";
       if (chat.classList.contains("showChat")) {
-        const chat_id = chat.getAttribute("chat_id");
-        websocket.send(JSON.stringify({"sender": user_email, "receiver": "sen.pn@ucu.edu.ua" , "messege": "test","time": "10:00", "command":"get_all"}));
+        receiver_email = chat.getAttribute("chat_id");
+        websocket.send(JSON.stringify({"sender": user_email, "receiver": receiver_email , "messege": "test","time": "10:00", "command":"get_all"}));
         // fetch("/chats/"+chat_id+"/messages")
         //   .then(response => response.json())
         //   .then(data => {
@@ -227,7 +229,6 @@ function send_click() {
     const your_text = document.createElement("p");
     const your_time = document.createElement("span");
     const your_msg_avatar = document.createElement("img");
-    _user_email = "sen.pn@ucu.edu.ua"
     messages.classList.add("your_message");
     your_message_info.classList.add("your_message_info");
     your_text.classList.add("your_text");
@@ -240,10 +241,10 @@ function send_click() {
     messages.appendChild(your_msg_avatar);
     your_message_info.appendChild(your_text);
     your_message_info.appendChild(your_time);
-    
     document.getElementById("messages").appendChild(messages);
     input.value = "";
-    websocket.send(JSON.stringify({"sender": user_email, "receiver":_user_email , "messege": message,"time": your_time.innerHTML, "command":"send"}));
+    receiver_email = document.querySelector(".highlight").getAttribute("chat_id");
+    websocket.send(JSON.stringify({"sender": user_email, "receiver":receiver_email , "messege": message,"time": your_time.innerHTML, "command":"send"}));
   }
 }
 

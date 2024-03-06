@@ -6,7 +6,6 @@ import os
 from fastapi.staticfiles import StaticFiles
 from sql.database import SessionLocal, engine
 import bcrypt
-import connection_manager
 from fastapi import WebSocket, WebSocketDisconnect
 
 
@@ -14,8 +13,6 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 active_users = {"1".encode('utf-8'):db_wrapper.get_user_by_email(SessionLocal(), "bykov.pn@ucu.edu.ua")}
 app.mount('/static', StaticFiles(directory='static', html=True), name='static')
-
-manager = connection_manager.ConnectionManager()
 
 def get_db():
     db = SessionLocal()
@@ -149,10 +146,6 @@ async def chats_page():
     with open("./static/chats/chats.html", "r", encoding="utf-8") as file:
         html_con = '\n'.join(file.readlines())
     return html_con
-
-@app.websocket("/chats_websocket/{session_id}")
-async def chats_websocket(websocket: WebSocket, session_id:str):
-    await manager.accept_connection(websocket, session_id)
     
     
 

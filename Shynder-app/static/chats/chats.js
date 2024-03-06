@@ -37,6 +37,15 @@ function chats_click() {
 //   window.location.href = "/logout";
 // }
 
+function getTime() {
+  const now = new Date();
+  const hours = now.getHours().toString().padStart(2, '0');
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  const time = `${hours}:${minutes}`;
+  return time;
+}
+
+
 user_email = '';
 fetch(`/get_active_user/?session_id=${user_session_id}`)
   .then(response => response.json())
@@ -225,7 +234,7 @@ function send_click() {
     your_time.classList.add("your_time");
     your_msg_avatar.classList.add("your_msg_avatar");
     your_text.innerHTML = message;
-    your_time.innerHTML = "10:00";
+    your_time.innerHTML = getTime();
     your_msg_avatar.src = "https://www.w3schools.com/howto/img_avatar.png";
     messages.appendChild(your_message_info);
     messages.appendChild(your_msg_avatar);

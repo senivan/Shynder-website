@@ -45,6 +45,21 @@ function getTime() {
   return time;
 }
 
+let div = document.getElementById('messages');
+
+// Listen for a scroll event on the div
+div.addEventListener('scroll', () => {
+  let scrollTop = div.scrollTop;
+  let scrollHeight = div.scrollHeight;
+  let clientHeight = div.clientHeight;
+});
+
+// Function to scroll to the bottom of the div
+function scrollToDivBottom() {
+  setTimeout(() => {
+    div.scrollTop = div.scrollHeight;
+  }, 0);
+}
 
 user_email = '';
 fetch(`/get_active_user/?session_id=${user_session_id}`)
@@ -57,6 +72,7 @@ fetch(`/get_active_user/?session_id=${user_session_id}`)
     console.error('Error retrieving user email:', error);
   });
 websocket.onmessage = async function(event) {
+  scrollToDivBottom();
   messag = JSON.parse(event.data)
   console.log(messag instanceof Array);
   if (messag instanceof Array){
@@ -246,6 +262,7 @@ function send_click() {
     receiver_email = document.querySelector(".highlight").getAttribute("chat_id");
     websocket.send(JSON.stringify({"sender": user_email, "receiver":receiver_email , "messege": message,"time": your_time.innerHTML, "command":"send"}));
   }
+  scrollToDivBottom();
 }
 
 var input = document.querySelector(".message_input");

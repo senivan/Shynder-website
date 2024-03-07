@@ -171,6 +171,8 @@ border-radius: 50%;
 
 .messages{
   overflow: auto;
+  scroll-behavior: auto;
+  overflow-anchor: auto;
   height: 91%;
 }
 

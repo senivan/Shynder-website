@@ -57,9 +57,10 @@ def update_match(db: Session, match_id: int, **kwargs):
 
 def get_match_id(db: Session, user1_id: int, user2_id: int):
     try:
-        return db.query(models.Match).where(models.Match.user1_id == user1_id and models.Match.user2_id == user2_id).first().id
+        print(user1_id, user2_id)
+        return db.query(models.Match).filter(models.Match.user1_id == user1_id, models.Match.user2_id == user2_id).first().id
     except AttributeError:
         try:
-            return db.query(models.Match).where(models.Match.user1_id == user2_id and models.Match.user2_id == user1_id).first().id
+            return db.query(models.Match).filter(models.Match.user1_id == user2_id, models.Match.user2_id == user1_id).first().id
         except AttributeError:
             return None

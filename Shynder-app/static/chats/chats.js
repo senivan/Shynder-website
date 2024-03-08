@@ -5,7 +5,7 @@ const closeIcon= document.querySelector(".closeIcon");
 const menuIcon = document.querySelector(".menuIcon");
 const chat = document.querySelector(".chat");
 
-user_session_id = '1';
+user_session_id = '3';
 var websocket = new WebSocket('ws://127.0.0.1:8000/chats_websocket/'+user_session_id);
 var receivers = [];
 let chat_opened = false;
@@ -96,11 +96,11 @@ websocket.onmessage = async function(event) {
       if (user1.email == user_email){
         chat.setAttribute("chat_id", user2.email);
         name.innerHTML = user2.username;
-        receivers.push(user2.email);
+        receivers.push(user1.email);
       }else{
         chat.setAttribute("chat_id", user1.email);
         name.innerHTML = user1.username;
-        receivers.push(user1.email);
+        receivers.push(user2.email);
       }
       last_message.innerHTML = "Last message";
       chat.appendChild(chat_avatar);
@@ -123,7 +123,6 @@ websocket.onmessage = async function(event) {
     const your_text = document.createElement("p");
     const your_time = document.createElement("span");
     const your_msg_avatar = document.createElement("img");
-    _user_email = "sen.pn@ucu.edu.ua"
     messages.classList.add(user + "_message");
     your_message_info.classList.add(user + "_message_info");
     your_text.classList.add(user + "_text");
@@ -164,12 +163,14 @@ function toggleMenu() {
 
 function toggleChat(event) {
   const clickedChat = event.target;
+  console.log(clickedChat);
   const allChats = document.querySelectorAll(".chat");
   const messages = document.querySelector(".messages");
   chat_opened = (clickedChat.classList.contains("showChat")) ? false : true;
 
   allChats.forEach(function (chat) {
-    if (chat === clickedChat) {
+    if (chat == clickedChat) {
+      console.log(chat);
       chat.classList.toggle("showChat");
       chat.classList.toggle("highlight");
       chat.style.backgroundColor = chat.classList.contains("showChat") ? "#9A7BEC" : "transparent";
@@ -178,12 +179,14 @@ function toggleChat(event) {
         chat.style.backgroundColor = chat.classList.contains("showChat") ? "#9A7BEC" : "transparent";
         chat.style.color = chat.classList.contains("showChat") ? "white" : "black";
       });
-      // open the chat
       messages.innerHTML = "";
       if (chat.classList.contains("showChat")) {
         receiver_email = chat.getAttribute("chat_id");
-        websocket.send(JSON.stringify({"sender": user_email, "receiver": receiver_email , "messege": "test","time": "10:00", "command":"get_all"}));
+        websocket.send(JSON.stringify({"sender": user_email, "receiver":receiver_email , "messege": "test","time": "10:00", "command":"get_all"}));
       }
+      // receiver = clickedChat.getAttribute("chat_id");
+      // console.log(receiver);
+      // websocket.send(JSON.stringify({"sender": user_email, "receiver": receiver , "messege": "test","time": "10:00", "command":"get_all"}));
     } else {
       chat.classList.remove("showChat");
       chat.classList.remove("highlight");
@@ -195,6 +198,7 @@ function toggleChat(event) {
       });
     }
   });
+  
 }
 
 function send_click() {

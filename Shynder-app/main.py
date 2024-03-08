@@ -11,7 +11,7 @@ import json
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
-active_users = {"1".encode('utf-8'):db_wrapper.get_user_by_email(SessionLocal(), "bykov.pn@ucu.edu.ua"), "2".encode('utf-8'):db_wrapper.get_user_by_email(SessionLocal(), "sen.pn@ucu.edu.ua")}
+active_users = {"1".encode('utf-8'):db_wrapper.get_user_by_email(SessionLocal(), "bykov.pn@ucu.edu.ua"), "2".encode('utf-8'):db_wrapper.get_user_by_email(SessionLocal(), "sen.pn@ucu.edu.ua"), "3".encode('utf-8'):db_wrapper.get_user_by_email(SessionLocal(), "maria.pn@ucu.edu.ua")}
 app.mount('/static', StaticFiles(directory='static', html=True), name='static')
 class ConnectionManager:
     def __init__(self):
@@ -41,6 +41,7 @@ class ConnectionManager:
     async def process_data(self, message: 'Message', websocket: WebSocket):
         if message.command == "send":
             receiver = db_wrapper.get_user_by_email(get_db().__next__(), message.receiver)
+            print(receiver.email)
             print(receiver.id, self.active_sockets[websocket][0].id)
             match_id = db_wrapper.get_match_id(get_db().__next__(), self.active_sockets[websocket][0].id, receiver.id)
             if match_id is None:
@@ -62,9 +63,14 @@ class ConnectionManager:
                 file.close()
         elif message.command == "get_all":
             match_id = db_wrapper.get_match_id(get_db().__next__(), self.active_sockets[websocket][0].id, db_wrapper.get_user_by_email(get_db().__next__(), message.receiver).id)
-            with open("chat_logs/" + str(match_id) + ".txt", "r") as file:
-                for line in file.readlines():
-                    await self.send_personal_message(line, websocket)
+            print(match_id)
+            try:
+                with open("chat_logs/" + str(match_id) + ".txt", "r") as file:
+                    for line in file.readlines():
+                        await self.send_personal_message(line, websocket)
+            except FileNotFoundError:
+                file = open("chat_logs/" + str(match_id) + ".txt", "w")
+                file.close()
         elif message.command == "get_all_matches":
             print(self.active_sockets[websocket][0].id)
             matches = db_wrapper.get_all_matches(get_db().__next__(), self.active_sockets[websocket][0].id)

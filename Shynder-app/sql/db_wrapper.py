@@ -18,9 +18,6 @@ def get_match(db: Session, match_id: int):
 def get_matches(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Match).offset(skip).limit(limit).all()
 
-def get_all_matches(db: Session, user_id:int):
-    return db.query(models.Match).where(models.Match.user1_id == user_id).all() + db.query(models.Match).where(models.Match.user2_id == user_id).all()
-
 def create_user(db: Session, user: schemas.UserCreate):
     db_user = models.User(**user.model_dump())
     db.add(db_user)
@@ -56,11 +53,4 @@ def update_match(db: Session, match_id: int, **kwargs):
     return {"message": "Match updated"}
 
 def get_match_id(db: Session, user1_id: int, user2_id: int):
-    try:
-        print(user1_id, user2_id)
-        return db.query(models.Match).filter(models.Match.user1_id == user1_id, models.Match.user2_id == user2_id).first().id
-    except AttributeError:
-        try:
-            return db.query(models.Match).filter(models.Match.user1_id == user2_id, models.Match.user2_id == user1_id).first().id
-        except AttributeError:
-            return None
+    return db.query(models.Match).where(models.Match.user1_id == user1_id and models.Match.user2_id == user2_id).first().id

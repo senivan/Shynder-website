@@ -43,7 +43,8 @@ function getTime() {
   const hours = now.getHours().toString().padStart(2, '0');
   const minutes = now.getMinutes().toString().padStart(2, '0');
   const time = `${hours}:${minutes}`;
-  return time;
+  const full_date = `${now.getFullYear()}:${now.getMonth()}:${now.getDate()} ${time}`;
+  return full_date;
 }
 
 let div = document.getElementById('messages');
@@ -129,7 +130,7 @@ websocket.onmessage = async function(event) {
     your_time.classList.add(user + "_time");
     your_msg_avatar.classList.add(user + "_msg_avatar");
     your_text.innerHTML = messag.messege;
-    your_time.innerHTML = messag.time;
+    your_time.innerHTML = messag.time.split(' ')[1];
     your_msg_avatar.src = "https://www.w3schools.com/howto/img_avatar.png";
     if (user == "other"){
       messages.appendChild(your_msg_avatar);
@@ -217,7 +218,8 @@ function send_click() {
       your_time.classList.add("your_time");
       your_msg_avatar.classList.add("your_msg_avatar");
       your_text.innerHTML = message;
-      your_time.innerHTML = getTime();
+      full_date = getTime();
+      your_time.innerHTML = full_date.split(' ')[1];
       your_msg_avatar.src = "https://www.w3schools.com/howto/img_avatar.png";
       messages.appendChild(your_message_info);
       messages.appendChild(your_msg_avatar);
@@ -226,7 +228,7 @@ function send_click() {
       document.getElementById("messages").appendChild(messages);
       input.value = "";
       receiver_email = document.querySelector(".highlight").getAttribute("chat_id");
-      websocket.send(JSON.stringify({"sender": user_email, "receiver":receiver_email , "messege": message,"time": your_time.innerHTML, "command":"send"}));
+      websocket.send(JSON.stringify({"sender": user_email, "receiver":receiver_email , "messege": message,"time": full_date, "command":"send"}));
     }
     scrollToDivBottom();
   }

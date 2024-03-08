@@ -8,6 +8,7 @@ const chat = document.querySelector(".chat");
 user_session_id = '1';
 var websocket = new WebSocket('ws://127.0.0.1:8000/chats_websocket/'+user_session_id);
 var receivers = [];
+let chat_opened = false;
 // MessageJson{
 //   "sender":email,
 //   "receiver":email,
@@ -145,22 +146,6 @@ websocket.onmessage = async function(event) {
   }}
 }
 
-// for (const jsonFile of json_list) {
-              //   if (jsonFile["sender"] === user_email) {
-              //     messageDiv.classList.add("your_message");
-              //     messageInfo.classList.add("your_message_info");
-              //     text.classList.add("your_text");
-              //     time.classList.add("your_time");
-              //     msg_avatar.classList.add("your_msg_avatar");
-              //   }else{
-              //     messageDiv.classList.add("other_message");
-              //     messageInfo.classList.add("other_message_info");
-              //     text.classList.add("other_text");
-              //     time.classList.add("other_time");
-              //     msg_avatar.classList.add("other_msg_avatar");
-              //   }
-              // }
-
 function toggleMenu() {
   if (menu.classList.contains("showMenu")) {
     menu.classList.remove("showMenu");
@@ -181,6 +166,7 @@ function toggleChat(event) {
   const clickedChat = event.target;
   const allChats = document.querySelectorAll(".chat");
   const messages = document.querySelector(".messages");
+  chat_opened = (clickedChat.classList.contains("showChat")) ? false : true;
 
   allChats.forEach(function (chat) {
     if (chat === clickedChat) {
@@ -197,31 +183,6 @@ function toggleChat(event) {
       if (chat.classList.contains("showChat")) {
         receiver_email = chat.getAttribute("chat_id");
         websocket.send(JSON.stringify({"sender": user_email, "receiver": receiver_email , "messege": "test","time": "10:00", "command":"get_all"}));
-        // fetch("/chats/"+chat_id+"/messages")
-        //   .then(response => response.json())
-        //   .then(data => {
-        //     data.forEach(function (message) {
-        //       const messageDiv = document.createElement("div");
-        //       const messageInfo = document.createElement("div");
-        //       const text = document.createElement("p");
-        //       const time = document.createElement("span");
-        //       const msg_avatar = document.createElement("img");
-        //       messageDiv.classList.add("message");
-        //       messageInfo.classList.add("message_info");
-        //       text.classList.add("text");
-        //       time.classList.add("time");
-        //       msg_avatar.classList.add("msg_avatar");
-        //       text.innerHTML = message.text;
-        //       time.innerHTML = message.time;
-        //       msg_avatar.src = message.avatar;
-        //       messageDiv.appendChild(msg_avatar);
-        //       messageDiv.appendChild(messageInfo);
-        //       messageInfo.appendChild(text);
-        //       messageInfo.appendChild(time);
-        //       messages.appendChild(messageDiv);
-        //       // get all mesaages from server
-        //     });
-        //   }); 
       }
     } else {
       chat.classList.remove("showChat");
@@ -237,32 +198,34 @@ function toggleChat(event) {
 }
 
 function send_click() {
-  const input = document.querySelector(".message_input");
-  const message = input.value;
-  if (message) {
-    const messages = document.createElement("div");
-    const your_message_info = document.createElement("div");
-    const your_text = document.createElement("p");
-    const your_time = document.createElement("span");
-    const your_msg_avatar = document.createElement("img");
-    messages.classList.add("your_message");
-    your_message_info.classList.add("your_message_info");
-    your_text.classList.add("your_text");
-    your_time.classList.add("your_time");
-    your_msg_avatar.classList.add("your_msg_avatar");
-    your_text.innerHTML = message;
-    your_time.innerHTML = getTime();
-    your_msg_avatar.src = "https://www.w3schools.com/howto/img_avatar.png";
-    messages.appendChild(your_message_info);
-    messages.appendChild(your_msg_avatar);
-    your_message_info.appendChild(your_text);
-    your_message_info.appendChild(your_time);
-    document.getElementById("messages").appendChild(messages);
-    input.value = "";
-    receiver_email = document.querySelector(".highlight").getAttribute("chat_id");
-    websocket.send(JSON.stringify({"sender": user_email, "receiver":receiver_email , "messege": message,"time": your_time.innerHTML, "command":"send"}));
+  if (chat_opened) {
+    const input = document.querySelector(".message_input");
+    const message = input.value;
+    if (message) {
+      const messages = document.createElement("div");
+      const your_message_info = document.createElement("div");
+      const your_text = document.createElement("p");
+      const your_time = document.createElement("span");
+      const your_msg_avatar = document.createElement("img");
+      messages.classList.add("your_message");
+      your_message_info.classList.add("your_message_info");
+      your_text.classList.add("your_text");
+      your_time.classList.add("your_time");
+      your_msg_avatar.classList.add("your_msg_avatar");
+      your_text.innerHTML = message;
+      your_time.innerHTML = getTime();
+      your_msg_avatar.src = "https://www.w3schools.com/howto/img_avatar.png";
+      messages.appendChild(your_message_info);
+      messages.appendChild(your_msg_avatar);
+      your_message_info.appendChild(your_text);
+      your_message_info.appendChild(your_time);
+      document.getElementById("messages").appendChild(messages);
+      input.value = "";
+      receiver_email = document.querySelector(".highlight").getAttribute("chat_id");
+      websocket.send(JSON.stringify({"sender": user_email, "receiver":receiver_email , "messege": message,"time": your_time.innerHTML, "command":"send"}));
+    }
+    scrollToDivBottom();
   }
-  scrollToDivBottom();
 }
 
 var input = document.querySelector(".message_input");

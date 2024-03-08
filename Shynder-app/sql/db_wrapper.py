@@ -22,14 +22,14 @@ def get_all_matches(db: Session, user_id:int):
     return db.query(models.Match).where(models.Match.user1_id == user_id).all() + db.query(models.Match).where(models.Match.user2_id == user_id).all()
 
 def create_user(db: Session, user: schemas.UserCreate):
-    db_user = models.User(**user.model_dump())
+    db_user = models.User(**user.dict())
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
     return db_user
 
 def create_match(db: Session, match: schemas.MatchCreate):
-    db_match = models.Match(**match.model_dump())
+    db_match = models.Match(**match.dict())
     db.add(db_match)
     db.commit()
     db.refresh(db_match)

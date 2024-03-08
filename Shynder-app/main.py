@@ -11,7 +11,7 @@ import json
 import datetime
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
-active_users = {"1".encode('utf-8'):db_wrapper.get_user_by_email(SessionLocal(), "bykov.pn@ucu.edu.ua"), "2".encode('utf-8'):db_wrapper.get_user_by_email(SessionLocal(), "sen.pn@ucu.edu.ua"), "3".encode('utf-8'):db_wrapper.get_user_by_email(SessionLocal(), "maria.pn@ucu.edu.ua")}
+active_users = {"1".encode('utf-8'):db_wrapper.get_user_by_email(SessionLocal(), "bykov.pn@ucu.edu.ua"), "2".encode('utf-8'):db_wrapper.get_user_by_email(SessionLocal(), "sen.pn@ucu.edu.ua"), "3".encode('utf-8'):db_wrapper.get_user_by_email(SessionLocal(), "sirska.pn@ucu.edu.ua")}
 app.mount('/static', StaticFiles(directory='static', html=True), name='static')
 class ConnectionManager:
     def __init__(self):

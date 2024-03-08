@@ -97,8 +97,8 @@ class Message:
         decoded = decoder.decode(_json)
         return Message(sender=decoded['sender'], receiver=decoded['receiver'], messege=decoded['messege'], time=decoded['time'], command=decoded['command'])
 
-manager = ConnectionManager()
 
+manager = ConnectionManager()
 def get_db():
     db = SessionLocal()
     try:
@@ -232,6 +232,7 @@ async def chats_page():
         html_con = '\n'.join(file.readlines())
     return html_con
 
+
 @app.get("/match/")
 async def match(user1_id:int, user2_id:int):
     db = get_db().__next__()
@@ -252,6 +253,7 @@ async def get_match(match_id:int):
 async def get_user_by_id(user_id:int):
     db = get_db().__next__()
     return db_wrapper.get_user(db, user_id)
+
 
 if __name__ == "__main__":
     import uvicorn

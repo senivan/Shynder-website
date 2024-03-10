@@ -6,7 +6,7 @@ const menuIcon = document.querySelector(".menuIcon");
 const chat = document.querySelector(".chat");
 
 user_session_id = '1';
-var websocket = new WebSocket('ws://127.0.0.1:8000/chats_websocket/'+user_session_id);
+var websocket = new WebSocket('wss://127.0.0.1:8000/chats_websocket/'+user_session_id);
 var receivers = [];
 let chat_opened = false;
 // MessageJson{

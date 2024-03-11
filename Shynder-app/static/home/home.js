@@ -42,9 +42,9 @@ function generateChats() {
   name.classList.add("username");
   match.classList.add("matchText");
   description.classList.add("descriptionText");
-  name.textContent = "Name";
-  description.textContent = "Description";
-  match.textContent = "Match";
+  name.textContent = "Name"; // Replace with actual name
+  description.textContent = "Description"; // Replace with actual description
+  match.textContent = "Match"; // Replace with actual match
   heartButton.textContent = "❤️";
   crossButton.textContent = "❌";
   nameDiv.appendChild(name);
@@ -62,7 +62,6 @@ function generateChats() {
 
 generateChats();
 generateChats();
-
 
 document.addEventListener("DOMContentLoaded", function() {
   heartButton = document.querySelectorAll(".buttonHeart");
@@ -82,16 +81,6 @@ document.addEventListener("DOMContentLoaded", function() {
       rectangle = document.querySelectorAll(".card"); // Update the rectangle elements after deletion
     })
   })
-
-
-  // heartButton.addEventListener("click", function(event) {
-  //   toggleButton(event.target);
-  //   handleSwipe("left", rectangle);
-  // }); 
-  // crossButton.addEventListener("click", function(event) {
-  //   toggleButton(event.target);
-  //   handleSwipe("right", rectangle);
-  // });
 
   function toggleButton(clickedButton) {
     const allButtons = document.querySelectorAll(".buttonHeart, .buttonCross");
@@ -122,29 +111,10 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 menuItems.forEach(function (menuItem) {
   menuItem.addEventListener("click", toggleMenu);
 });
 hamburger.addEventListener("click", toggleMenu);
-
 
 menuItems.forEach(function (menuItem) {
   menuItem.addEventListener("click", toggleMenu);

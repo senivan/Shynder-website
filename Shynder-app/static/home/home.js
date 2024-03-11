@@ -21,17 +21,18 @@ document.addEventListener("DOMContentLoaded", function() {
   heartButton = document.querySelectorAll(".homepagedesctop-button");
   crossButton = document.querySelectorAll(".homepagedesctop-button1");
   rectangle = document.querySelectorAll(".homepagedesctop-rectangle1");
-  console.log(heartButton)
   heartButton.forEach(function (button){
     button.addEventListener("click", function (event) {
       toggleButton(event.target);
-      handleSwipe("left", rectangle);
+      handleSwipe("left", rectangle[rectangle.length - 1]);
+      rectangle = document.querySelectorAll(".homepagedesctop-rectangle1"); // Update the rectangle elements after deletion
     })
   })
   crossButton.forEach(function (button){
     button.addEventListener("click", function (event) {
       toggleButton(event.target);
-      handleSwipe("right", rectangle);
+      handleSwipe("right", rectangle[rectangle.length - 1]);
+      rectangle = document.querySelectorAll(".homepagedesctop-rectangle1"); // Update the rectangle elements after deletion
     })
   })
 

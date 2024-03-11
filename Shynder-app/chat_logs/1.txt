@@ -1,0 +1,6 @@
+{"sender": "bykov.pn@ucu.edu.ua", "receiver": "sen.pn@ucu.edu.ua", "messege": "Hi", "command": "send", "time": "2024:2:8 13:20"}
+{"sender": "bykov.pn@ucu.edu.ua", "receiver": "sen.pn@ucu.edu.ua", "messege": "How are you?", "command": "send", "time": "2024:2:8 13:20"}
+{"sender": "bykov.pn@ucu.edu.ua", "receiver": "sen.pn@ucu.edu.ua", "messege": "dafsdasd", "command": "send", "time": "2024:2:8 13:20"}
+{"sender": "bykov.pn@ucu.edu.ua", "receiver": "sen.pn@ucu.edu.ua", "messege": "sadasdasda", "command": "send", "time": "2024:2:8 13:20"}
+{"sender": "bykov.pn@ucu.edu.ua", "receiver": "sen.pn@ucu.edu.ua", "messege": "ffsfd", "command": "send", "time": "2024:2:8 13:20"}
+{"sender": "bykov.pn@ucu.edu.ua", "receiver": "sen.pn@ucu.edu.ua", "messege": "xzckxzjckjzxc", "command": "send", "time": "2024:2:8 13:30"}

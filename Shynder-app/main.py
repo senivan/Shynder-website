@@ -25,7 +25,7 @@ def get_db():
 @app.get("/", response_class=HTMLResponse)
 async def root():
     html_con = ""
-    with open("./static/login/login.html", "r", encoding="utf-8") as file:
+    with open("./static/login/login_page.html", "r", encoding="utf-8") as file:
         html_con = '\n'.join(file.readlines())
     return html_con
 

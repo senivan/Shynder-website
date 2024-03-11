@@ -275,15 +275,15 @@
   </div>
 
   <h3>Які в тебе музичні смаки?</h3>
-  <label><input type="checkbox" name="q2" value="Спорт" onchange="showSubInterest()"> Рок</label>
-  <label><input type="checkbox" name="q2" value="Книги" onchange="showSubInterest()"> Реп</label>
-  <label><input type="checkbox" name="q2" value="Фільми" onchange="showSubInterest()"> Класична музика</label>
-  <label><input type="checkbox" name="q2" value="Рукоділля" onchange="showSubInterest()"> Електронна музика</label>
-  <label><input type="checkbox" name="q2" value="Подорожі" onchange="showSubInterest()"> Поп</label>
-  <label><input type="checkbox" name="q2" value="Ігри" onchange="showSubInterest()"> Хіп-хоп</label>
-  <label><input type="checkbox" name="q2" value="Кулінарія" onchange="showSubInterest()"> Етнофолк</label>
-  <label><input type="checkbox" name="q2" value="Програмування" onchange="showSubInterest()"> Меломан</label>
-  <label><input type="checkbox" name="q2" value="Мистецтво" onchange="showSubInterest()"> Не слухаю музику</label>
+  <label><input type="checkbox" value="Рок" onchange="showSubInterest()"> Рок</label>
+  <label><input type="checkbox" value="Реп" onchange="showSubInterest()"> Реп</label>
+  <label><input type="checkbox" value="Класична музика" onchange="showSubInterest()"> Класична музика</label>
+  <label><input type="checkbox" value="Електонна" onchange="showSubInterest()"> Електронна музика</label>
+  <label><input type="checkbox" value="Поп" onchange="showSubInterest()"> Поп</label>
+  <label><input type="checkbox" value="Хіп" onchange="showSubInterest()"> Хіп-хоп</label>
+  <label><input type="checkbox" value="Етнофолк" onchange="showSubInterest()"> Етнофолк</label>
+  <label><input type="checkbox" value="Меломан" onchange="showSubInterest()"> Меломан</label>
+  <label><input type="checkbox" value="Не слухаю" onchange="showSubInterest()"> Не слухаю музику</label>
 
   
 
@@ -307,7 +307,6 @@
 <script>
   function showSubInterest() {
     var mainInterests = document.querySelectorAll('input[name="q2"]:checked');
-  
     // Hide all sub-interests first
     var subInterestContainers = document.querySelectorAll('#subInterestContainer > div');
     subInterestContainers.forEach(function(container) {

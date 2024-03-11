@@ -91,9 +91,9 @@ font-weight: 500;
 
 
 
-.homepagedesctop-rectangle1 {
+.card {
   position: absolute;
-  left: 40%;
+  left: 38%;
   top: 130px;
   width: 414px;
   height: 700px;
@@ -101,10 +101,10 @@ font-weight: 500;
   background-color: #CCBCF4; 
 }   
 
-.homepagedesctop-container{
+.container{
   overflow: hidden;
 }
-.homepagedesctop-homepagedesctop {
+.homepagedesctop {
   width: 100%;
   height: 1024px;
   display: flex;
@@ -114,7 +114,7 @@ font-weight: 500;
   flex-shrink: 0;
   background-color: #f9f9fa;
 }
-.homepagedesctop-homepage {
+.homepage {
   top: 0;
   left: 0;
   width: 100%;/* 100% of the viewport width */
@@ -127,7 +127,7 @@ font-weight: 500;
   background-color: #fdfdfd;
 }
 
-.homepagedesctop-frame7 {
+.usernameDiv {
   gap: 10px;
   top: 15px;
   left: 11px;
@@ -142,7 +142,7 @@ font-weight: 500;
   justify-content: center;
   background-color: rgba(255, 255, 255, 1);
 }
-.homepagedesctop-text {
+.username {
   color: #6F59AA;
   width: 300px;
   height: auto;
@@ -156,7 +156,7 @@ font-weight: 500;
   text-decoration: none;
   
 }
-.homepagedesctop-frame4 {
+.matchDiv {
   gap: 10px;
   top: 390px;
   left: 11px;
@@ -171,7 +171,7 @@ font-weight: 500;
   justify-content: center;
   background-color: rgba(255, 255, 255, 1);
 }
-.homepagedesctop-text06 {
+.matchText {
   color: #6F59AA;
   width: 400px;
   height: auto;
@@ -184,7 +184,7 @@ font-weight: 500;
   font-stretch: normal;
   text-decoration: none;
 }
-.homepagedesctop-frame20 {
+.descriptionDiv {
   gap: 10px;
   top: 200px;
   left: 11px;
@@ -199,7 +199,7 @@ font-weight: 500;
   justify-content: center;
   background-color: rgba(255, 255, 255, 1);
 }
-.homepagedesctop-text20 {
+.descriptionText {
   color: #6F59AA;
   width: 400px;
   height: auto;
@@ -213,7 +213,7 @@ font-weight: 500;
   text-decoration: none;
 }
 
-.homepagedesctop-button {
+.buttonHeart {
   width: 160px;
   height: 90px;
   display: flex;
@@ -228,14 +228,14 @@ font-weight: 500;
 }
 
 
-.homepagedesctop-text08 {
+.likeText {
   color: rgba(231, 14, 14, 1);
   font-size: 45px; 
   font-weight: bold;
 
 }
 
-.homepagedesctop-button1 {
+.buttonCross {
   width: 160px;
   height: 90px;
   display: flex;
@@ -250,12 +250,12 @@ font-weight: 500;
 }
 
 
-.homepagedesctop-text13 {
+.crossText {
   color: rgba(231, 14, 14, 1);
   font-size: 45px; 
   font-weight: bold;
 }
-.homepagedesctop-frame8 {
+.frame8 {
   gap: 10px;
   top: 17px;
   left: 181px;
@@ -266,13 +266,13 @@ font-weight: 500;
   align-items: flex-start;
   flex-direction: column;
 }
-.homepagedesctop-teen21 {
+.teen21 {
   width: 154px;
   height: 136px;
   border-radius: 32px;
 }
 
-.homepagedesctop-frame2 {
+.frame2 {
   gap: 10px;
   top: 282.2701110839844px;
   width: 330px;
@@ -282,7 +282,7 @@ font-weight: 500;
   flex-shrink: 0;
   justify-content: center;
 }
-.homepagedesctop-text18 {
+.text18 {
   color: rgb(17, 0, 0);
   width: 300px;
   height: auto;
@@ -295,7 +295,7 @@ font-weight: 500;
   font-stretch: normal;
   text-decoration: none;         
 }
-.homepagedesctop-button2 {
+.button2 {
   gap: 10px;
   top: 207px;
   left: 0px;
@@ -309,7 +309,7 @@ font-weight: 500;
   justify-content: center;
   background-color: rgba(201, 121, 204, 1);
 }
-.homepagedesctop-text19 {
+.text19 {
   color: rgba(0, 0, 0, 1);
   width: 375px;
   height: auto;
@@ -322,7 +322,7 @@ font-weight: 500;
   font-stretch: normal;
   text-decoration: none;
 }
-.homepagedesctop-button3 {
+.button3 {
   gap: 10px;
   top: 289px;
   left: 0px;
@@ -336,7 +336,7 @@ font-weight: 500;
   justify-content: center;
   background-color: rgba(202, 122, 204, 1);
 }
-.homepagedesctop-text21 {
+.text21 {
   top: 10px;
   left: 97px;
   color: rgba(0, 0, 0, 1);
@@ -352,7 +352,7 @@ font-weight: 500;
   font-stretch: normal;
   text-decoration: none;
 }
-.homepagedesctop-rectangle8 {
+.rectangle8 {
   top: 0px;
   left: 446px;
   width: 22px;
@@ -360,8 +360,8 @@ font-weight: 500;
   position: absolute;
 }
 
-.homepagedesctop-button,
-.homepagedesctop-button1 {
+.buttonHeart,
+.buttonCross {
   width: 160px;
   height: 90px;
   display: flex;
@@ -373,14 +373,14 @@ font-weight: 500;
   position: absolute;
 }
 
-.homepagedesctop-button:hover,
-.homepagedesctop-button1:hover {
+.buttonHeart:hover,
+.buttonCross:hover {
   background-color: #9A7BEC;
   cursor: pointer;
 }
 
-.homepagedesctop-text08,
-.homepagedesctop-text13 {
+.likeText,
+.crossText {
   color: rgba(231, 14, 14, 1);
   font-size: 45px;
   font-weight: bold;

@@ -17,22 +17,69 @@ function toggleMenu() {
   }
 }
 
+const page = document.querySelector(".homepage");
+
+function generateChats() {
+  const nameDiv = document.createElement("div");
+  const descriptionDiv = document.createElement("div");
+  const matchDiv = document.createElement("div");
+  const heartButtonDiv = document.createElement("div");
+  const crossButtonDiv = document.createElement("div");
+  const name = document.createElement("span");
+  const description = document.createElement("span");
+  const match = document.createElement("span");
+  const heartButton = document.createElement("div");
+  const crossButton = document.createElement("div");
+  const rectangle = document.createElement("div");
+  rectangle.classList.add("card");
+  nameDiv.classList.add("usernameDiv");
+  descriptionDiv.classList.add("descriptionDiv");
+  matchDiv.classList.add("matchDiv");
+  heartButtonDiv.classList.add("buttonHeart");
+  crossButtonDiv.classList.add("buttonCross");
+  heartButton.classList.add("likeText");
+  crossButton.classList.add("crossText");
+  name.classList.add("username");
+  match.classList.add("matchText");
+  description.classList.add("descriptionText");
+  name.textContent = "Name";
+  description.textContent = "Description";
+  match.textContent = "Match";
+  heartButton.textContent = "❤️";
+  crossButton.textContent = "❌";
+  nameDiv.appendChild(name);
+  descriptionDiv.appendChild(description);
+  matchDiv.appendChild(match);
+  heartButtonDiv.appendChild(heartButton);
+  crossButtonDiv.appendChild(crossButton);
+  rectangle.appendChild(nameDiv);
+  rectangle.appendChild(descriptionDiv);
+  rectangle.appendChild(matchDiv);
+  rectangle.appendChild(heartButtonDiv);
+  rectangle.appendChild(crossButtonDiv);
+  page.appendChild(rectangle);
+}
+
+generateChats();
+generateChats();
+
+
 document.addEventListener("DOMContentLoaded", function() {
-  heartButton = document.querySelectorAll(".homepagedesctop-button");
-  crossButton = document.querySelectorAll(".homepagedesctop-button1");
-  rectangle = document.querySelectorAll(".homepagedesctop-rectangle1");
+  heartButton = document.querySelectorAll(".buttonHeart");
+  crossButton = document.querySelectorAll(".buttonCross");
+  rectangle = document.querySelectorAll(".card");
   heartButton.forEach(function (button){
     button.addEventListener("click", function (event) {
       toggleButton(event.target);
       handleSwipe("left", rectangle[rectangle.length - 1]);
-      rectangle = document.querySelectorAll(".homepagedesctop-rectangle1"); // Update the rectangle elements after deletion
+      rectangle = document.querySelectorAll(".card"); // Update the rectangle elements after deletion
     })
   })
   crossButton.forEach(function (button){
     button.addEventListener("click", function (event) {
       toggleButton(event.target);
       handleSwipe("right", rectangle[rectangle.length - 1]);
-      rectangle = document.querySelectorAll(".homepagedesctop-rectangle1"); // Update the rectangle elements after deletion
+      rectangle = document.querySelectorAll(".card"); // Update the rectangle elements after deletion
     })
   })
 
@@ -47,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // });
 
   function toggleButton(clickedButton) {
-    const allButtons = document.querySelectorAll(".homepagedesctop-button, .homepagedesctop-button1");
+    const allButtons = document.querySelectorAll(".buttonHeart, .buttonCross");
 
     allButtons.forEach(function(button) {
       if (button === clickedButton) {

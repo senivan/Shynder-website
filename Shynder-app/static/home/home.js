@@ -18,19 +18,32 @@ function toggleMenu() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  const heartButton = document.getElementById("heartButton");
-  const crossButton = document.getElementById("crossButton");
-  const rectangle = document.querySelector(".homepagedesctop-rectangle1");
+  heartButton = document.querySelectorAll(".homepagedesctop-button");
+  crossButton = document.querySelectorAll(".homepagedesctop-button1");
+  rectangle = document.querySelectorAll(".homepagedesctop-rectangle1");
+  console.log(heartButton)
+  heartButton.forEach(function (button){
+    button.addEventListener("click", function (event) {
+      toggleButton(event.target);
+      handleSwipe("left", rectangle);
+    })
+  })
+  crossButton.forEach(function (button){
+    button.addEventListener("click", function (event) {
+      toggleButton(event.target);
+      handleSwipe("right", rectangle);
+    })
+  })
 
-  heartButton.addEventListener("click", function(event) {
-    toggleButton(event.target);
-    handleSwipe("left", rectangle);
-  });
 
-  crossButton.addEventListener("click", function(event) {
-    toggleButton(event.target);
-    handleSwipe("right", rectangle);
-  });
+  // heartButton.addEventListener("click", function(event) {
+  //   toggleButton(event.target);
+  //   handleSwipe("left", rectangle);
+  // }); 
+  // crossButton.addEventListener("click", function(event) {
+  //   toggleButton(event.target);
+  //   handleSwipe("right", rectangle);
+  // });
 
   function toggleButton(clickedButton) {
     const allButtons = document.querySelectorAll(".homepagedesctop-button, .homepagedesctop-button1");
@@ -60,6 +73,29 @@ document.addEventListener("DOMContentLoaded", function() {
     }, 1000); 
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+menuItems.forEach(function (menuItem) {
+  menuItem.addEventListener("click", toggleMenu);
+});
+hamburger.addEventListener("click", toggleMenu);
 
 
 menuItems.forEach(function (menuItem) {

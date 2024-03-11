@@ -6,6 +6,7 @@ import os
 from fastapi.staticfiles import StaticFiles
 from sql.database import SessionLocal, engine
 import bcrypt
+import json
 
 
 models.Base.metadata.create_all(bind=engine)
@@ -13,7 +14,16 @@ app = FastAPI()
 active_users = {"1".encode('utf-8'): schemas.UserCreate(username="test", ddescription="test", age=1, email="test", ppassword="test", test_results="test")}
 app.mount('/static', StaticFiles(directory='static', html=True), name='static')
 
-
+class TestAnswers:
+    def __init__(self, answers:dict):
+        self.answers = answers
+    
+    def to_json(self):
+        return json.dumps(self.answers)
+    
+    def from_json(self, json_str:str):
+        self.answers = json.loads(json_str)
+    
 
 def get_db():
     db = SessionLocal()
@@ -95,7 +105,7 @@ async def profile(email:str, session_id:str = ""):
     return html_con
 
 @app.get("/register/")
-async def register(username:str, ddescription:str, age:int, email:str, ppassword:str, test_results:str):
+async def register(username:str, ddescription:str, age:int, email:str, ppassword:str, test_results:str = ""):
     db = get_db().__next__()
     db_wrapper.create_user(db, schemas.UserCreate(username=username, ddescription=ddescription, age=age, email=email, ppassword=hash_bcr(ppassword), test_results=test_results))
     return {"message": "Success"}

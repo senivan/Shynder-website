@@ -13,8 +13,23 @@ from mail_wrapper import *
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
-active_users = {"1".encode('utf-8'):db_wrapper.get_user_by_email(SessionLocal(), "bykov.pn@ucu.edu.ua"), "2".encode('utf-8'):db_wrapper.get_user_by_email(SessionLocal(), "sen.pn@ucu.edu.ua"), "3".encode('utf-8'):db_wrapper.get_user_by_email(SessionLocal(), "sirska.pn@ucu.edu.ua")}
+# active_users = {"1".encode('utf-8'): schemas.UserCreate(username="test", ddescription="test", age=1, email="test", ppassword="test", test_results="test")}
+active_users = {}
+waiting_verification = {}
 app.mount('/static', StaticFiles(directory='static', html=True), name='static')
+
+class TestAnswers:
+    def __init__(self, answers:str):
+        self.answers = TestAnswers.from_json(answers)
+    
+    def to_json(self):
+        return json.dumps(self.answers)
+    
+    @staticmethod
+    def from_json(json_str:str):
+        return json.loads(json_str)
+    
+
 waiting_verification = {}
 class ConnectionManager:
     def __init__(self):
@@ -194,26 +209,44 @@ async def profile(email:str, session_id:str = ""):
     return html_con
 
 @app.get("/register/")
-async def register(username:str, ddescription:str, age:int, email:str, ppassword:str, test_results:str):
+async def register(username:str, ddescription:str, course:str, full_name:str, email:str, ppassword:str, test_results:str = ""):
+    print(username, ddescription, course, full_name, email, ppassword, test_results)
     db = get_db().__next__()
+    cs = 0
+    if course == "1 курс":
+        cs = 1
+    elif course == "2 курс":
+        cs = 2
+    elif course == "3 курс":
+        cs = 3
+    elif course == "4 курс":
+        cs = 4
+    elif course == "Магістр":
+        cs = 5
+    elif course == "Аспірант":
+        cs = 6
+    elif course == "Працівник":
+        cs = 7
     if not ("ucu.edu.ua" in email):
         return {"message":"Not UCU mail"}
     if db_wrapper.get_user_by_email(db, email) is not None:
         return {"message":"User already exists"}
     # db_wrapper.create_user(db, schemas.UserCreate(username=username, ddescription=ddescription, age=age, email=email, ppassword=hash_bcr(ppassword), test_results=test_results))
-    user = schemas.UserCreate(username=username, ddescription=ddescription, age=age, email=email, ppassword=hash_bcr(ppassword), test_results=test_results)
+    user = schemas.UserCreate(username=username, ddescription=ddescription, course=cs, full_name=full_name, email=email, ppassword=hash_bcr(ppassword), test_results=test_results)
     token = str(hash_bcr(email + str(random.randint(0, 1000000))))
     waiting_verification[token] = user
     await send_email(email, username, token)
     return {"message": "Waiting verification"}
-
-@app.get("/verify/")
+@app.get("/verify/", response_class=HTMLResponse)
 async def verify(token:str):
     if token in waiting_verification:
         db = get_db().__next__()
         db_wrapper.create_user(db, waiting_verification[token])
         del waiting_verification[token]
-        return {"message": "Success"}
+        html = ""
+        with open("./static/login/login.html", "r", encoding="utf-8") as file:
+            html = '\n'.join(file.readlines())
+        return HTMLResponse(content=html)
     return {"message": "Token not found"}
 
 @app.get("/get_active_user/")

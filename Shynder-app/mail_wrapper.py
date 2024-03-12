@@ -1,15 +1,15 @@
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 
 conf = ConnectionConfig(
-    MAIL_USERNAME = "shynder451",
-    MAIL_PASSWORD = "kskxgzlrunxvnjar",
-    MAIL_FROM = "shynder451@gmail.com",
-    MAIL_PORT = 587,
-    MAIL_SERVER="smtp.gmail.com",
-    MAIL_FROM_NAME="Shynder Verification",
+    MAIL_USERNAME = "shynder.support@ukr.net",
+    MAIL_PASSWORD = "dJP0sJRUqx0zHDkx",
+    MAIL_FROM = "shynder.support@ukr.net",
+    MAIL_PORT = 465,
+    MAIL_SERVER="smtp.ukr.net",
+    MAIL_FROM_NAME="shynder.support@ukr.net",
     USE_CREDENTIALS=True,
-    MAIL_SSL_TLS=False,
-    MAIL_STARTTLS=True
+    MAIL_SSL_TLS=True,
+    MAIL_STARTTLS=False
 )
 
 async def send_email(email: str, username: str, token:str):
@@ -18,6 +18,7 @@ async def send_email(email: str, username: str, token:str):
         body = file.read()
     body = body.replace("[USERNAME]", username)
     body = body.replace("[TOKEN]", token)
+    print(body)
     message = MessageSchema(
         subject="Shynder Verification",
         recipients=[email],

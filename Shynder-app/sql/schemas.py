@@ -9,15 +9,16 @@ class MatchCreate(MatchBase):
 
 class Match(MatchBase):
     id : int
-    chat_log_file : str | None = None
     class Config:
         orm_mode = True
 
 class UserBase(BaseModel):
     username : str
     ddescription: str | None = None
-    age: int
+    course: int
     email : str
+    full_name : str
+
 
 class UserCreate(UserBase):
     ppassword : str #hashed password

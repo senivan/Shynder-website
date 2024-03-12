@@ -172,7 +172,7 @@ async def login(login:str, password:str):
                 msg['session_id'] = session_id
                 active_users[session_id] = user
                 break
-            
+    print(msg)
     return msg
 
 
@@ -192,22 +192,18 @@ async def logout(session_id:str):
     return html_con
 
 def embed_user_into_profile_html(email:str):
-    with open("./static/user_profile/profile.html", "r", encoding="utf-8") as file:
+    with open("./static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
         html_con = '\n'.join(file.readlines())
     html_con = html_con.replace("<user_email></user_email>", f'<user_email class="user">{email}</user_email>')
     return html_con
 
 @app.get("/profile/", response_class=HTMLResponse)
-async def profile(email:str, session_id:str = ""):
-    if session_id.encode('utf-8') in active_users and active_users[session_id.encode('utf-8')].email == email:
-        with open("./static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
-            html_con = '\n'.join(file.readlines())
-        return html_con
+async def profile(email:str=""):
     html_con = embed_user_into_profile_html(email)
     # with open("./static/user_profile/profile.html", "r", encoding="utf-8") as file:
     #     html_con = '\n'.join(file.readlines())
     # print(html_con)
-    return html_con
+    return HTMLResponse(content=html_con)
 
 @app.get("/register/")
 async def register(username:str, ddescription:str, course:str, full_name:str, email:str, ppassword:str, test_results:str = ""):
@@ -236,6 +232,7 @@ async def register(username:str, ddescription:str, course:str, full_name:str, em
     user = schemas.UserCreate(username=username, ddescription=ddescription, course=cs, full_name=full_name, email=email, ppassword=hash_bcr(ppassword), test_results=test_results)
     token = str(hash_bcr(email + str(random.randint(0, 1000000))))
     waiting_verification[token] = user
+    print(waiting_verification)
     await send_email(email, username, token)
     return {"message": "Waiting verification"}
 @app.get("/verify/", response_class=HTMLResponse)
@@ -257,11 +254,26 @@ async def get_active_user(session_id:str):
     return {"message": "User not found"}
 
 @app.get("/update_user/", response_class=HTMLResponse)
-async def update_user(session_id:str, username:str, ddescription:str, age:int, email:str, ppassword:str):
+async def update_user(session_id:str, username:str, ddescription:str, course:str, email:str, test_results:str, ppassword:str=""):
     if session_id.encode('utf-8') in active_users:
         db = get_db().__next__()
         user = active_users[session_id.encode('utf-8')]
-        db_wrapper.update_user(db, user.id, username=username, ddescription=ddescription, age=age, email=email, ppassword=hash_bcr(ppassword))
+        cs = 0
+        if course == "1 курс":
+            cs = 1
+        elif course == "2 курс":
+            cs = 2
+        elif course == "3 курс":
+            cs = 3
+        elif course == "4 курс":
+            cs = 4
+        elif course == "Магістр":
+            cs = 5
+        elif course == "Аспірант":
+            cs = 6
+        elif course == "Працівник":
+            cs = 7
+        db_wrapper.update_user(db, user.id, username=username, ddescription=ddescription, course=cs, email=email, test_results=test_results)
         active_users[session_id.encode('utf-8')] = db_wrapper.get_user_by_email(db, email)
     with open("./static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
         html_con = '\n'.join(file.readlines())

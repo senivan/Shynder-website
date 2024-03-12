@@ -137,13 +137,16 @@ async def register(username:str, ddescription:str, course:str, full_name:str, em
     waiting_verification[token] = user
     await send_email(email, username, token)
     return {"message": "Waiting verification"}
-@app.get("/verify/")
+@app.get("/verify/", response_class=HTMLResponse)
 async def verify(token:str):
     if token in waiting_verification:
         db = get_db().__next__()
         db_wrapper.create_user(db, waiting_verification[token])
         del waiting_verification[token]
-        return {"message": "Success"}
+        html = ""
+        with open("./static/login/login.html", "r", encoding="utf-8") as file:
+            html = '\n'.join(file.readlines())
+        return HTMLResponse(content=html)
     return {"message": "Token not found"}
 
 @app.get("/get_active_user/")

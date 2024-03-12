@@ -600,7 +600,7 @@ function register() {
     alert('Паролі не співпадають');
   } else {
     alert('На пошту ' + email + ' відправлено лист з підтвердженням реєстрації. Перейдіть за посиланням у листі для завершення реєстрації.');
-    fetch('/register/?username='+username+'&email='+email+'&ppassword='+password+'&full_name='+name+"&ddescription="+desc+"&test_answers="+JSON.stringify(test_answers)+"&course="+my_course).then(response => response.json()).then(data => {
+    fetch('/register/?username='+username+'&email='+email+'&ppassword='+password+'&full_name='+name+"&ddescription="+desc+"&test_results="+JSON.stringify(test_answers)+"&course="+my_course).then(response => response.json()).then(data => {
       // alert(data);
       console.log(data);
     });

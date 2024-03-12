@@ -6,6 +6,7 @@ import os
 from fastapi.staticfiles import StaticFiles
 from sql.database import SessionLocal, engine
 import bcrypt
+from fastapi import WebSocket, WebSocketDisconnect
 import json
 
 
@@ -13,6 +14,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 # active_users = {"1".encode('utf-8'): schemas.UserCreate(username="test", ddescription="test", age=1, email="test", ppassword="test", test_results="test")}
 active_users = {}
+waiting_verification = {}
 app.mount('/static', StaticFiles(directory='static', html=True), name='static')
 
 class TestAnswers:
@@ -125,8 +127,24 @@ async def register(username:str, ddescription:str, course:str, full_name:str, em
         cs = 6
     elif course == "Працівник":
         cs = 7
-    db_wrapper.create_user(db, schemas.UserCreate(username=username,full_name=full_name, ddescription=ddescription, course=cs, email=email, ppassword=hash_bcr(ppassword), test_results=test_results))
-    return {"message": "Success"}
+    if not ("ucu.edu.ua" in email):
+        return {"message":"Not UCU mail"}
+    if db_wrapper.get_user_by_email(db, email) is not None:
+        return {"message":"User already exists"}
+    # db_wrapper.create_user(db, schemas.UserCreate(username=username, ddescription=ddescription, age=age, email=email, ppassword=hash_bcr(ppassword), test_results=test_results))
+    user = schemas.UserCreate(username=username, ddescription=ddescription, course=cs, full_name=full_name, email=email, ppassword=hash_bcr(ppassword), test_results=test_results)
+    token = str(hash_bcr(email + str(random.randint(0, 1000000))))
+    waiting_verification[token] = user
+    await send_email(email, username, token)
+    return {"message": "Waiting verification"}
+@app.get("/verify/")
+async def verify(token:str):
+    if token in waiting_verification:
+        db = get_db().__next__()
+        db_wrapper.create_user(db, waiting_verification[token])
+        del waiting_verification[token]
+        return {"message": "Success"}
+    return {"message": "Token not found"}
 
 @app.get("/get_active_user/")
 async def get_active_user(session_id:str):

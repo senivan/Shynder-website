@@ -18,6 +18,9 @@ class User(Base):
     test_results = Column(String, nullable=False)
     matches = relationship("Match", back_populates="user1", foreign_keys='Match.user1_id')
 
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
 class Match(Base):
     """
     Match model.
@@ -28,3 +31,6 @@ class Match(Base):
     user2_id = Column(Integer, ForeignKey("Users.id"), nullable=True)
     user1 = relationship("User", back_populates="matches", foreign_keys=[user1_id])
     user2 = relationship("User", back_populates="matches", foreign_keys=[user2_id])
+
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}

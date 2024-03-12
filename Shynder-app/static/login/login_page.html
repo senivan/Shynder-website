@@ -100,7 +100,7 @@
 
   function login(){
     fetch('/login/?login='+document.querySelector('input[type="text"]').value+'&password='+document.querySelector('input[type="password"]').value).then(response => response.json()).then(data => {
-      if(data['message'] == 'ok'){
+      if(data['message'] == 'Success'){
         sessionid = data['sessionid'];
         document.cookie = 'sessionid='+sessionid;
         window.location.href = "/home";

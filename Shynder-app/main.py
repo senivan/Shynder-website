@@ -244,7 +244,7 @@ async def verify(token:str):
         db_wrapper.create_user(db, waiting_verification[token])
         del waiting_verification[token]
         html = ""
-        with open("./static/login/login.html", "r", encoding="utf-8") as file:
+        with open("./static/login/login_page.html", "r", encoding="utf-8") as file:
             html = '\n'.join(file.readlines())
         return HTMLResponse(content=html)
     return {"message": "Token not found"}

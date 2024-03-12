@@ -11,18 +11,20 @@ import json
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
-active_users = {"1".encode('utf-8'): schemas.UserCreate(username="test", ddescription="test", age=1, email="test", ppassword="test", test_results="test")}
+# active_users = {"1".encode('utf-8'): schemas.UserCreate(username="test", ddescription="test", age=1, email="test", ppassword="test", test_results="test")}
+active_users = {}
 app.mount('/static', StaticFiles(directory='static', html=True), name='static')
 
 class TestAnswers:
-    def __init__(self, answers:dict):
-        self.answers = answers
+    def __init__(self, answers:str):
+        self.answers = TestAnswers.from_json(answers)
     
     def to_json(self):
         return json.dumps(self.answers)
     
-    def from_json(self, json_str:str):
-        self.answers = json.loads(json_str)
+    @staticmethod
+    def from_json(json_str:str):
+        return json.loads(json_str)
     
 
 def get_db():
@@ -105,9 +107,25 @@ async def profile(email:str, session_id:str = ""):
     return html_con
 
 @app.get("/register/")
-async def register(username:str, ddescription:str, age:int, email:str, ppassword:str, test_results:str = ""):
+async def register(username:str, ddescription:str, course:str, full_name:str, email:str, ppassword:str, test_results:str = ""):
+    print(username, ddescription, course, full_name, email, ppassword, test_results)
     db = get_db().__next__()
-    db_wrapper.create_user(db, schemas.UserCreate(username=username, ddescription=ddescription, age=age, email=email, ppassword=hash_bcr(ppassword), test_results=test_results))
+    cs = 0
+    if course == "1 курс":
+        cs = 1
+    elif course == "2 курс":
+        cs = 2
+    elif course == "3 курс":
+        cs = 3
+    elif course == "4 курс":
+        cs = 4
+    elif course == "Магістр":
+        cs = 5
+    elif course == "Аспірант":
+        cs = 6
+    elif course == "Працівник":
+        cs = 7
+    db_wrapper.create_user(db, schemas.UserCreate(username=username,full_name=full_name, ddescription=ddescription, course=cs, email=email, ppassword=hash_bcr(ppassword), test_results=test_results))
     return {"message": "Success"}
 
 @app.get("/get_active_user/")

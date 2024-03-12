@@ -19,14 +19,14 @@ def get_matches(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Match).offset(skip).limit(limit).all()
 
 def create_user(db: Session, user: schemas.UserCreate):
-    db_user = models.User(**user.model_dump())
+    db_user = models.User(**user.dict())
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
     return db_user
 
 def create_match(db: Session, match: schemas.MatchCreate):
-    db_match = models.Match(**match.model_dump())
+    db_match = models.Match(**match.dict())
     db.add(db_match)
     db.commit()
     db.refresh(db_match)

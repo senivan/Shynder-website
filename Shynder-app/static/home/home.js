@@ -1,9 +1,10 @@
 const menu = document.querySelector(".menu");
 const menuItems = document.querySelectorAll(".menuItem");
-const hamburger= document.querySelector(".hamburger");
-const closeIcon= document.querySelector(".closeIcon");
+const hamburger = document.querySelector(".hamburger");
+const closeIcon = document.querySelector(".closeIcon");
 const menuIcon = document.querySelector(".menuIcon");
 const chat = document.querySelector(".home");
+let heartButton, crossButton, rectangle;
 
 function toggleMenu() {
   if (menu.classList.contains("showMenu")) {
@@ -58,65 +59,46 @@ function generateChats() {
   rectangle.appendChild(heartButtonDiv);
   rectangle.appendChild(crossButtonDiv);
   page.appendChild(rectangle);
+
+  // Update event listeners after generating chats
+  updateEventListeners();
 }
 
 generateChats();
 generateChats();
 
-document.addEventListener("DOMContentLoaded", function() {
+function updateEventListeners() {
   heartButton = document.querySelectorAll(".buttonHeart");
   crossButton = document.querySelectorAll(".buttonCross");
-  rectangle = document.querySelectorAll(".card");
-  heartButton.forEach(function (button){
+  heartButton.forEach(function (button) {
     button.addEventListener("click", function (event) {
-      toggleButton(event.target);
-      handleSwipe("left", rectangle[rectangle.length - 1]);
-      rectangle = document.querySelectorAll(".card"); // Update the rectangle elements after deletion
-    })
-  })
-  crossButton.forEach(function (button){
-    button.addEventListener("click", function (event) {
-      toggleButton(event.target);
-      handleSwipe("right", rectangle[rectangle.length - 1]);
-      rectangle = document.querySelectorAll(".card"); // Update the rectangle elements after deletion
-    })
-  })
-
-  function toggleButton(clickedButton) {
-    const allButtons = document.querySelectorAll(".buttonHeart, .buttonCross");
-
-    allButtons.forEach(function(button) {
-      if (button === clickedButton) {
-        button.classList.add("showButton");
-        button.classList.add("highlight");
-      } else {
-        button.classList.remove("showButton");
-        button.classList.remove("highlight");
-      }
+      handleSwipe("left", event.target.closest(".card"));
     });
+  });
+  crossButton.forEach(function (button) {
+    button.addEventListener("click", function (event) {
+      handleSwipe("right", event.target.closest(".card"));
+    });
+  });
+}
+
+function handleSwipe(direction, element) {
+  if (direction === "left") {
+    element.style.transform = "translateX(-100px)";
+    element.classList.add("fall-left-animation");
+  } else if (direction === "right") {
+    element.style.transform = "translateX(100px)";
+    element.classList.add("fall-right-animation");
   }
 
-  function handleSwipe(direction, element) {
-    if (direction === "left") {
-      element.style.transform = "translateX(-100px)";
-      element.classList.add("fall-left-animation");
-    } else if (direction === "right") {
-      element.style.transform = "translateX(100px)";
-      element.classList.add("fall-right-animation");
-    }
-
-    setTimeout(function() {
-      element.remove();
-    }, 1000); 
-  }
-});
+  setTimeout(function () {
+    element.remove();
+  }, 1000);
+}
 
 menuItems.forEach(function (menuItem) {
   menuItem.addEventListener("click", toggleMenu);
 });
+
 hamburger.addEventListener("click", toggleMenu);
 
-menuItems.forEach(function (menuItem) {
-  menuItem.addEventListener("click", toggleMenu);
-});
-hamburger.addEventListener("click", toggleMenu);

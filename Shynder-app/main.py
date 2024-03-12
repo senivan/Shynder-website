@@ -246,8 +246,8 @@ async def verify(token:str):
         html = ""
         with open("./static/login/login_page.html", "r", encoding="utf-8") as file:
             html = '\n'.join(file.readlines())
-        return HTMLResponse(content=html)
-    return {"message": "Token not found"}
+    return HTMLResponse(content=html)
+
 
 @app.get("/get_active_user/")
 async def get_active_user(session_id:str):

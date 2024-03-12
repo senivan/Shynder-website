@@ -5,8 +5,24 @@ const closeIcon= document.querySelector(".closeIcon");
 const menuIcon = document.querySelector(".menuIcon");
 const chat = document.querySelector(".chat");
 
-user_session_id = '1';
-var websocket = new WebSocket('ws://20.117.195.190/chats_websocket/'+user_session_id);
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+user_session_id = getCookie("session_id");
+
+var websocket = new WebSocket('wss://20.117.195.190/chats_websocket/'+user_session_id);
 var receivers = [];
 let chat_opened = false;
 // MessageJson{
@@ -18,7 +34,7 @@ let chat_opened = false;
 // }
 
 websocket.onopen = function(event) {
-  websocket.send(JSON.stringify({"sender": user_email, "receiver":"sen.pn@ucu.edu.ua", "messege": "test","time": "10:00", "command":"get_all_matches"}));
+  websocket.send(JSON.stringify({"sender": user_email, "receiver":"", "messege": "test","time": "10:00", "command":"get_all_matches"}));
 };
 
 function home_click() {

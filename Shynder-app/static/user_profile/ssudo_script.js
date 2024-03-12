@@ -48,9 +48,9 @@ function submit_event(){
     user_cook = "1";
     var user = {}
     if (new_username != ""){
-        user["user_name"] = new_username;
+        user["username"] = new_username;
     }else{
-        user["user_name"] = document.querySelector(".username").innerHTML.split(": ")[1];
+        user["username"] = document.querySelector(".username").innerHTML.split(": ")[1];
     }
     if (new_email != ""){
         user["email"] = new_email;
@@ -73,9 +73,7 @@ function submit_event(){
         user["age"] = document.querySelector(".age").innerHTML.split(": ")[1];
     }
     console.log(user);
-    fetch("/delete_user/?session_id="+user_cook)
-    fetch("/register_user/?user_name="+user["username"]+"&email="+user["email"]+"&ppassword="+user["ppassword"]+"&ddescription="+user["ddescription"]+"&age="+user["age"])
-    fetch("/")
+    window.location.href = "/update_user/?session_id="+user_cook+"&username="+user["username"]+"&email="+user["email"]+"&ddescription="+user["ddescription"]+"&ppassword="+user["ppassword"]+"&age="+user["age"]
 
 }
 hamburger.addEventListener("click", toggleMenu);
@@ -91,7 +89,7 @@ if (user_cook != ""){
             document.querySelector(".username").innerHTML = "Username: "+ data.username;
             document.querySelector(".email").innerHTML = "Email: "+ data.email;
             document.querySelector(".about_me").querySelector("p").innerHTML = data.ddescription;
-            document.querySelector(".password").innerHTML = "Password: "+ data.password;
+            document.querySelector(".password").innerHTML = "Password: "+ data.ppassword;
             // document.querySelector(".password").display = "None";
             document.querySelector(".age").innerHTML = "Age: "+ data.age;
         });

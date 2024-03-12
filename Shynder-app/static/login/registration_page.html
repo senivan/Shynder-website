@@ -72,43 +72,95 @@
     <!-- <svg width="400" height="100" > -->
         <!-- <line x1="50" y1="50" x2="450" y2="50" style="stroke: rgb(111, 42, 196); stroke-width: 2;" /> -->
       <!--  -->
-        <circle cx="100" cy="50" r="10" fill =  "rgb(124, 209,98)" />
+        <!-- <circle cx="100" cy="50" r="10" fill =  "rgb(124, 209,98)" /> -->
         <!-- <circle cx="200" cy="50" r="10" fill= "rgb(198, 191,191)" /> -->
         <!-- <circle cx="300" cy="50" r="10" fill= "rgb(198, 191,191)" /> -->
         <!-- <circle cx="400" cy="50" r="10" fill= "rgb(198, 191,191)" /> -->
       <!--  -->
       <!-- </svg> -->
-      <img src="/static/big_logo.png" alt="HTML5 Icon">
-
-<p style="margin-left:37%;  color: rgba(31, 30, 30, 0.82);">Ваше ім’я</p>
-<input type="text" style = margin-left:37%;  onclick="myFunction()">
 
 
-<p style="margin-left:37%;  color: rgba(31, 30, 30, 0.82);">Ім’я користувача</p>
-<input type="text" style =  margin-left:37%;  onclick="myFunction()">
+<img src="C:\Users\mary2\Downloads\untitled-html\public\external\image3403-f83-200h.png" alt="HTML5 Icon">
 
 
-<p style="margin-left:37%; color: rgba(31, 30, 30, 0.82);">UCU email </p>
-<input type="text" style = margin-left:37%; onclick="myFunction()">
+<form id="registrationForm">
+  <p style="margin-left:37%;  color: rgba(31, 30, 30, 0.82);">Ваше ім’я</p>
+  <input type="text" style = margin-left:37%;  name="fullName">
+  
+  
+  <p style="margin-left:37%;  color: rgba(31, 30, 30, 0.82);">Ім’я користувача</p>
+  <input type="text" style =  margin-left:37%; name="userName" >
+  
+  
+  <p style="margin-left:37%; color: rgba(31, 30, 30, 0.82);">UCU email </p>
+  <input type="text" style = margin-left:37%;  name="email">
+  
+  
+  <p style="margin-left:37%; color: rgba(31, 30, 30, 0.82);">Пароль</p>
+  <input type="password"  style = "margin-left:37%;" name="password" >
+  
+  
+  <p style="color: rgba(31, 30, 30, 0.82); margin-left:37%; ">Підтвердити пароль</p>
+  <input type="password"  style = "margin-left:37%;"  name="confirmPassword">
+  
+  <button type="button"   style = "margin-left:37%; margin-top:3%" onclick="validateForm()">Зареєструватися</button>
+  
+  <!-- <p style="text-align: +200px; color: rgba(31, 30, 30, 0.82);">Ще не маєте акаунту?</p> -->
+  <!-- <button type="button" onclick="myFunction()">Зареєструватися</button> -->
+</form>
 
 
-<p style="margin-left:37%; color: rgba(31, 30, 30, 0.82);">Пароль</p>
-<input type="password"  style = "margin-left:37%;" onclick="myFunction()">
-
-
-<p style="color: rgba(31, 30, 30, 0.82); margin-left:37%; ">Підтвердити пароль</p>
-<input type="password"  style = "margin-left:37%;" onclick="myFunction()">
-
-<button type="button"   style = "margin-left:41%; margin-top:3%" onclick="redirectToSecondPage()">Зареєструватися</button>
-
-<!-- <p style="text-align: +200px; color: rgba(31, 30, 30, 0.82);">Ще не маєте акаунту?</p> -->
-<!-- <button type="button" onclick="myFunction()">Зареєструватися</button> -->
 
 <script>
-  function redirectToSecondPage() {
-    window.location.href = "/static/login/test_page.html"; // Replace "second_page.html" with the URL of your second page
+  function validateForm() {
+    var form = document.getElementById("registrationForm");
+    var formData = new FormData(form);
+
+    // Check if any field is empty
+    var emptyField = false;
+    formData.forEach(function(value) {
+      if (value.trim() === "") { // Use trim() to remove leading and trailing spaces
+        emptyField = true;
+      }
+    });
+
+    if (emptyField) {
+      alert("You haven't finished registration. Please fill in all fields.");
+      return; // Exit function if any field is empty
+    }
+
+    // Check if email ends with "@ucu.edu.ua"
+    var email = formData.get("email");
+    if (!email.endsWith("@ucu.edu.ua")) {
+      alert("Invalid email. Please enter a valid UCU email.");
+      return; // Exit function if email is invalid
+    }
+
+    // Check if password and confirm password match
+    var password = formData.get("password");
+    var confirmPassword = formData.get("confirmPassword");
+    if (password !== confirmPassword) {
+      alert("Confirm password does not match. Please re-enter.");
+      return; // Exit function if passwords do not match
+    }
+
+    // If all validations pass, save user data and redirect to the next page
+    saveUserData(formData);
+  }
+
+  function saveUserData(formData) {
+    // Perform actions to save user data here
+    console.log("User data saved:", formData);
+
+    // Redirect to the next page
+    window.location.href = "test_page.html";
   }
 </script>
+<!-- <script> -->
+  <!-- // function redirectToSecondPage() { -->
+    <!-- // window.location.href = "test_page.html"; // Replace "second_page.html" with the URL of your second page -->
+  <!-- // } -->
+<!-- </script> -->
 
 
 

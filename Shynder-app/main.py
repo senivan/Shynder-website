@@ -169,9 +169,10 @@ async def login(login:str, password:str):
         while True:
             session_id = hash_bcr(login) + hash_bcr(str(random.randint(0, 1000000)))
             if session_id not in active_users:
+                msg['session_id'] = session_id
                 active_users[session_id] = user
                 break
-            msg['session_id'] = session_id
+            
     return msg
 
 

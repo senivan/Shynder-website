@@ -259,21 +259,6 @@ font-family: rubik;
 font-weight: 500;
 }
 
-/* .other_message .message_bubble {
-background-color: #9A7BEC;
-color: white;
-border-radius: 10px;
-padding: 10px;
-max-width: 70%;
-}
-
-.other_message .message_time {
-align-self: flex-end;
-font-size: 12px;
-color: #6f59aa;
-margin-top: 5px;
-} */
-
 .other_message_info {
 display: inline-flex;
 background-color: #9A7BEC;

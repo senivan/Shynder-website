@@ -5,17 +5,10 @@ const closeIcon= document.querySelector(".closeIcon");
 const menuIcon = document.querySelector(".menuIcon");
 const chat = document.querySelector(".chat");
 
-user_session_id = '1';
+user_session_id = document.cookie.split('=')[1];
 var websocket = new WebSocket('ws://20.117.195.190/chats_websocket/'+user_session_id);
 var receivers = [];
 let chat_opened = false;
-// MessageJson{
-//   "sender":email,
-//   "receiver":email,
-//   "text":message,
-//   "time":time,
-//   "command":"send"
-// }
 
 websocket.onopen = function(event) {
   websocket.send(JSON.stringify({"sender": user_email, "receiver":"sen.pn@ucu.edu.ua", "messege": "test","time": "10:00", "command":"get_all_matches"}));
@@ -24,10 +17,10 @@ websocket.onopen = function(event) {
 function home_click() {
   window.location.href = "/home";
 }
-// Waiting for cookie
-// function profile_click() {
-//   window.location.href = "/profile/1";
-// }
+
+function profile_click() {
+  window.location.href = "/profile/" + user_session_id;
+}
 
 function chats_click() {
   window.location.href = "/chats_page";

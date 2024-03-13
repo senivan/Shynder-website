@@ -289,11 +289,11 @@ async def delete_user(session_id:str):
         html_con = '\n'.join(file.readlines())
     return html_con
 
-@app.get("/temp/", response_class=HTMLResponse)
-async def temp():
-    with open("./static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
-        html_con = '\n'.join(file.readlines())
-    return html_con
+# @app.get("/temp/", response_class=HTMLResponse)
+# async def temp():
+#     with open("./static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
+#         html_con = '\n'.join(file.readlines())
+#     return html_con
 
 @app.get("/get_all_active_users/")
 async def get_all_active_users():
@@ -317,7 +317,7 @@ async def match(user1_id:int, user2_id:int):
     db_wrapper.create_match(db, schemas.MatchCreate(user1_id=user1_id, user2_id=user2_id))
     return {"message": "Success"}
 
-@app.websocket("/chats_websocket/{session_id}")
+@app.websocket("/chats_websocket")
 async def chats_websocket(websocket: WebSocket, session_id:str):
     print("Accepted connection")
     await manager.accept_connection(websocket, session_id)

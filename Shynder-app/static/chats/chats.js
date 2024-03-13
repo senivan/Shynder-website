@@ -22,7 +22,7 @@ function getCookie(cname) {
 }
 user_session_id = getCookie("session_id");
 
-var websocket = new WebSocket('wss://20.117.195.190/chats_websocket/'+user_session_id);
+var websocket = new WebSocket('wss://shynder.com.ua/chats_websocket/'+user_session_id);
 var receivers = [];
 let chat_opened = false;
 // MessageJson{

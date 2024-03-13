@@ -139,13 +139,13 @@ def get_db():
 @app.get("/", response_class=HTMLResponse)
 async def root():
     html_con = ""
-    with open("./static/login/login_page.html", "r", encoding="utf-8") as file:
+    with open("static/login/login_page.html", "r", encoding="utf-8") as file:
         html_con = '\n'.join(file.readlines())
     return html_con
 
 @app.get("/favicon.ico")
 async def favicon():
-    return FileResponse("./static/small_small.png")
+    return FileResponse("static/small_small.png")
 
 def hash_bcr(password):
     pass_bytes = password.encode('utf-8')
@@ -179,7 +179,7 @@ async def login(login:str, password:str):
 
 @app.get("/home/", response_class=HTMLResponse)
 async def home():
-    with open("./static/home/home.html", "r", encoding="utf-8") as file:
+    with open("static/home/home.html", "r", encoding="utf-8") as file:
         html_con = '\n'.join(file.readlines())
     return html_con
 
@@ -187,12 +187,12 @@ async def home():
 async def logout(session_id:str):
     if session_id in active_users:
         del active_users[session_id]
-    with open("./static/login/login_page.html", "r", encoding="utf-8") as file:
+    with open("static/login/login_page.html", "r", encoding="utf-8") as file:
         html_con = '\n'.join(file.readlines())
     return html_con
 
 def embed_user_into_profile_html(email:str):
-    with open("./static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
+    with open("static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
         html_con = '\n'.join(file.readlines())
     html_con = html_con.replace("<user_email></user_email>", f'<user_email class="user">{email}</user_email>')
     return html_con
@@ -242,7 +242,7 @@ async def verify(token:str):
         db_wrapper.create_user(db, waiting_verification[token])
         del waiting_verification[token]
     html = ""
-    with open("./static/login/login_page.html", "r", encoding="utf-8") as file:
+    with open("static/login/login_page.html", "r", encoding="utf-8") as file:
         html = '\n'.join(file.readlines())
     return HTMLResponse(content=html)
 
@@ -275,7 +275,7 @@ async def update_user(session_id:str, username:str, ddescription:str, course:str
             cs = 7
         db_wrapper.update_user(db, user.id, username=username, ddescription=ddescription, course=cs, email=email, test_results=test_results)
         active_users[session_id.encode('utf-8')] = db_wrapper.get_user_by_email(db, email)
-    with open("./static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
+    with open("static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
         html_con = '\n'.join(file.readlines())
     return html_con
 
@@ -285,7 +285,7 @@ async def delete_user(session_id:str):
         db = get_db().__next__()
         db_wrapper.delete_user(db, active_users[session_id.encode('utf-8')].id)
         del active_users[session_id.encode('utf-8')]
-    with open("./static/login/login_page.html", "r", encoding="utf-8") as file:
+    with open("static/login/login_page.html", "r", encoding="utf-8") as file:
         html_con = '\n'.join(file.readlines())
     return html_con
 
@@ -306,7 +306,7 @@ async def get_user_by_email(email:str):
 
 @app.get("/chats_page/", response_class=HTMLResponse)
 async def chats_page():
-    with open("./static/chats/chats.html", "r", encoding="utf-8") as file:
+    with open("static/chats/chats.html", "r", encoding="utf-8") as file:
         html_con = '\n'.join(file.readlines())
     return html_con
 

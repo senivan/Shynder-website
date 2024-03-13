@@ -317,7 +317,7 @@ async def match(user1_id:int, user2_id:int):
     db_wrapper.create_match(db, schemas.MatchCreate(user1_id=user1_id, user2_id=user2_id))
     return {"message": "Success"}
 
-@app.websocket("/chats_websocket")
+@app.websocket("/chats_websocket/")
 async def chats_websocket(websocket: WebSocket, session_id:str):
     print("Accepted connection")
     await manager.accept_connection(websocket, session_id)

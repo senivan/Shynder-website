@@ -118,7 +118,9 @@ function updateEventListeners() {
   cards.forEach(function (card) {
     card.addEventListener('click', function () {
       var username = card.querySelector('.username').textContent;
+      console.log(username); 
       user_id = matches.find(match => match.username === username).id;
+      console.log(user_id);
       fetch('/get_user_by_id/?user_id='+user_id).then(response => response.json()).then(data => {
         window.location.href = '/profile/?email='+data.email;
     });

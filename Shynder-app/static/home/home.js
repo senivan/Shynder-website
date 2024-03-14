@@ -75,9 +75,9 @@ function generateChats(username, ddesription, matched) {
   name.classList.add("username");
   match.classList.add("matchText");
   description.classList.add("descriptionText");
-  name.textContent = "Name"; // Replace with actual name
-  description.textContent = "Description"; // Replace with actual description
-  match.textContent = "Match"; // Replace with actual match
+  name.textContent = username; // Replace with actual name
+  description.textContent = ddesription; // Replace with actual description
+  match.textContent = matched; // Replace with actual match
   heartButton.textContent = "❤️";
   crossButton.textContent = "❌";
   nameDiv.appendChild(name);

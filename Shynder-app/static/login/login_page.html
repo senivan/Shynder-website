@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login Form</title>
@@ -65,24 +68,27 @@
   button:hover {
     background-color: #45a049;
   }
+  .login{
+
+  }
+
 </style>
 </head>
 <body>
-
-<img src= "/static/login/logo.png" alt="HTML5 Icon">
-
+<img src= "/static/big_logo.png" alt="HTML5 Icon">
 
 
-<p style="color: rgba(31, 30, 30, 0.82); margin-left:37%;  margin-top: 2%;">Ім’я користувача або емейл </p>
-<input type="text" style = "margin-left:37%;" onclick="myFunction()">
+
+<p style="color: rgba(31, 30, 30, 0.82); margin-left:37%;  margin-top: 2%;">E-mail</p>
+<input type="text" style = "margin-left:37%;font-family: rubik;font-size: 18px; font-weight: 500;" onclick="myFunction()">
 
 <p style="color: rgba(31, 30, 30, 0.82);  margin-left:37%; margin-top: -0.8%;">Пароль</p>
-<input type="password"  style = "margin-left:37%;" onclick="myFunction()">
+<input type="password"  style = "margin-left:37%;font-family: rubik;font-size: 18px; font-weight: 500;" onclick="myFunction()">
 
-<button type="button" style = "margin-left:37%;" onclick="myFunction()">Увійти</button>
+<button type="button" style = "margin-left:37%;" onclick="login()" class="login">Увійти</button>
 
 <p style="text-align: +200px; margin-left:30%; color: rgba(31, 30, 30, 0.82);   margin-top: 2%;">Ще не маєте акаунту?</p>
-<button type="button" style = "margin-left:37%; margin-top: 2%;" onclick="redirectToSecondPage()">Зареєструватися</button>
+<button type="button" style = "margin-left:37%; margin-top: 2%;" onclick="redirectToSecondPage()" class="register">Зареєструватися</button>
 
 
 
@@ -91,8 +97,19 @@
   function redirectToSecondPage() {
     window.location.href = "/static/login/registration_page.html"; // Replace "second_page.html" with the URL of your second page
   }
-</script>
 
+  function login(){
+    fetch('/login/?login='+document.querySelector('input[type="text"]').value+'&password='+document.querySelector('input[type="password"]').value).then(response => response.json()).then(data => {
+      if(data['message'] == 'Success'){
+        sessionid = data['session_id'];
+        document.cookie = 'session_id='+sessionid;
+        window.location.href = "/home";
+      }else{
+        alert('Wrong login or password');
+      }
+    });
+  }
+</script>
 
 </body>
 </html>

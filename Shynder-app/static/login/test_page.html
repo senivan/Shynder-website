@@ -25,24 +25,16 @@
     color: #333;
   }
 
-  label {
-    display: block;
-    margin-bottom: 10px;
-  }
+ 
 
-  input[type="radio"],
-  input[type="checkbox"] {
-    display: none;
-  }
-
-select {
-  width: 100%;
-    padding: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
+  select { 
+  width: 100%; 
+  padding: 5px;
+  margin-bottom: 10px; 
+  border: 1px solid #ccc; 
+  border-radius: 5px; 
+  box-sizing: border-box; 
+  } 
 
   input[type="text"],
   input[type="password"] {
@@ -56,8 +48,6 @@ select {
     background: none; 
     outline: none;
   }
-
-
   .gender-label {
     display: inline-block;
     padding: 5px 10px;
@@ -68,6 +58,17 @@ select {
     margin-right: 10px;
   }
 
+
+  
+  /* input[type="radio"], input[type="checkbox"] { */
+    /* margin-right: 10px; */
+  /* } */
+  /* label { */
+    /* display: block; */
+    /* margin-bottom: 10px; */
+  /* } */
+
+
   .textbox-line {
     width: 100%;
     height: 1px;
@@ -75,15 +76,15 @@ select {
     margin-bottom: 10px;
   }
 
-  .number-option {
-    display: inline-block;
-    padding: 5px 10px;
-    background-color: #ededde;
-    border-color:  #ededde;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-right: 10px;
-  }
+  .number-option { 
+    display: inline-block; 
+    padding: 5px 10px; 
+    background-color: #ededde; 
+    border-color:  #ededde; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    margin-right: 10px; 
+   } 
 
   button {
     padding: 10px 20px;
@@ -92,6 +93,17 @@ select {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+  }
+  button:hover {
+    background-color: #db97f0;
+  }
+  .gender-label.clicked {
+    background-color: #db97f0; /* Change to your desired color */
+    color: white; /* Change to your desired text color */
+  }
+  .number-option.clicked {
+    background-color: #db97f0; /* Change to your desired color */
+    color: white; /* Change to your desired text color */
   }
 </style>
 </head>
@@ -102,54 +114,244 @@ select {
   <!-- <div class="textbox-line"></div> -->
   <!-- <textarea name="about_me" rows="4" placeholder="Розкажи трохи про себе..."></textarea> -->
 
-  <h3>Твій вік:</h3>
-  <!-- <div class="textbox-line"></div> -->
-  <input type="text" name="age">
 
   <h3>Стать:</h3>
   <!-- <div class="textbox-line"></div> -->
-  <button for="male" class="gender-label">Хлопець</button>
-  <input type="radio" id="male" name="gender" value="male">
-  <button for="female" class="gender-label">Дівчина</button>
-  <input type="radio" id="female" name="gender" value="female">
+  <button for="male" class="gender-label" onclick="toggleGender(this)">Хлопець</button>
+  <button for="female" class="gender-label" onclick="toggleGender(this)">Дівчина</button>
 
   <h3>На якому курсі навчаєшся?</h3>
   <!-- <div class="textbox-line"></div> -->
-  <button for="course1" class="number-option">1</button>
-  <input type="radio" id="course1" name="course" value="1">
-  <button for="course2" class="number-option">2</button>
-  <input type="radio" id="course2" name="course" value="2">
-  <button for="course3" class="number-option">3</button>
-  <input type="radio" id="course3" name="course" value="3">
-  <button for="course4" class="number-option">4</button>
-  <input type="radio" id="course4" name="course" value="4">
-  <button for="course5" class="number-option">Магістр</button>
-  <input type="radio" id="course5" name="course" value="Магістр">
+  <button for="course1" class="number-option" onclick="toggleCourse(this)">1</button>
+  <!-- <input type="radio" id="course1" name="course" value="1"> -->
+  <button for="course2" class="number-option" onclick="toggleCourse(this)">2</button>
+  <!-- <input type="radio" id="course2" name="course" value="2"> -->
+  <button for="course3" class="number-option" onclick="toggleCourse(this)">3</button>
+  <!-- <input type="radio" id="course3" name="course" value="3"> -->
+  <button for="course4" class="number-option" onclick="toggleCourse(this)">4</button>
+  <!-- <input type="radio" id="course4" name="course" value="4"> -->
+  <button for="course5" class="number-option" onclick="toggleCourse(this)">Магістр</button>
+  <!-- <input type="radio" id="course5" name="course" value="Магістр"> -->
+  <button for="course5" class="number-option" onclick="toggleCourse(this)" >Працівник</button>
+  <button for="course5" class="number-option" onclick="toggleCourse(this)" >Аспірант</button>
+  <!-- <input type="radio" id="course5" name="course" Працівник="Магістр"> -->
+  
+  
 
-  <h3>Факультет:</h3>
+  <h3>Розкажи про себе:</h3>
   <!-- <div class="textbox-line"></div> -->
-  <select name="faculty">
-    <option value="faculty1">Обрати факультет</option>
-    <option value="faculty1">ФПН</option>
-    <option value="faculty2">ФСН</option>
-    <option value="faculty3">ФБФ</option>
-    <option value="faculty4">ФНЗ</option>
-    <option value="faculty5">Гуманітарний факультет</option>
-  </select>
+  <input type="text" name="interests" placeholder="Розкажи про себе">
 
-  <h3>Твої інтереси:</h3>
-  <!-- <div class="textbox-line"></div> -->
-  <input type="text" name="interests" placeholder="Твої інтереси">
 
-  <h3>Додатково:</h3>
+  <h3>Вибери з переліку все чим ти цікавишся</h3>
+  <!-- <label><input type="checkbox" name="q2" value="Музика" onchange="showSubInterest()"> Музика</label> -->
+  <label><input type="checkbox" name="q2" value="Спорт" onchange="showSubInterest()"> Спорт</label>
+  <label><input type="checkbox" name="q2" value="Книги" onchange="showSubInterest()"> Книги</label>
+  <label><input type="checkbox" name="q2" value="Фільми" onchange="showSubInterest()"> Фільми</label>
+  <label><input type="checkbox" name="q2" value="Рукоділля" onchange="showSubInterest()"> Рукоділля</label>
+  <label><input type="checkbox" name="q2" value="Подорожі" onchange="showSubInterest()"> Подорожі</label>
+  <label><input type="checkbox" name="q2" value="Ігри" onchange="showSubInterest()"> Ігри</label>
+  <!-- <label><input type="checkbox" name="q2" value="Настільні ігри" onchange="showSubInterest()"> Настільні ігри</label> -->
+  <label><input type="checkbox" name="q2" value="Кулінарія" onchange="showSubInterest()"> Кулінарія</label>
+  <label><input type="checkbox" name="q2" value="Програмування" onchange="showSubInterest()"> Програмування</label>
+  <label><input type="checkbox" name="q2" value="Мистецтво" onchange="showSubInterest()"> Мистецтво</label>
+  <label><input type="checkbox" name="q2" value="Музика" onchange="showSubInterest()"> Музика</label>
+  
+
+  <!-- Container to hold sub-interest checkboxes -->
+  <div id="subInterestContainer" style="display: none;">
+    <h4>Sub-Interests:</h4>
+   <!-- <div id="МузикаSubOptions" style="display: none;"> -->
+     <!-- <label><input type="checkbox" name="subInterest" value="sub1"> Sub-Interest 1 for Reading</label> -->
+     <!-- <label><input type="checkbox" name="subInterest" value="sub2"> Sub-Interest 2 for Reading</label> -->
+     <!-- <label><input type="checkbox" name="subInterest" value="sub3"> Sub-Interest 3 for Reading</label> -->
+   <!-- </div> -->
+    <div id="СпортSubOptions" style="display: none;">
+      <label><input type="checkbox" name="Волейбол" value="sub1"> Волейбол</label>
+      <label><input type="checkbox" name="Біг" value="sub2"> Біг</label>
+      <label><input type="checkbox" name="Футбол" value="sub3"> Футбол</label>
+      <label><input type="checkbox" name="Баскетбол" value="sub1"> Баскетбол</label>
+      <label><input type="checkbox" name="Легка атлетика" value="sub2"> Легка атлетика</label>
+      <label><input type="checkbox" name="Танці" value="sub2"> Танці</label>
+      <label><input type="checkbox" name="Плавання" value="sub2"> "Плавання</label>
+      <label><input type="checkbox" name="Шахи" value="sub2"> Шахи</label>\
+      <label><input type="checkbox" name="Зал" value="sub2"> Зал</label>
+      <label><input type="checkbox" name="Лижі" value="sub2"> Лижі</label>
+      <label><input type="checkbox" name="Шахи" value="sub2"> Бадмінтон</label>
+      <label><input type="checkbox" name="Велопрогулянки" value="sub2"> Велопрогулянки</label>
+    </div>
+    <div id="КнигиSubOptions" style="display: none;">
+      <label><input type="checkbox" name="subInterest" value="sub1"> Детективи</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Фетнезі</label>
+      <label><input type="checkbox" name="subInterest" value="sub3"> Наукова фантастика</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Поезія</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Трилери</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Романи</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Пригоди</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Біографії</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> non-fiction</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Історичні</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Комікси</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Манги</label>
+    </div>
+    <div id="ФільмиSubOptions" style="display: none;">
+      <label><input type="checkbox" name="subInterest" value="sub1"> Детективи</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Фетнезі</label>
+      <label><input type="checkbox" name="subInterest" value="sub3"> Наукова фантастика</label>
+      <label><input type="checkbox" name="subInterest" value="sub3"> Бойовики</label>
+      <label><input type="checkbox" name="subInterest" value="sub3"> Комедії</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Мелодрами</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Трилери</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Пригоди</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Документальні</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Історичні</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Аніме</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Дорами</label>
+    </div>
+    <div id="РукоділляSubOptions" style="display: none;">
+      <label><input type="checkbox" name="subInterest" value="sub1"> Плетіння з бісеру</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> В'язання</label>
+      <label><input type="checkbox" name="subInterest" value="sub3"> Орігамі</label>
+      <label><input type="checkbox" name="subInterest" value="sub3"> Вишивка</label>
+      <label><input type="checkbox" name="subInterest" value="sub3"> Гончарство</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Мозаїка</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Миловаріння</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Квілінг</label>
+      
+    </div>
+    <!-- <div id="paintingSubOptions" style="display: none;"> -->
+      <!-- <label><input type="checkbox" name="subInterest" value="sub1"> Sub-Interest 1 for Painting</label> -->
+      <!-- <label><input type="checkbox" name="subInterest" value="sub2"> Sub-Interest 2 for Painting</label> -->
+      <!-- <label><input type="checkbox" name="subInterest" value="sub3"> Sub-Interest 3 for Painting</label> -->
+    <!-- </div> -->
+    <div id="ПодорожіSubOptions" style="display: none;">
+      <label><input type="checkbox" name="subInterest" value="sub1"> Кемпінг</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Велоподожі</label>
+      <label><input type="checkbox" name="subInterest" value="sub3"> Hicking</label>
+      <label><input type="checkbox" name="subInterest" value="sub3"> Тур</label>
+      <label><input type="checkbox" name="subInterest" value="sub3"> Пляжний відпочинок</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Трекінг</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Альпінізм</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Каякінг</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Екскурсії</label>
+    </div>
+    <div id="ІгриSubOptions" style="display: none;">
+      <label><input type="checkbox" name="subInterest" value="Комп'ютерні ігри"> Комп'ютерні ігри</label>
+      <label><input type="checkbox" name="subInterest" value="Настільні ігри"> Настільні ігри</label>
+    </div>
+    <div id="КулінаріяSubOptions" style="display: none;">
+      <label><input type="checkbox" name="subInterest" value="Випічка"> Випічка</label>
+      <label><input type="checkbox" name="subInterest" value="Основні страви"> Основні страви</label>
+    </div>
+
+    <div id="ПрограмуванняSubOptions" style="display: none;">
+      <label><input type="checkbox" name="Волейбол" value="sub1"> ШІ</label>
+      <label><input type="checkbox" name="Біг" value="sub2"> Веб-дизайн</label>
+      <label><input type="checkbox" name="Футбол" value="sub3"> Робототехніка</label>
+      <label><input type="checkbox" name="Баскетбол" value="sub1"> Back-end</label>
+      <label><input type="checkbox" name="Баскетбол" value="sub1"> </label>
+    </div>
+
+    <div id="МистецтвоSubOptions" style="display: none;">
+      <label><input type="checkbox" name="subInterest" value="sub1"> Фотографія</label>
+      <label><input type="checkbox" name="subInterest" value="sub3"> Блог</label>
+      <label><input type="checkbox" name="subInterest" value="sub3"> Малювання</label>
+      <label><input type="checkbox" name="subInterest" value="sub3"> Дизайн</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Поезія</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> Мода</label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> </label>
+      <label><input type="checkbox" name="subInterest" value="sub2"> </label>
+    </div>
+  
+    <div id="МузикаSubOptions" style="display: none;">
+    <label><input type="checkbox" name="subInterest" value="sub2"> Спів</label>
+    <label><input type="checkbox" name="subInterest" value="sub2"> Струнні інструменти</label>
+    <label><input type="checkbox" name="subInterest" value="sub2"> Ударні інструменти</label>
+    <label><input type="checkbox" name="subInterest" value="sub2"> Духові інструменти</label>
+    <label><input type="checkbox" name="subInterest" value="sub2"> Язичкові інструменти</label>
+    <label><input type="checkbox" name="subInterest" value="sub2"> Клавішні інструменти</label>
+    </div>
+
+  </div>
+
+  <h3>Які в тебе музичні смаки?</h3>
+  <label><input type="checkbox" value="Рок" onchange="showSubInterest()"> Рок</label>
+  <label><input type="checkbox" value="Реп" onchange="showSubInterest()"> Реп</label>
+  <label><input type="checkbox" value="Класична музика" onchange="showSubInterest()"> Класична музика</label>
+  <label><input type="checkbox" value="Електонна" onchange="showSubInterest()"> Електронна музика</label>
+  <label><input type="checkbox" value="Поп" onchange="showSubInterest()"> Поп</label>
+  <label><input type="checkbox" value="Хіп" onchange="showSubInterest()"> Хіп-хоп</label>
+  <label><input type="checkbox" value="Етнофолк" onchange="showSubInterest()"> Етнофолк</label>
+  <label><input type="checkbox" value="Меломан" onchange="showSubInterest()"> Меломан</label>
+  <label><input type="checkbox" value="Не слухаю" onchange="showSubInterest()"> Не слухаю музику</label>
+
+  
+
+
+
+  
+
+
+  <h3>Опиши з якими людьми хочеш подружитися:</h3>
   <!-- <div class="textbox-line"></div> -->
-  <input type="text" name="additional" placeholder="Додаткова інформація">
+  <input type="text" name="additional" placeholder="Опиши з якими людьми хочеш подружитися:">
 
   <br><br>
   <!-- <button style = "color:rgb(142, 28, 28)" >Створити профіль</button> -->
   <button type="button"  onclick="myFunction()">Створити Профіль</button>
 </div>
 
+
+
+
+<script>
+  function showSubInterest() {
+    var mainInterests = document.querySelectorAll('input[name="q2"]:checked');
+    // Hide all sub-interests first
+    var subInterestContainers = document.querySelectorAll('#subInterestContainer > div');
+    subInterestContainers.forEach(function(container) {
+      container.style.display = 'none';
+    });
+  
+    // Show sub-interests for each checked main interest
+    mainInterests.forEach(function(mainInterest) {
+      var subOptionsId = mainInterest.value + 'SubOptions';
+      var subOptionsContainer = document.getElementById(subOptionsId);
+      if (subOptionsContainer) {
+        subOptionsContainer.style.display = 'block';
+      }
+    });
+  
+    // Show sub-interest container if any main interest checkbox is checked
+    var subInterestContainer = document.getElementById('subInterestContainer');
+    subInterestContainer.style.display = mainInterests.length > 0 ? 'block' : 'none';
+  }
+
+
+  function toggleGender(button) {
+  // Remove 'clicked' class from all gender labels
+  var genderButtons = document.querySelectorAll('.gender-label');
+  genderButtons.forEach(function(btn) {
+    btn.classList.remove('clicked');
+  });
+
+  // Add 'clicked' class to the clicked button
+  button.classList.add('clicked');
+}
+
+
+function toggleCourse(button) {
+  // Remove 'clicked' class from all course buttons
+  var courseButtons = document.querySelectorAll('.number-option');
+  courseButtons.forEach(function(btn) {
+    btn.classList.remove('clicked');
+  });
+
+  // Add 'clicked' class to the clicked button
+  button.classList.add('clicked');
+}
+  </script>
+  
 
 
   

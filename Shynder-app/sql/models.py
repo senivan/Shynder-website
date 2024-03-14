@@ -12,10 +12,14 @@ class User(Base):
     email = Column(String, nullable=False)
     ppassword = Column(String)
     username = Column(String, nullable=False)
-    age = Column(Integer, nullable=False)
+    full_name = Column(String, nullable=False)
+    course = Column(Integer, nullable=False)
     ddescription = Column(String, nullable=False)
     test_results = Column(String, nullable=False)
     matches = relationship("Match", back_populates="user1", foreign_keys='Match.user1_id')
+
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 class Match(Base):
     """
@@ -25,6 +29,8 @@ class Match(Base):
     id = Column(Integer, primary_key=True)
     user1_id = Column(Integer, ForeignKey("Users.id"), nullable=False)
     user2_id = Column(Integer, ForeignKey("Users.id"), nullable=True)
-    chat_log_file = Column(String, nullable=True)
     user1 = relationship("User", back_populates="matches", foreign_keys=[user1_id])
     user2 = relationship("User", back_populates="matches", foreign_keys=[user2_id])
+
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}

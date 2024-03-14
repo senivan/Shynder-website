@@ -44,7 +44,8 @@ function get_matches(){
   fetch('/gen_matches/?session_id=' + user_cook).then(response => response.json()).then(data => {
     matches.push(data);
     data.forEach(function (match) {
-      generateChats(match.username, match.description, match.matched);
+      console,log(match);
+      generateChats(match.username, match.description, match.matched_interests);
       match_counter ++;
     });
   });

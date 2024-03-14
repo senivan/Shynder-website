@@ -362,8 +362,9 @@ def gen_matches(user_id:int):
 
         result = {
             "id": current_user.id,
-            "fullname": current_user.full_name,
+            "username": current_user.username,
             "matched_interests": matched_interests,
+            "description": current_user.ddescription,
             "match_coef": coef
         }
 

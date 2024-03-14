@@ -29,3 +29,16 @@ class User(UserBase):
     matches : list[Match] = []
     class Config:
         orm_mode = True
+
+
+class LikeBase(BaseModel):
+    id : int
+    user1_id : int
+    user2_id : int
+
+class LikeCreate(LikeBase):
+    pass
+
+class Like(LikeBase):
+    class Config:
+        orm_mode = True

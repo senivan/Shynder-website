@@ -9,6 +9,12 @@ def get_user(db: Session, user_id: int):
 def get_user_matches(db: Session, user_id: int):
     return db.query(models.User).where(models.User.id == user_id).first().matches
 
+def get_all_users(db:Session):
+    return db.query(models.User).all()
+
+def get_likes(db: Session, like_id: int):
+    return db.query(models.Likes).where(models.Likes.id == like_id).first()
+
 def get_user_by_email(db: Session, email: str):
     return db.query(models.User).where(models.User.email == email).first()
 
@@ -35,6 +41,13 @@ def create_match(db: Session, match: schemas.MatchCreate):
     db.refresh(db_match)
     return db_match
 
+def create_like(db: Session, like: schemas.LikeCreate):
+    db_like = models.Likes(**like.dict())
+    db.add(db_like)
+    db.commit()
+    db.refresh(db_like)
+    return db_like
+
 def delete_match(db: Session, match_id: int):
     db.query(models.Match).where(models.Match.id == match_id).delete()
     db.commit()
@@ -45,6 +58,11 @@ def delete_user(db: Session, user_id: int):
     db.commit()
     return {"message": "User deleted"}
 
+def delete_like(db: Session, like_id: int):
+    db.query(models.Likes).where(models.Likes.id == like_id).delete()
+    db.commit()
+    return {"message": "Like deleted"}
+
 def update_user(db: Session, user_id: int, **kwargs):
     db.query(models.User).where(models.User.id == user_id).update(kwargs)
     db.commit()
@@ -54,6 +72,11 @@ def update_match(db: Session, match_id: int, **kwargs):
     db.query(models.Match).where(models.Match.id == match_id).update(kwargs)
     db.commit()
     return {"message": "Match updated"}
+
+def update_like(db: Session, like_id: int, **kwargs):
+    db.query(models.Likes).where(models.Likes.id == like_id).update(kwargs)
+    db.commit()
+    return {"message": "Like updated"}
 
 def get_match_id(db: Session, user1_id: int, user2_id: int):
     try:

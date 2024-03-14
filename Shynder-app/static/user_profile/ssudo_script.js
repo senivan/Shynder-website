@@ -209,7 +209,7 @@ if (user_cook != "" && user_email == ""){
             // var email = document.querySelector('input[name="email"]');
             var desc = document.querySelector('.desc');
             
-            name.value = data["full_name"];
+            name.value = data["full_name"].length * '*';
             username.value = data["username"];
             desc.value = data["ddescription"];
 

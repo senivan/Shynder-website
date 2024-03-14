@@ -282,7 +282,7 @@ if (user_cook != "" && user_email == ""){
             // var email = document.querySelector('input[name="email"]');
             var desc = document.querySelector('.desc');
             
-            name.value = '*' * data["full_name"].length;
+            name.value = '*'.repeat(data["full_name"].length);
             name.disabled = true;
             username.value = data["username"];
             username.disabled = true;

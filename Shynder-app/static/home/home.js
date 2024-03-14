@@ -104,7 +104,7 @@ function generateChats(username, ddesription, matched, id) {
 function updateEventListeners() {
   heartButton = document.querySelectorAll(".buttonHeart");
   crossButton = document.querySelectorAll(".buttonCross");
-  var cards  = document.querySelectorAll('.card');
+  var cards  = document.querySelectorAll('.usernameDiv') + document.querySelectorAll('.descriptionDiv') + document.querySelectorAll('.matchDiv');
   cards.forEach(function (card) {
     card.addEventListener('click', function () {
       var username = card.querySelector('.username').textContent;

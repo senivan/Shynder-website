@@ -43,9 +43,10 @@ function toggleMenu() {
 
 function get_matches(){
   fetch('/gen_matches/?session_id=' + user_cook).then(response => response.json()).then(data => {
-    matches.push(data);
+    // matches.push(data);
     data.forEach(function (match) {
       console.log(match);
+      matches.push(match);
       generateChats(match.username, match.description, match.matched_interests, match.id);
       match_counter ++;
     });
@@ -82,7 +83,7 @@ function generateChats(username, ddesription, matched, id) {
   match.textContent = matched; // Replace with actual match
   heartButton.textContent = "❤️";
   crossButton.textContent = "❌";
-  rectangle.attributes["data-id"] = id;
+  // rectangle.attributes["data-id"] = id;
   nameDiv.appendChild(name);
   descriptionDiv.appendChild(description);
   matchDiv.appendChild(match);
@@ -115,9 +116,10 @@ function updateEventListeners() {
   });
   var cards  = document.querySelectorAll('.card');
   cards.forEach(function (card) {
-    card.addEventListener('click', function (event) {
-      console.log(card.attributes["data-id"].value);
-      fetch('/get_user_by_id/?session_id='+card.attributes["data-id"].value).then(response => response.json()).then(data => {
+    card.addEventListener('click', function () {
+      var username = card.querySelector('.username').textContent;
+      user_id = matches.find(match => match.username === username).id;
+      fetch('/get_user_by_id/?user_id='+user_id).then(response => response.json()).then(data => {
         window.location.href = '/profile/?email='+data.email;
     });
   });

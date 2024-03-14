@@ -104,7 +104,7 @@ function generateChats(username, ddesription, matched, id) {
 function updateEventListeners() {
   heartButton = document.querySelectorAll(".buttonHeart");
   crossButton = document.querySelectorAll(".buttonCross");
-  var cards  = document.querySelectorAll('.usernameDiv') + document.querySelectorAll('.descriptionDiv') + document.querySelectorAll('.matchDiv');
+  var cards  = document.querySelectorAll('.usernameDiv');
   cards.forEach(function (card) {
     card.addEventListener('click', function () {
       var username = card.querySelector('.username').textContent;
@@ -116,6 +116,29 @@ function updateEventListeners() {
     });
   });
 });
+  var cards = document.querySelectorAll('.descriptionDiv');
+  cards.forEach(function (card) {
+    card.addEventListener('click', function () {
+      var username = card.querySelector('.username').textContent;
+      console.log(username); 
+      user_id = matches.find(match => match.username === username).id;
+      console.log(user_id);
+      fetch('/get_user_by_id/?user_id='+user_id).then(response => response.json()).then(data => {
+        window.location.href = '/profile/?email='+data.email;
+    });
+  });
+  var cards = document.querySelectorAll('.matchDiv');
+  cards.forEach(function (card) {
+    card.addEventListener('click', function () {
+      var username = card.querySelector('.username').textContent;
+      console.log(username); 
+      user_id = matches.find(match => match.username === username).id;
+      console.log(user_id);
+      fetch('/get_user_by_id/?user_id='+user_id).then(response => response.json()).then(data => {
+        window.location.href = '/profile/?email='+data.email;
+    });
+  });
+  });
 heartButton.forEach(function (button) {
   button.addEventListener("click", function (event) {
     handleSwipe("left", event.target.closest(".card"));
@@ -125,6 +148,7 @@ crossButton.forEach(function (button) {
   button.addEventListener("click", function (event) {
     handleSwipe("right", event.target.closest(".card"));
   });
+});
 });
 }
 

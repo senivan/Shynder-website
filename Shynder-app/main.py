@@ -305,8 +305,9 @@ def gen_matches(user_id:int):
     matches = {} # list of matches that function will return
     interests = test_results.answers['interests'] # list of currect user interests
     music_taste = test_results.answers['music_taste'] # list of currect user music taste
-
+    print(match_with, interests, music_taste, user.test_results)
     for current_user in db_wrapper.get_all_users(db):
+        print(current_user.email)
         #if user not in match_with then we dont try to match with him 
         if user.course not in match_with:
             continue
@@ -315,11 +316,12 @@ def gen_matches(user_id:int):
         current_user_interests = current_user_test_results.answers['interests']
         current_user_music_taste = current_user_test_results.answers['music_taste']
         current_user_match_with = current_user_test_results.answers['match_with']
+        print(current_user.course)
         if current_user.id == user.id:
             continue
 
         #if user1 not in match_with then we dont try to match with him
-        if current_user.course not in current_user_match_with:
+        if current_user.course not in match_with:
             continue
 
         # match general interests
@@ -339,27 +341,38 @@ def gen_matches(user_id:int):
                     coef += 1
         
         #check if current likes us
-        if db_wrapper.get_like(db, user.id, current_user.id) is not None:
-            coef *= 1.3
-        
-        #check if we like current
-        if db_wrapper.get_like(db, current_user.id, user.id) is not None:
-            coef *= 0.0
-
+        try:
+            if user.id in [like.user1_id for like in db_wrapper.get_likes(db, current_user.id)]:
+                coef *= 1.3
+            
+            #check if we like current
+            if current_user.id in [like.user1_id for like in db_wrapper.get_likes(db, user.id)]:
+                coef *= 0.0
+        except TypeError:
+            pass
         #check if we have match
         if db_wrapper.get_match_id(db, user.id, current_user.id) is not None:
             coef *= 0.0
-        
+        print(coef)
         matches[current_user] = coef
     
     return matches
 
+def dict_serialize(dictionary):
+    result = {}
+    for key in dictionary:
+        enc_key = json.dumps(key.as_dict())
+        result[enc_key] = dictionary[key]
+    return result
 
-@app.get("/gen_ matches/")
-async def gen_matches(session_id:str ):
+@app.get("/gen_matches/")
+async def generate_matches(session_id:str):
     if session_id.encode('utf-8') in active_users:
         user = active_users[session_id.encode('utf-8')]
-        return gen_matches(user.id)
+        print(user)
+        temp = gen_matches(user.id)
+        print(temp)
+        return dict_serialize(temp)
     return {"message": "User not found"}
 
 @app.get("/match/")

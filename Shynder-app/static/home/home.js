@@ -82,7 +82,7 @@ function generateChats(username, ddesription, matched, id) {
   match.textContent = matched; // Replace with actual match
   heartButton.textContent = "❤️";
   crossButton.textContent = "❌";
-  rectangle['user_id'] = id
+  rectangle.attributes["data-id"] = id;
   nameDiv.appendChild(name);
   descriptionDiv.appendChild(description);
   matchDiv.appendChild(match);
@@ -113,6 +113,14 @@ function updateEventListeners() {
       handleSwipe("right", event.target.closest(".card"));
     });
   });
+  var cards  = document.querySelectorAll('.card');
+  cards.forEach(function (card) {
+    card.addEventListener('click', function (event) {
+      fetch('/get_user_by_id/?session_id='+card.attributes["data-id"].value).then(response => response.json()).then(data => {
+        window.location.href = '/profile/?email='+data.email;
+    });
+  });
+});
 }
 
 function handleSwipe(direction, element) {
@@ -143,9 +151,4 @@ menuItems.forEach(function (menuItem) {
 hamburger.addEventListener("click", toggleMenu);
 get_matches();
 
-var cards  = document.querySelectorAll('.card');
-cards.forEach(function (card) {
-  card.addEventListener('click', function (event) {
-    
-  });
-});
+

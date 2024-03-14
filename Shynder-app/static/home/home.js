@@ -6,6 +6,8 @@ const menuIcon = document.querySelector(".menuIcon");
 const chat = document.querySelector(".home");
 let heartButton, crossButton, rectangle;
 
+let match_counter = 0;
+
 function toggleMenu() {
   if (menu.classList.contains("showMenu")) {
     menu.classList.remove("showMenu");
@@ -20,7 +22,7 @@ function toggleMenu() {
 
 const page = document.querySelector(".homepage");
 
-function generateChats() {
+function generateChats(username, ddesription, matched) {
   const nameDiv = document.createElement("div");
   const descriptionDiv = document.createElement("div");
   const matchDiv = document.createElement("div");

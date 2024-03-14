@@ -116,6 +116,7 @@ function updateEventListeners() {
   var cards  = document.querySelectorAll('.card');
   cards.forEach(function (card) {
     card.addEventListener('click', function (event) {
+      console.log(card.attributes["data-id"].value);
       fetch('/get_user_by_id/?session_id='+card.attributes["data-id"].value).then(response => response.json()).then(data => {
         window.location.href = '/profile/?email='+data.email;
     });

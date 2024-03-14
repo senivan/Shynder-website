@@ -371,12 +371,12 @@ def gen_matches(user_id:int):
         matches.append(result)
     return matches
 
-def dict_serialize(dictionary):
-    result = {}
-    for key in dictionary:
-        enc_key = json.dumps(key.as_dict())
-        result[enc_key] = dictionary[key]
-    return result
+# def dict_serialize(dictionary):
+#     result = {}
+#     for key in dictionary:
+#         enc_key = json.dumps(key.as_dict())
+#         result[enc_key] = dictionary[key]
+#     return result
 
 @app.get("/gen_matches/")
 async def generate_matches(session_id:str):
@@ -385,7 +385,7 @@ async def generate_matches(session_id:str):
         print(user)
         temp = gen_matches(user.id)
         print(temp)
-        return dict_serialize(temp)
+        return sorted(temp, key=lambda x: x['match_coef'], reverse=True)
     return {"message": "User not found"}
 
 @app.get("/match/")

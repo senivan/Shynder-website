@@ -5,8 +5,28 @@ const closeIcon = document.querySelector(".closeIcon");
 const menuIcon = document.querySelector(".menuIcon");
 const chat = document.querySelector(".home");
 let heartButton, crossButton, rectangle;
-
+const UPDATE_AT = 5;
 let match_counter = 0;
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+let user_cook = getCookie("session_id");
+
+let matches = []
 
 function toggleMenu() {
   if (menu.classList.contains("showMenu")) {
@@ -18,6 +38,16 @@ function toggleMenu() {
     closeIcon.style.display = "block";
     menuIcon.style.display = "none";
   }
+}
+
+function get_matches(){
+  fetch('/gen_matches/?session_id=' + user_cook).then(response => response.json()).then(data => {
+    matches.push(data);
+    data.forEach(function (match) {
+      generateChats(match.username, match.description, match.matched);
+      match_counter ++;
+    });
+  });
 }
 
 const page = document.querySelector(".homepage");
@@ -93,6 +123,11 @@ function handleSwipe(direction, element) {
     element.classList.add("fall-right-animation");
   }
 
+  match_counter --;
+    if (match_counter <= UPDATE_AT){
+      get_matches();
+  }
+
   setTimeout(function () {
     element.remove();
   }, 1000);
@@ -103,4 +138,4 @@ menuItems.forEach(function (menuItem) {
 });
 
 hamburger.addEventListener("click", toggleMenu);
-
+get_matches();

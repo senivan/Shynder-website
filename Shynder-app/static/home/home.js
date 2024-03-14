@@ -28,6 +28,7 @@ let user_cook = getCookie("session_id");
 
 let matches = []
 
+
 function toggleMenu() {
   if (menu.classList.contains("showMenu")) {
     menu.classList.remove("showMenu");
@@ -45,7 +46,7 @@ function get_matches(){
     matches.push(data);
     data.forEach(function (match) {
       console,log(match);
-      generateChats(match.username, match.description, match.matched_interests);
+      generateChats(match.username, match.description, match.matched_interests, match.id);
       match_counter ++;
     });
   });
@@ -53,7 +54,7 @@ function get_matches(){
 
 const page = document.querySelector(".homepage");
 
-function generateChats(username, ddesription, matched) {
+function generateChats(username, ddesription, matched, id) {
   const nameDiv = document.createElement("div");
   const descriptionDiv = document.createElement("div");
   const matchDiv = document.createElement("div");
@@ -81,6 +82,7 @@ function generateChats(username, ddesription, matched) {
   match.textContent = matched; // Replace with actual match
   heartButton.textContent = "❤️";
   crossButton.textContent = "❌";
+  rectangle['user_id'] = id
   nameDiv.appendChild(name);
   descriptionDiv.appendChild(description);
   matchDiv.appendChild(match);
@@ -97,8 +99,6 @@ function generateChats(username, ddesription, matched) {
   updateEventListeners();
 }
 
-generateChats();
-generateChats();
 
 function updateEventListeners() {
   heartButton = document.querySelectorAll(".buttonHeart");
@@ -138,5 +138,14 @@ menuItems.forEach(function (menuItem) {
   menuItem.addEventListener("click", toggleMenu);
 });
 
+
+
 hamburger.addEventListener("click", toggleMenu);
 get_matches();
+
+var cards  = document.querySelectorAll('.card');
+cards.forEach(function (card) {
+  card.addEventListener('click', function (event) {
+    
+  });
+});

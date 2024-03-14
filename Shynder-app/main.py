@@ -29,7 +29,21 @@ class TestAnswers:
     def from_json(json_str:str):
         return json.loads(json_str)
     
-
+def str_to_course_number(course:str):
+    if course == "1 курс":
+        return 1
+    elif course == "2 курс":
+        return 2
+    elif course == "3 курс":
+        return 3
+    elif course == "4 курс":
+        return 4
+    elif course == "Магістр":
+        return 5
+    elif course == "Аспірант":
+        return 6
+    elif course == "Працівник":
+        return 7
 waiting_verification = {}
 class ConnectionManager:
     def __init__(self):
@@ -209,21 +223,7 @@ async def profile(email:str=""):
 async def register(username:str, ddescription:str, course:str, full_name:str, email:str, ppassword:str, test_results:str = ""):
     print(username, ddescription, course, full_name, email, ppassword, test_results)
     db = get_db().__next__()
-    cs = 0
-    if course == "1 курс":
-        cs = 1
-    elif course == "2 курс":
-        cs = 2
-    elif course == "3 курс":
-        cs = 3
-    elif course == "4 курс":
-        cs = 4
-    elif course == "Магістр":
-        cs = 5
-    elif course == "Аспірант":
-        cs = 6
-    elif course == "Працівник":
-        cs = 7
+    cs = str_to_course_number(course)
     if not ("ucu.edu.ua" in email):
         return {"message":"Not UCU mail"}
     if db_wrapper.get_user_by_email(db, email) is not None:
@@ -258,21 +258,7 @@ async def update_user(session_id:str, username:str, ddescription:str, course:str
     if session_id.encode('utf-8') in active_users:
         db = get_db().__next__()
         user = active_users[session_id.encode('utf-8')]
-        cs = 0
-        if course == "1 курс":
-            cs = 1
-        elif course == "2 курс":
-            cs = 2
-        elif course == "3 курс":
-            cs = 3
-        elif course == "4 курс":
-            cs = 4
-        elif course == "Магістр":
-            cs = 5
-        elif course == "Аспірант":
-            cs = 6
-        elif course == "Працівник":
-            cs = 7
+        cs = str_to_course_number(course)
         db_wrapper.update_user(db, user.id, username=username, ddescription=ddescription, course=cs, email=email, test_results=test_results)
         active_users[session_id.encode('utf-8')] = db_wrapper.get_user_by_email(db, email)
     with open("static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
@@ -310,6 +296,71 @@ async def chats_page():
         html_con = '\n'.join(file.readlines())
     return html_con
 
+
+def gen_matches(user_id:int):
+    db = get_db().__next__()
+    user = db_wrapper.get_user(db, user_id)
+    test_results = TestAnswers(user.test_results)
+    match_with = [str_to_course_number(cs) for cs in test_results.answers['match_with']]
+    matches = {} # list of matches that function will return
+    interests = test_results.answers['interests'] # list of currect user interests
+    music_taste = test_results.answers['music_taste'] # list of currect user music taste
+
+    for current_user in db_wrapper.get_all_users(db):
+        #if user not in match_with then we dont try to match with him 
+        if user.course not in match_with:
+            continue
+        coef = 0
+        current_user_test_results = TestAnswers(user.test_results)
+        current_user_interests = current_user_test_results.answers['interests']
+        current_user_music_taste = current_user_test_results.answers['music_taste']
+        current_user_match_with = current_user_test_results.answers['match_with']
+        if current_user.id == user.id:
+            continue
+
+        #if user1 not in match_with then we dont try to match with him
+        if current_user.course not in current_user_match_with:
+            continue
+
+        # match general interests
+        for interest in interests:
+            if len(current_user_interests[interest]) != 0:
+                coef += 0.5
+        
+        # match music taste
+        for music in music_taste:
+            if music in current_user_music_taste:
+                coef += 1
+        
+        # match subinterests
+        for interest in interests:
+            for subinterest in interests[interest]:
+                if subinterest in current_user_interests[interest]:
+                    coef += 1
+        
+        #check if current likes us
+        if db_wrapper.get_like(db, user.id, current_user.id) is not None:
+            coef *= 1.3
+        
+        #check if we like current
+        if db_wrapper.get_like(db, current_user.id, user.id) is not None:
+            coef *= 0.0
+
+        #check if we have match
+        if db_wrapper.get_match_id(db, user.id, current_user.id) is not None:
+            coef *= 0.0
+        
+        matches[current_user] = coef
+    
+    return matches
+
+
+@app.get("/gen_ matches/")
+async def gen_matches(session_id:str ):
+    if session_id.encode('utf-8') in active_users:
+        user = active_users[session_id.encode('utf-8')]
+        return gen_matches(user.id)
+    return {"message": "User not found"}
 
 @app.get("/match/")
 async def match(user1_id:int, user2_id:int):

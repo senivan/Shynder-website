@@ -104,16 +104,6 @@ function generateChats(username, ddesription, matched, id) {
 function updateEventListeners() {
   heartButton = document.querySelectorAll(".buttonHeart");
   crossButton = document.querySelectorAll(".buttonCross");
-  heartButton.forEach(function (button) {
-    button.addEventListener("click", function (event) {
-      handleSwipe("left", event.target.closest(".card"));
-    });
-  });
-  crossButton.forEach(function (button) {
-    button.addEventListener("click", function (event) {
-      handleSwipe("right", event.target.closest(".card"));
-    });
-  });
   var cards  = document.querySelectorAll('.card');
   cards.forEach(function (card) {
     card.addEventListener('click', function () {
@@ -124,6 +114,16 @@ function updateEventListeners() {
       fetch('/get_user_by_id/?user_id='+user_id).then(response => response.json()).then(data => {
         window.location.href = '/profile/?email='+data.email;
     });
+  });
+});
+heartButton.forEach(function (button) {
+  button.addEventListener("click", function (event) {
+    handleSwipe("left", event.target.closest(".card"));
+  });
+});
+crossButton.forEach(function (button) {
+  button.addEventListener("click", function (event) {
+    handleSwipe("right", event.target.closest(".card"));
   });
 });
 }

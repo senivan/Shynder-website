@@ -50,7 +50,7 @@ function go_profile(){
 }
 
 function go_messages(){
-  window.location = "/chat";
+  window.location = "/chats_page";
 }
 
 function go_logout(){

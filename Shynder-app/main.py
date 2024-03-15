@@ -83,9 +83,10 @@ class ConnectionManager:
             print(f"Receivers: {[self.active_sockets[socket][0].email for socket in self.active_sockets]}")
             if receiver.email in [self.active_sockets[socket][0].email for socket in self.active_sockets]:
                 for socket in self.active_sockets:
-                    print(self.active_sockets[socket][0].email, receiver.email)
                     if self.active_sockets[socket][0].email == receiver.email:
+                        # print(self.active_sockets[socket][0].email, receiver.email)
                         await self.send_personal_message(message.to_json(), socket)
+                        break
             try:
                 with open("chat_logs/" + str(match_id) + ".txt", "a") as file:
                     file.write(message.to_json() + "\n")
@@ -109,7 +110,8 @@ class ConnectionManager:
                     message = Message.from_json(line)
                     date = datetime.date(int(message.time.split(" ")[0].split(":")[0]), int(message.time.split(" ")[0].split(":")[1]), int(message.time.split(" ")[0].split(":")[2]))
                     current_date = datetime.date.today()
-                    if not(current_date - date > datetime.timedelta(days=28)):
+                    if not(current_date - date < datetime.timedelta(days=28)):
+                        print("line not deleted")
                         lines.append(line)
             with open("chat_logs/" + str(match_id) + ".txt", "w") as file:
                 for line in lines:

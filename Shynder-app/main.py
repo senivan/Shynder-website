@@ -356,12 +356,12 @@ def gen_matches(user_id:int):
             
             #check if we like current
             if current_user.id in [like.user1_id for like in db_wrapper.get_likes(db, user.id)]:
-                coef *= 0.0
+                continue
         except TypeError:
             pass
         #check if we have match
         if db_wrapper.get_match_id(db, user.id, current_user.id) is not None:
-            coef *= 0.0
+            continue
 
         result = {
             "id": current_user.id,
@@ -418,6 +418,8 @@ async def swipe_left(session_id:str, user_id:int):
     db = get_db().__next__()
     user2_id = user_id
     user1_id = active_users[session_id.encode('utf-8')].id
+    if db_wrapper.get_match_id(db, user1_id, user2_id) is not None:
+        return {"message": "match already exists"}
     if db_wrapper.get_like_id(db, user2_id, user1_id) is not None:
         db_wrapper.delete_like(db, db_wrapper.get_like_id(db, user2_id, user1_id))
         db_wrapper.create_match(db, schemas.MatchCreate(user1_id=user1_id, user2_id=user2_id))

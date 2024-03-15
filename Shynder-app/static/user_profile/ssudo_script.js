@@ -39,6 +39,8 @@ function delete_event(){
     window.location = "/delete_user/?session_id="+session_id;
 }
 
+
+
 function submit_event(){
     const new_username = document.querySelector(".username_input").value;
     const new_email = document.querySelector(".email_input").value;

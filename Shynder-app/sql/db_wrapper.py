@@ -87,3 +87,9 @@ def get_match_id(db: Session, user1_id: int, user2_id: int):
             return db.query(models.Match).filter(models.Match.user1_id == user2_id, models.Match.user2_id == user1_id).first().id
         except AttributeError:
             return None
+
+def get_like_id(db: Session, user1_id: int, user2_id: int):
+    try:
+        return db.query(models.Likes).filter(models.Likes.user1_id == user1_id, models.Likes.user2_id == user2_id).first().id
+    except AttributeError:
+        return None

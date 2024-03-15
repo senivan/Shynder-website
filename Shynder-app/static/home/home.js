@@ -156,9 +156,11 @@ function handleSwipe(direction, element) {
   if (direction === "left") {
     element.style.transform = "translateX(-100px)";
     element.classList.add("fall-left-animation");
+    fetch('/swipe_left/?session_id=' + user_cook + '&user_id=' + matches.find(match => match.username === element.querySelector('.username').textContent).id);
   } else if (direction === "right") {
     element.style.transform = "translateX(100px)";
     element.classList.add("fall-right-animation");
+    fetch('/swipe_right/?session_id=' + user_cook + '&user_id=' + matches.find(match => match.username === element.querySelector('.username').textContent).id);
   }
 
   match_counter --;

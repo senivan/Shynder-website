@@ -410,6 +410,28 @@ async def get_user_by_id(user_id:int):
     db = get_db().__next__()
     return db_wrapper.get_user(db, user_id)
 
+@app.get("/swipe_left/")
+async def swipe_left(session_id:str, user_id:int):
+    db = get_db().__next__()
+    user2_id = user_id
+    user1_id = active_users[session_id.encode('utf-8')].id
+    if db_wrapper.get_like_id(db, user2_id, user1_id) is not None:
+        db_wrapper.delete_like(db, db_wrapper.get_like_id(db, user2_id, user1_id))
+        db_wrapper.create_match(db, schemas.MatchCreate(user1_id=user1_id, user2_id=user2_id))
+        return {"message": "Matched"}
+    db_wrapper.create_like(db, schemas.LikeCreate(user1_id=user1_id, user2_id=user2_id))
+    return {"message": "Liked"}
+
+@app.get("/swipe_right/")
+async def swipe_right(session_id:str, user_id:int):
+    db = get_db().__next__()
+    user2_id = user_id
+    user1_id = active_users[session_id.encode('utf-8')].id
+    if db_wrapper.get_like_id(db, user2_id, user1_id) is not None:
+        db_wrapper.delete_like(db, db_wrapper.get_like_id(db, user2_id, user1_id))
+    return {"message": "Disliked"}
+
+
 
 if __name__ == "__main__":
     import uvicorn

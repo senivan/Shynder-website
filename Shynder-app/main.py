@@ -110,7 +110,7 @@ class ConnectionManager:
                     message = Message.from_json(line)
                     date = datetime.date(int(message.time.split(" ")[0].split(":")[0]), int(message.time.split(" ")[0].split(":")[1]), int(message.time.split(" ")[0].split(":")[2]))
                     current_date = datetime.date.today()
-                    if not(current_date - date > datetime.timedelta(days=28)):
+                    if not(current_date - date < datetime.timedelta(days=28)):
                         print("line not deleted")
                         lines.append(line)
             with open("chat_logs/" + str(match_id) + ".txt", "w") as file:

@@ -1,3 +1,29 @@
+"""
+                 _.._                   
+              .-'    `-.                
+             :          ;               
+             ; ,_    _, ;               
+             : \{"  "}/ :               
+            ,'.'"=..=''.'.              
+           ; / \      / \ ;             
+         .' ;   '.__.'   ; '.           
+      .-' .'              '. '-.        
+    .'   ;                  ;   '.      
+   /    /                    \    \     
+  ;    ;                      ;    ;    
+  ;   `-._                  _.-'   ;    
+   ;      ""--.        .--""      ;     
+    '.    _    ;      ;    _    .'      
+    {""..' '._.-.    .-._.' '..""}      
+     \           ;  ;           /       
+      :         :    :         :        
+      :         :.__.:         :        
+       \       /"-..-"\       /      
+        '-.__.'        '.__.-'          
+
+
+"""
+
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, FileResponse
 from sql import models, schemas, db_wrapper

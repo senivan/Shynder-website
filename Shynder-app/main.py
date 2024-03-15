@@ -83,8 +83,8 @@ class ConnectionManager:
             print(f"Receivers: {[self.active_sockets[socket][0].email for socket in self.active_sockets]}")
             if receiver.email in [self.active_sockets[socket][0].email for socket in self.active_sockets]:
                 for socket in self.active_sockets:
-                    print(self.active_sockets[socket][0].email, receiver.email)
                     if self.active_sockets[socket][0].email == receiver.email:
+                        print(self.active_sockets[socket][0].email, receiver.email)
                         await self.send_personal_message(message.to_json(), socket)
                         break
             try:

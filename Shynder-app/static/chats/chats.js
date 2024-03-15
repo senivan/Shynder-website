@@ -41,18 +41,18 @@ function home_click() {
   window.location.href = "/home";
 }
 // Waiting for cookie
-// function profile_click() {
-//   window.location.href = "/profile/1";
-// }
+function profile_click() {
+  window.location.href = "/profile";
+}
 
 function chats_click() {
   window.location.href = "/chats_page";
 }
 
-// Waiting for cookie
-// function logout_click() {
-//   window.location.href = "/logout";
-// }
+
+function logout_click() {
+  window.location.href = "/logout/?session_id="+user_session_id;
+}
 
 function getTime() {
   const now = new Date();

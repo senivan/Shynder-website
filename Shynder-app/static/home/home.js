@@ -53,6 +53,23 @@ function get_matches(){
   });
 }
 
+function go_home(){
+  window.location = "/home";
+}
+
+function go_profile(){
+  window.location = "/profile";
+}
+
+function go_messages(){
+  window.location = "/chats_page";
+}
+
+function go_logout(){
+  window.location = "/logout/?session_id="+user_cook;
+
+}
+
 const page = document.querySelector(".homepage");
 
 function generateChats(username, ddesription, matched, id) {

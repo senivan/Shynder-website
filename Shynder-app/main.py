@@ -302,7 +302,7 @@ def gen_matches(user_id:int):
     user = db_wrapper.get_user(db, user_id)
     test_results = TestAnswers(user.test_results)
     match_with = [str_to_course_number(cs) for cs in test_results.answers['match_with']]
-    matches = {} # list of matches that function will return
+    matches = [] # list of matches that function will return
     interests = test_results.answers['interests'] # list of currect user interests
     music_taste = test_results.answers['music_taste'] # list of currect user music taste
     print(match_with, interests, music_taste, user.test_results)
@@ -324,26 +324,32 @@ def gen_matches(user_id:int):
         if current_user.course not in match_with:
             continue
 
+        matched_interests = []
+
         # match general interests
         for interest in interests:
             if len(current_user_interests[interest]) != 0:
                 coef += 0.5
+                matched_interests.append(interest)
         
         # match music taste
         for music in music_taste:
             if music in current_user_music_taste:
                 coef += 1
+                matched_interests.append(f"Mus.taste:{music}")
         
         # match subinterests
         for interest in interests:
             for subinterest in interests[interest]:
                 if subinterest in current_user_interests[interest]:
                     coef += 1
+                    matched_interests.append(subinterest)
         
         #check if current likes us
         try:
             if user.id in [like.user1_id for like in db_wrapper.get_likes(db, current_user.id)]:
                 coef *= 1.3
+                matched_interests.append("Вподобав вас")
             
             #check if we like current
             if current_user.id in [like.user1_id for like in db_wrapper.get_likes(db, user.id)]:
@@ -353,17 +359,25 @@ def gen_matches(user_id:int):
         #check if we have match
         if db_wrapper.get_match_id(db, user.id, current_user.id) is not None:
             coef *= 0.0
-        print(coef)
-        matches[current_user] = coef
-    
+
+        result = {
+            "id": current_user.id,
+            "username": current_user.username,
+            "matched_interests": matched_interests,
+            "description": current_user.ddescription,
+            "match_coef": coef
+        }
+
+        # print(coef)
+        matches.append(result)
     return matches
 
-def dict_serialize(dictionary):
-    result = {}
-    for key in dictionary:
-        enc_key = json.dumps(key.as_dict())
-        result[enc_key] = dictionary[key]
-    return result
+# def dict_serialize(dictionary):
+#     result = {}
+#     for key in dictionary:
+#         enc_key = json.dumps(key.as_dict())
+#         result[enc_key] = dictionary[key]
+#     return result
 
 @app.get("/gen_matches/")
 async def generate_matches(session_id:str):
@@ -372,7 +386,7 @@ async def generate_matches(session_id:str):
         print(user)
         temp = gen_matches(user.id)
         print(temp)
-        return dict_serialize(temp)
+        return sorted(temp, key=lambda x: x['match_coef'], reverse=True)
     return {"message": "User not found"}
 
 @app.get("/match/")
@@ -395,6 +409,28 @@ async def get_match(match_id:int):
 async def get_user_by_id(user_id:int):
     db = get_db().__next__()
     return db_wrapper.get_user(db, user_id)
+
+@app.get("/swipe_left/")
+async def swipe_left(session_id:str, user_id:int):
+    db = get_db().__next__()
+    user2_id = user_id
+    user1_id = active_users[session_id.encode('utf-8')].id
+    if db_wrapper.get_like_id(db, user2_id, user1_id) is not None:
+        db_wrapper.delete_like(db, db_wrapper.get_like_id(db, user2_id, user1_id))
+        db_wrapper.create_match(db, schemas.MatchCreate(user1_id=user1_id, user2_id=user2_id))
+        return {"message": "Matched"}
+    db_wrapper.create_like(db, schemas.LikeCreate(user1_id=user1_id, user2_id=user2_id))
+    return {"message": "Liked"}
+
+@app.get("/swipe_right/")
+async def swipe_right(session_id:str, user_id:int):
+    db = get_db().__next__()
+    user2_id = user_id
+    user1_id = active_users[session_id.encode('utf-8')].id
+    if db_wrapper.get_like_id(db, user2_id, user1_id) is not None:
+        db_wrapper.delete_like(db, db_wrapper.get_like_id(db, user2_id, user1_id))
+    return {"message": "Disliked"}
+
 
 
 if __name__ == "__main__":

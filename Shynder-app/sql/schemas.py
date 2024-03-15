@@ -32,7 +32,6 @@ class User(UserBase):
 
 
 class LikeBase(BaseModel):
-    id : int
     user1_id : int
     user2_id : int
 
@@ -40,5 +39,6 @@ class LikeCreate(LikeBase):
     pass
 
 class Like(LikeBase):
+    id : int
     class Config:
         orm_mode = True

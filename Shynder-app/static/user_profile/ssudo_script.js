@@ -46,10 +46,10 @@ function go_home(){
 }
 
 function go_profile(){
-  window.location = "/user_profile";
+  window.location = "/profile";
 }
 
-function go_chat(){
+function go_messages(){
   window.location = "/chat";
 }
 

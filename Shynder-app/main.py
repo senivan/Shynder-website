@@ -332,7 +332,7 @@ def gen_matches(user_id:int):
     db = get_db().__next__()
     user = db_wrapper.get_user(db, user_id)
     test_results = TestAnswers(user.test_results)
-    match_with = [str_to_course_number(cs) for cs in test_results.answers['match_with']]
+    match_with = test_results.answers['match_with']
     matches = [] # list of matches that function will return
     interests = test_results.answers['interests'] # list of currect user interests
     music_taste = test_results.answers['music_taste'] # list of currect user music taste

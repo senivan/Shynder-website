@@ -355,6 +355,9 @@ def gen_matches(user_id:int):
         if current_user.course not in match_with:
             continue
 
+        if user.course not in current_user_match_with:
+            continue
+
         matched_interests = []
 
         # match general interests

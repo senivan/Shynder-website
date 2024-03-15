@@ -352,7 +352,7 @@ def gen_matches(user_id:int):
             continue
 
         #if user1 not in match_with then we dont try to match with him
-        if current_user.course not in match_with:
+        if str_to_course_number(current_user.course) not in match_with:
             continue
 
         if str_to_course_number(user.course) not in current_user_match_with:

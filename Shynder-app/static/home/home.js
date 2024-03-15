@@ -5,7 +5,7 @@ const closeIcon = document.querySelector(".closeIcon");
 const menuIcon = document.querySelector(".menuIcon");
 const chat = document.querySelector(".home");
 let heartButton, crossButton, rectangle;
-const UPDATE_AT = 5;
+const UPDATE_AT = 1;
 let match_counter = 0;
 
 function getCookie(cname) {

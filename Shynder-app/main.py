@@ -108,7 +108,7 @@ class ConnectionManager:
                 for line in file:
                     message = Message.from_json(line)
                     date = datetime.date(int(message.time.split(" ")[0].split(":")[0]), int(message.time.split(" ")[0].split(":")[1]), int(message.time.split(" ")[0].split(":")[2]))
-                    current_date = datetime.date.now()
+                    current_date = datetime.date.today()
                     if not(current_date - date > datetime.timedelta(days=28)):
                         lines.append(line)
             with open("chat_logs/" + str(match_id) + ".txt", "w") as file:
@@ -179,6 +179,9 @@ async def login(login:str, password:str):
             msg = {"message": "Incorrect password"}
     else:
         msg = {"message": "User not found"}
+    if user in active_users.values():
+        flag = False
+        msg = {"message": "User already logged in"}
     if flag:
         while True:
             session_id = hash_bcr(login) + hash_bcr(str(random.randint(0, 1000000)))

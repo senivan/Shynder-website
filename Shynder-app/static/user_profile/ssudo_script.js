@@ -16,6 +16,8 @@ function toggleMenu() {
   }
 }
 
+
+
 function getCookie(cname) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
@@ -39,7 +41,22 @@ function delete_event(){
     window.location = "/delete_user/?session_id="+session_id;
 }
 
+function go_home(){
+  window.location = "/home";
+}
 
+function go_profile(){
+  window.location = "/user_profile";
+}
+
+function go_chat(){
+  window.location = "/chat";
+}
+
+function go_logout(){
+  window.location = "/logout/?session_id="+user_cook;
+
+}
 
 function submit_event(){
     const new_username = document.querySelector(".username_input").value;

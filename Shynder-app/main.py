@@ -209,7 +209,7 @@ async def login(login:str, password:str):
         msg = {"message": "User not found"}
     if user in active_users.values():
         flag = False
-        msg = {"message": "User already logged in"}
+        msg = {"message": "Success", "session_id": [key for key in active_users if active_users[key] == user][0].decode('utf-8')}
     if flag:
         while True:
             session_id = hash_bcr(login) + hash_bcr(str(random.randint(0, 1000000)))

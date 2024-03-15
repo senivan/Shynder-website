@@ -199,6 +199,7 @@ function toggleChat(event) {
       messages.innerHTML = "";
       if (chat.classList.contains("showChat")) {
         receiver_email = chat.getAttribute("chat_id");
+        console.log(user_email+";"+receiver_email);
         websocket.send(JSON.stringify({"sender": user_email, "receiver":receiver_email , "messege": "test","time": "10:00", "command":"get_all"}));
       }
       // receiver = clickedChat.getAttribute("chat_id");
@@ -244,6 +245,7 @@ function send_click() {
       document.getElementById("messages").appendChild(messages);
       input.value = "";
       receiver_email = document.querySelector(".highlight").getAttribute("chat_id");
+      console.log(user_email+";"+receiver_email);
       websocket.send(JSON.stringify({"sender": user_email, "receiver":receiver_email , "messege": message,"time": full_date, "command":"send"}));
     }
     scrollToDivBottom();

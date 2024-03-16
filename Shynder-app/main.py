@@ -336,7 +336,7 @@ def gen_matches(user_id:int):
     matches = [] # list of matches that function will return
     interests = test_results.answers['interests'] # list of currect user interests
     music_taste = test_results.answers['music_taste'] # list of currect user music taste
-    print(match_with, interests, music_taste, user.test_results)
+    print(match_with, interests, music_taste, '\n\n\n')
     for current_user in db_wrapper.get_all_users(db):
         print(current_user.email)
         #if user not in match_with then we dont try to match with him 
@@ -348,6 +348,7 @@ def gen_matches(user_id:int):
         current_user_music_taste = current_user_test_results.answers['music_taste']
         current_user_match_with = current_user_test_results.answers['match_with']
         print(current_user.course)
+        print(match_with, current_user_match_with)
         if current_user.id == user.id:
             continue
 

@@ -347,8 +347,8 @@ def gen_matches(user_id:int):
         current_user_interests = current_user_test_results.answers['interests']
         current_user_music_taste = current_user_test_results.answers['music_taste']
         current_user_match_with = current_user_test_results.answers['match_with']
-        print(current_user.course)
-        print(match_with, current_user_match_with)
+        print("User: ",user.course, match_with)
+        print("Current user: ", current_user.course, current_user_match_with)
         if current_user.id == user.id:
             continue
 

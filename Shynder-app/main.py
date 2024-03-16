@@ -350,13 +350,16 @@ def gen_matches(user_id:int):
         print("User: ",user.course, match_with)
         print("Current user: ", current_user.course, current_user_match_with)
         if current_user.id == user.id:
+            print("Cant match with yourself")
             continue
 
         #if user1 not in match_with then we dont try to match with him
         if current_user.course not in [str_to_course_number(course) for course in match_with]:
+            print("Oopsie user doesnt match with us")
             continue
 
         if user.course not in [str_to_course_number(course) for course in current_user_match_with]:
+            print("Oopsie we dont match with user")
             continue
 
         matched_interests = []

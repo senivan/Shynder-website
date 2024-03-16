@@ -353,10 +353,10 @@ def gen_matches(user_id:int):
             continue
 
         #if user1 not in match_with then we dont try to match with him
-        if str_to_course_number(current_user.course) not in match_with:
+        if current_user.course not in [str_to_course_number(course) for course in match_with]:
             continue
 
-        if str_to_course_number(user.course) not in current_user_match_with:
+        if user.course not in [str_to_course_number(course) for course in current_user_match_with]:
             continue
 
         matched_interests = []

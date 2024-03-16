@@ -340,8 +340,8 @@ def gen_matches(user_id:int):
     for current_user in db_wrapper.get_all_users(db):
         print(current_user.email)
         #if user not in match_with then we dont try to match with him 
-        if user.course not in match_with:
-            continue
+        # if user.course not in match_with:
+        #     continue
         coef = 0
         current_user_test_results = TestAnswers(user.test_results)
         current_user_interests = current_user_test_results.answers['interests']

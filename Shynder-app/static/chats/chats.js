@@ -22,7 +22,7 @@ function getCookie(cname) {
 }
 user_session_id = getCookie("session_id");
 
-var websocket = new WebSocket('wss://shynder.com.ua/chats_websocket/?session_id='+user_session_id);
+var websocket = new WebSocket('wss://127.0.0.1:8000/chats_websocket/?session_id='+user_session_id);
 var receivers = [];
 let chat_opened = false;
 // MessageJson{
@@ -145,7 +145,26 @@ websocket.onmessage = async function(event) {
     your_text.classList.add(user + "_text");
     your_time.classList.add(user + "_time");
     your_msg_avatar.classList.add(user + "_msg_avatar");
-    your_text.innerHTML = messag.messege;
+    if (your_text.innerHTML.includes("http://") || your_text.innerHTML.includes("https://")) {
+      const link = document.createElement("a");
+      const textParts = your_text.innerHTML.split(/(http[s]?:\/\/\S+)/);
+      textParts.forEach((part) => {
+        if (part.startsWith("http://") || part.startsWith("https://")) {
+          const linkPart = document.createElement("span");
+          linkPart.innerHTML = part;
+          link.appendChild(linkPart);
+          link.href = part;
+          link.target = "_blank";
+          your_text.appendChild(link);
+        } else {
+          const textPart = document.createElement("span");
+          textPart.innerHTML = part;
+          your_text.appendChild(textPart);
+        }
+      });
+    } else {
+      your_text.innerHTML = messag.messege;
+    }
     your_time.innerHTML = messag.time.split(' ')[1];
     your_msg_avatar.src = "https://www.w3schools.com/howto/img_avatar.png";
     if (user == "other"){
@@ -234,7 +253,26 @@ function send_click() {
       your_text.classList.add("your_text");
       your_time.classList.add("your_time");
       your_msg_avatar.classList.add("your_msg_avatar");
-      your_text.innerHTML = message;
+      if (message.includes("http://") || message.includes("https://")) {
+        const link = document.createElement("a");
+        const textParts = message.split(/(http[s]?:\/\/\S+)/);
+        textParts.forEach((part) => {
+          if (part.startsWith("http://") || part.startsWith("https://")) {
+            const linkPart = document.createElement("span");
+            linkPart.innerHTML = part;
+            link.appendChild(linkPart);
+            link.href = part;
+            link.target = "_blank";
+            your_text.appendChild(link);
+          } else {
+            const textPart = document.createElement("span");
+            textPart.innerHTML = part;
+            your_text.appendChild(textPart);
+          }
+        });
+      } else {
+        your_text.innerHTML = message;
+      }
       full_date = getTime();
       your_time.innerHTML = full_date.split(' ')[1];
       your_msg_avatar.src = "https://www.w3schools.com/howto/img_avatar.png";

@@ -357,7 +357,7 @@ def gen_matches(user_id:int):
         if current_user.course not in [str_to_course_number(course) for course in match_with]:
             print("Oopsie user doesnt match with us")
             continue
-        print([str_to_course_number(course) for course in current_user_match_with])
+        print([str_to_course_number(course) for course in current_user_match_with], user.course)
         if user.course not in [str_to_course_number(course) for course in current_user_match_with]:
             print("Oopsie we dont match with user")
             continue

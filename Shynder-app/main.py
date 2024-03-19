@@ -336,26 +336,31 @@ def gen_matches(user_id:int):
     matches = [] # list of matches that function will return
     interests = test_results.answers['interests'] # list of currect user interests
     music_taste = test_results.answers['music_taste'] # list of currect user music taste
-    print(match_with, interests, music_taste, user.test_results)
+    print(match_with, interests, music_taste, '\n\n\n')
     for current_user in db_wrapper.get_all_users(db):
         print(current_user.email)
         #if user not in match_with then we dont try to match with him 
-        if user.course not in match_with:
-            continue
+        # if user.course not in match_with:
+        #     continue
         coef = 0
-        current_user_test_results = TestAnswers(user.test_results)
+        current_user_test_results = TestAnswers(current_user.test_results)
+        print(current_user_test_results.answers)
         current_user_interests = current_user_test_results.answers['interests']
         current_user_music_taste = current_user_test_results.answers['music_taste']
         current_user_match_with = current_user_test_results.answers['match_with']
-        print(current_user.course)
+        print("User: ",user.course, match_with)
+        print("Current user: ", current_user.course, current_user_match_with)
         if current_user.id == user.id:
+            print("Cant match with yourself")
             continue
 
         #if user1 not in match_with then we dont try to match with him
-        if str_to_course_number(current_user.course) not in match_with:
+        if current_user.course not in [str_to_course_number(course) for course in match_with]:
+            print("Oopsie user doesnt match with us")
             continue
-
-        if str_to_course_number(user.course) not in current_user_match_with:
+        print([str_to_course_number(course) for course in current_user_match_with], user.course)
+        if user.course not in [str_to_course_number(course) for course in current_user_match_with]:
+            print("Oopsie we dont match with user")
             continue
 
         matched_interests = []

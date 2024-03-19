@@ -343,7 +343,7 @@ def gen_matches(user_id:int):
         # if user.course not in match_with:
         #     continue
         coef = 0
-        current_user_test_results = TestAnswers(user.test_results)
+        current_user_test_results = TestAnswers(current_user.test_results)
         print(current_user_test_results.answers)
         current_user_interests = current_user_test_results.answers['interests']
         current_user_music_taste = current_user_test_results.answers['music_taste']

@@ -183,6 +183,7 @@ font-weight: 500;
   line-height: normal;
   font-stretch: normal;
   text-decoration: none;
+  line-break: loose;
 }
 .descriptionDiv {
   gap: 10px;

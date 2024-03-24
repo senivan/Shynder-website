@@ -23,26 +23,28 @@
 
 
 """
-
-from fastapi import FastAPI
-from fastapi.responses import HTMLResponse, FileResponse
-from sql import models, schemas, db_wrapper
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
 import random
-import os
-from fastapi.staticfiles import StaticFiles
-from sql.database import SessionLocal, engine
-import bcrypt
-from fastapi import WebSocket, WebSocketDisconnect
 import json
 import datetime
+from fastapi import FastAPI
+from fastapi import WebSocket, WebSocketDisconnect
+from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
+import bcrypt
 from mail_wrapper import *
+from sql import models, schemas, db_wrapper
+from sql.database import SessionLocal, engine
+
+
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
-# active_users = {"1".encode('utf-8'): schemas.UserCreate(username="test", ddescription="test", age=1, email="test", ppassword="test", test_results="test")}
 active_users = {}
 waiting_verification = {}
 app.mount('/static', StaticFiles(directory='static', html=True), name='static')
+executor = ThreadPoolExecutor()
 
 class TestAnswers:
     def __init__(self, answers:str):
@@ -71,6 +73,7 @@ def str_to_course_number(course:str):
     elif course == "Працівник":
         return 7
 waiting_verification = {}
+waiting_reset = {}
 class ConnectionManager:
     def __init__(self):
         self.active_sockets = {}
@@ -327,6 +330,32 @@ async def chats_page():
         html_con = '\n'.join(file.readlines())
     return html_con
 
+@app.get("/forgot_password/")
+async def forgot_password(email:str):
+    db = get_db().__next__()
+    user = db_wrapper.get_user_by_email(db, email)
+    if user is None:
+        return {"message": "User not found"}
+    token = str(hash_bcr(email + str(random.randint(0, 1000000))))
+    waiting_reset[token] = user
+    await send_email(email, user.username, token, type="reset")
+    return {"message": "Success"}
+
+@app.get("/reset_password/", response_class=HTMLResponse)
+async def reset_password(token:str):
+    if token in waiting_reset:
+        with open("static/reset/reset.html", "r", encoding="utf-8") as file:
+            html_con = '\n'.join(file.readlines())
+        return HTMLResponse(content=html_con)
+
+@app.get("/change_password/")
+async def change_password(token:str, new_password:str):
+    if token in waiting_reset:
+        db = get_db().__next__()
+        db_wrapper.update_user(db, waiting_reset[token].id, ppassword=hash_bcr(new_password))
+        del waiting_reset[token]
+    return {"message": "Success"}
+
 
 def gen_matches(user_id:int):
     db = get_db().__next__()
@@ -418,8 +447,7 @@ def gen_matches(user_id:int):
 #         result[enc_key] = dictionary[key]
 #     return result
 
-@app.get("/gen_matches/")
-async def generate_matches(session_id:str):
+def generate_matches_sync(session_id:str):
     if session_id.encode('utf-8') in active_users:
         user = active_users[session_id.encode('utf-8')]
         print(user)
@@ -427,6 +455,13 @@ async def generate_matches(session_id:str):
         print(temp)
         return sorted(temp, key=lambda x: x['match_coef'], reverse=True)
     return {"message": "User not found"}
+
+@app.get("/gen_matches/")
+async def generate_matches(session_id:str):
+    loop = asyncio.get_event_loop()
+    result = await loop.run_in_executor(executor, generate_matches_sync, session_id)
+    return result
+
 
 @app.get("/match/")
 async def match(user1_id:int, user2_id:int):

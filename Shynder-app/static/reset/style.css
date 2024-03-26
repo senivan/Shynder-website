@@ -1,0 +1,56 @@
+
+
+body {
+    font-family: rubik;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+
+input[type="text"],
+input[type="password"] {
+  width: 18%;
+  height: 8%;
+  margin-bottom: 3%; /* Increase distance between input fields */
+  padding: 0.25%;
+  border: none;
+  border-bottom: 1px solid rgb(63, 59, 59); 
+  box-sizing: border-box;
+  background: none; 
+  outline: none;
+  font-size:18px;
+  font-weight: 500;
+}
+
+
+button {
+    width: 20%;
+    height: 40px;
+    background-color: #61ae61;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 2%; /* Increase distance between button and next element */
+  }
+
+  button:hover {
+    background-color: #45a049;
+  }
+
+
+  .email{
+    width: 18%;
+  height: 8%;
+  margin-bottom: 3%; /* Increase distance between input fields */
+  padding: 0.25%;
+  border: none;
+  border-bottom: 1px solid rgb(63, 59, 59); 
+  box-sizing: border-box;
+  background: none; 
+  outline: none;
+  font-size:18px;
+  font-weight: 500;
+  }

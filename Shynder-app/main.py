@@ -202,10 +202,12 @@ def sync_login(login:str, password:str):
     flag = False
     msg = {}
     user = db_wrapper.get_user_by_email(db, login)
-    print(isinstance(password, str))
-    print(isinstance(hash_bcr(password), bytes))
-    print(isinstance(user.ppassword, bytes))
+    # print(isinstance(password, str))
+    # print(isinstance(hash_bcr(password), bytes))
+    # print(isinstance(user.ppassword, bytes))
     if user:
+        if isinstance(user.ppassword, str):
+            user.ppassword = user.ppassword.encode('utf-8')
         if bcrypt.checkpw(password.encode('utf-8'), user.ppassword):
             msg = {"message": "Success"}
             flag = True

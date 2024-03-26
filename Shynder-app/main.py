@@ -203,7 +203,7 @@ async def login(login:str, password:str):
     msg = {}
     user = db_wrapper.get_user_by_email(db, login)
     if user:
-        if bcrypt.checkpw(password.encode('utf-8'), user.ppassword.encode('utf-8')):
+        if bcrypt.checkpw(password.encode('utf-8'), user.ppassword):
             msg = {"message": "Success"}
             flag = True
         else:

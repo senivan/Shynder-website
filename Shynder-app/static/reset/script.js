@@ -14,10 +14,10 @@ function submit_password(){
     token = window.location.href.split('?')[1].split('=')[1];
     fetch('/change_password/?new_password='+password+"&token="+token).then(response => response.json()).then(data => {
          if (data['message'] == "Success"){
-                alert("Пароль було змінено");
-                window.location.href = '/';
+                // alert("Пароль було змінено");
+                // window.location.href = '/';
          } else {
-                alert("Помилка зміни паролю");
+                // alert("Помилка зміни паролю");
          }
     });
 }

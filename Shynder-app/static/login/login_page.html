@@ -10,10 +10,10 @@
 <title>Centered Image with Text and Input Field</title>
 <style>
   body {
-    font-family: Arial, sans-serif;
+    font-family: rubik;
     display: flex;
     flex-direction: column;
-    /* align-items: center ; */
+    align-items: center ;
     /* justify-content: center; */
     height: 10%;
     margin: 0;
@@ -77,18 +77,21 @@
 <body>
 <img src= "/static/big_logo.png" alt="HTML5 Icon">
 
+<customtag></customtag>
 
+<p style="color: rgba(31, 30, 30, 0.82);">E-mail</p>
+<input type="text" style = "font-family: rubik;font-size: 18px; font-weight: 500;" onclick="myFunction()">
 
-<p style="color: rgba(31, 30, 30, 0.82); margin-left:37%;  margin-top: 2%;">E-mail</p>
-<input type="text" style = "margin-left:37%;font-family: rubik;font-size: 18px; font-weight: 500;" onclick="myFunction()">
+<p style="color: rgba(31, 30, 30, 0.82);">Пароль</p>
+<input type="password"  style = "font-family: rubik;font-size: 18px; font-weight: 500;" onclick="myFunction()">
 
-<p style="color: rgba(31, 30, 30, 0.82);  margin-left:37%; margin-top: -0.8%;">Пароль</p>
-<input type="password"  style = "margin-left:37%;font-family: rubik;font-size: 18px; font-weight: 500;" onclick="myFunction()">
+<button type="button" style = "" onclick="login()" class="login">Увійти</button>
 
-<button type="button" style = "margin-left:37%;" onclick="login()" class="login">Увійти</button>
+<p>Забули пароль?</p>
+<button type="button" style = "" onclick="forgot_password()" class="login">Відновити пароль</button>
 
-<p style="text-align: +200px; margin-left:30%; color: rgba(31, 30, 30, 0.82);   margin-top: 2%;">Ще не маєте акаунту?</p>
-<button type="button" style = "margin-left:37%; margin-top: 2%;" onclick="redirectToSecondPage()" class="register">Зареєструватися</button>
+<p style=" color: rgba(31, 30, 30, 0.82);">Ще не маєте акаунту?</p>
+<button type="button" style = "" onclick="redirectToSecondPage()" class="register">Зареєструватися</button>
 
 
 
@@ -108,6 +111,10 @@
         alert('Wrong login or password');
       }
     });
+  }
+
+  function forgot_password(){
+    window.location.href = "/static/reset/forgot.html";
   }
 </script>
 

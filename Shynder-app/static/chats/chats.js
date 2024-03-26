@@ -22,7 +22,7 @@ function getCookie(cname) {
 }
 user_session_id = getCookie("session_id");
 
-var websocket = new WebSocket('wss://shynder.com.ua/chats_websocket/?session_id='+user_session_id);
+var websocket = new WebSocket('wss://127.0.0.1:8000/chats_websocket/?session_id='+user_session_id);
 var receivers = [];
 let chat_opened = false;
 // MessageJson{
@@ -100,13 +100,13 @@ websocket.onmessage = async function(event) {
       await fetch('/get_user_by_id/?user_id='+match.user1_id).then(response => response.json()).then(data => {user1 = data; console.log(user1);});
       await fetch('/get_user_by_id/?user_id='+match.user2_id).then(response => response.json()).then(data => user2 = data);
       const chat = document.createElement("div");
-      const chat_avatar = document.createElement("img");
+      // const chat_avatar = document.createElement("img");
       const chat_info = document.createElement("div");
       const name = document.createElement("p");
       const last_message = document.createElement("p");
       chat.classList.add("chat");
-      chat_avatar.classList.add("chat_avatar");
-      chat_avatar.src = "https://www.w3schools.com/howto/img_avatar.png";
+      // chat_avatar.classList.add("chat_avatar");
+      // chat_avatar.src = "https://www.w3schools.com/howto/img_avatar.png";
       chat_info.classList.add("chat_info");
       name.classList.add("name");
       last_message.classList.add("last_message");
@@ -120,7 +120,7 @@ websocket.onmessage = async function(event) {
         receivers.push(user2.email);
       }
       last_message.innerHTML = "Last message";
-      chat.appendChild(chat_avatar);
+      // chat.appendChild(chat_avatar);
       chat.appendChild(chat_info);
       chat_info.appendChild(name);
       chat_info.appendChild(last_message);
@@ -139,21 +139,40 @@ websocket.onmessage = async function(event) {
     const your_message_info = document.createElement("div");
     const your_text = document.createElement("p");
     const your_time = document.createElement("span");
-    const your_msg_avatar = document.createElement("img");
+    // const your_msg_avatar = document.createElement("img");
     messages.classList.add(user + "_message");
     your_message_info.classList.add(user + "_message_info");
     your_text.classList.add(user + "_text");
     your_time.classList.add(user + "_time");
-    your_msg_avatar.classList.add(user + "_msg_avatar");
-    your_text.innerHTML = messag.messege;
+    // your_msg_avatar.classList.add(user + "_msg_avatar");
+    if (your_text.innerHTML.includes("http://") || your_text.innerHTML.includes("https://")) {
+      const link = document.createElement("a");
+      const textParts = your_text.innerHTML.split(/(http[s]?:\/\/\S+)/);
+      textParts.forEach((part) => {
+        if (part.startsWith("http://") || part.startsWith("https://")) {
+          const linkPart = document.createElement("span");
+          linkPart.innerHTML = part;
+          link.appendChild(linkPart);
+          link.href = part;
+          link.target = "_blank";
+          your_text.appendChild(link);
+        } else {
+          const textPart = document.createElement("span");
+          textPart.innerHTML = part;
+          your_text.appendChild(textPart);
+        }
+      });
+    } else {
+      your_text.innerHTML = messag.messege;
+    }
     your_time.innerHTML = messag.time.split(' ')[1];
-    your_msg_avatar.src = "https://www.w3schools.com/howto/img_avatar.png";
+    // your_msg_avatar.src = "https://www.w3schools.com/howto/img_avatar.png";
     if (user == "other"){
-      messages.appendChild(your_msg_avatar);
+      // messages.appendChild(your_msg_avatar);
       messages.appendChild(your_message_info);
     }else{
       messages.appendChild(your_message_info);
-      messages.appendChild(your_msg_avatar);
+      // messages.appendChild(your_msg_avatar);
     }
     your_message_info.appendChild(your_text);
     your_message_info.appendChild(your_time);
@@ -228,18 +247,37 @@ function send_click() {
       const your_message_info = document.createElement("div");
       const your_text = document.createElement("p");
       const your_time = document.createElement("span");
-      const your_msg_avatar = document.createElement("img");
+      // const your_msg_avatar = document.createElement("img");
       messages.classList.add("your_message");
       your_message_info.classList.add("your_message_info");
       your_text.classList.add("your_text");
       your_time.classList.add("your_time");
-      your_msg_avatar.classList.add("your_msg_avatar");
-      your_text.innerHTML = message;
+      // your_msg_avatar.classList.add("your_msg_avatar");
+      if (message.includes("http://") || message.includes("https://")) {
+        const link = document.createElement("a");
+        const textParts = message.split(/(http[s]?:\/\/\S+)/);
+        textParts.forEach((part) => {
+          if (part.startsWith("http://") || part.startsWith("https://")) {
+            const linkPart = document.createElement("span");
+            linkPart.innerHTML = part;
+            link.appendChild(linkPart);
+            link.href = part;
+            link.target = "_blank";
+            your_text.appendChild(link);
+          } else {
+            const textPart = document.createElement("span");
+            textPart.innerHTML = part;
+            your_text.appendChild(textPart);
+          }
+        });
+      } else {
+        your_text.innerHTML = message;
+      }
       full_date = getTime();
       your_time.innerHTML = full_date.split(' ')[1];
-      your_msg_avatar.src = "https://www.w3schools.com/howto/img_avatar.png";
+      // your_msg_avatar.src = "https://www.w3schools.com/howto/img_avatar.png";
       messages.appendChild(your_message_info);
-      messages.appendChild(your_msg_avatar);
+      // messages.appendChild(your_msg_avatar);
       your_message_info.appendChild(your_text);
       your_message_info.appendChild(your_time);
       document.getElementById("messages").appendChild(messages);

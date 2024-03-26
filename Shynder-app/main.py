@@ -266,6 +266,8 @@ async def register(username:str, ddescription:str, course:str, full_name:str, em
     if db_wrapper.get_user_by_email(db, email) is not None:
         return {"message":"User already exists"}
     # db_wrapper.create_user(db, schemas.UserCreate(username=username, ddescription=ddedscription, age=age, email=email, ppassword=hash_bcr(ppassword), test_results=test_results))
+    print(isinstance(ppassword, str))
+    print(isinstance(hash_bcr(ppassword), bytes))
     user = schemas.UserCreate(username=username, ddescription=ddescription, course=cs, full_name=full_name, email=email, ppassword=hash_bcr(ppassword), test_results=test_results)
     token = str(hash_bcr(email + str(random.randint(0, 1000000))))
     waiting_verification[token] = user
@@ -355,6 +357,8 @@ async def reset_password(token:str):
 async def change_password(token:str, new_password:str):
     if token in waiting_reset:
         db = get_db().__next__()
+        print(isinstance(new_password, str))
+        print(isinstance(hash_bcr(new_password), bytes))
         db_wrapper.update_user(db, waiting_reset[token].id, ppassword=hash_bcr(new_password))
         del waiting_reset[token]
     return {"message": "Success"}
@@ -368,7 +372,7 @@ def gen_matches(user_id:int):
     matches = [] # list of matches that function will return
     interests = test_results.answers['interests'] # list of currect user interests
     music_taste = test_results.answers['music_taste'] # list of currect user music taste
-    print(match_with, interests, music_taste, '\n\n\n')
+    # print(match_with, interests, music_taste, '\n\n\n')
     for current_user in db_wrapper.get_all_users(db):
         print(current_user.email)
         #if user not in match_with then we dont try to match with him 

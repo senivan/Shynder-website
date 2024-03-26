@@ -28,7 +28,7 @@ from concurrent.futures import ThreadPoolExecutor
 import random
 import json
 import datetime
-from fastapi import FastAPI
+from fastapi import FastAPI 
 from fastapi import WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -40,9 +40,11 @@ from sql.database import SessionLocal, engine
 
 
 models.Base.metadata.create_all(bind=engine)
-app = FastAPI()
+app = FastAPI(openapi_url="")
+
 active_users = {}
 waiting_verification = {}
+waiting_reset = {}
 app.mount('/static', StaticFiles(directory='static', html=True), name='static')
 executor = ThreadPoolExecutor()
 
@@ -72,8 +74,6 @@ def str_to_course_number(course:str):
         return 6
     elif course == "Працівник":
         return 7
-waiting_verification = {}
-waiting_reset = {}
 class ConnectionManager:
     def __init__(self):
         self.active_sockets = {}
@@ -98,23 +98,23 @@ class ConnectionManager:
                 await self.process_data(message, websocket) 
         except WebSocketDisconnect:
             self.close_connection(websocket)
-    
-    async def process_data(self, message: 'Message', websocket: WebSocket):
+
+    def sync_process_data(self, message: 'Message', websocket: WebSocket):
         if message.command == "send":
             receiver = db_wrapper.get_user_by_email(get_db().__next__(), message.receiver)
-            print(receiver.email)
-            print(receiver.id, self.active_sockets[websocket][0].id)
+            # print(receiver.email)
+            # print(receiver.id, self.active_sockets[websocket][0].id)
             match_id = db_wrapper.get_match_id(get_db().__next__(), self.active_sockets[websocket][0].id, receiver.id)
             if match_id is None:
                 raise ValueError("Match not found")
             # print(self.active_sockets)
-            print(receiver.email)
-            print(f"Receivers: {[self.active_sockets[socket][0].email for socket in self.active_sockets]}")
+            # print(receiver.email)
+            # print(f"Receivers: {[self.active_sockets[socket][0].email for socket in self.active_sockets]}")
             if receiver.email in [self.active_sockets[socket][0].email for socket in self.active_sockets]:
                 for socket in self.active_sockets:
                     if self.active_sockets[socket][0].email == receiver.email:
                         # print(self.active_sockets[socket][0].email, receiver.email)
-                        await self.send_personal_message(message.to_json(), socket)
+                        self.send_personal_message(message.to_json(), socket)
                         break
             try:
                 with open("chat_logs/" + str(match_id) + ".txt", "a") as file:
@@ -129,7 +129,7 @@ class ConnectionManager:
             try:
                 with open("chat_logs/" + str(match_id) + ".txt", "r") as file:
                     for line in file.readlines():
-                        await self.send_personal_message(line, websocket)
+                        self.send_personal_message(line, websocket)
             except FileNotFoundError:
                 file = open("chat_logs/" + str(match_id) + ".txt", "w")
                 file.close()
@@ -153,8 +153,10 @@ class ConnectionManager:
             for match in matches:
                 res_matches.append(match.as_dict())
                 res_matches[-1]['command'] = "get_all_matches"
-            await self.send_personal_message(json.dumps(res_matches), websocket)
-        
+            self.send_personal_message(json.dumps(res_matches), websocket)
+    
+    async def process_data(self, message: 'Message', websocket: WebSocket):
+        await asyncio.get_event_loop().run_in_executor(executor, self.sync_process_data, message, websocket)
 
 class Message:
     def __init__(self, sender:str, receiver:str, messege:str,time, command:str = ""):
@@ -180,7 +182,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
 @app.get("/", response_class=HTMLResponse)
 async def root():
     html_con = ""
@@ -196,8 +197,7 @@ def hash_bcr(password):
     pass_bytes = password.encode('utf-8')
     return bcrypt.hashpw(pass_bytes, bcrypt.gensalt())
 
-@app.get("/login/")
-async def login(login:str, password:str):
+def sync_login(login:str, password:str):
     db = get_db().__next__()
     flag = False
     msg = {}
@@ -220,8 +220,12 @@ async def login(login:str, password:str):
                 msg['session_id'] = session_id
                 active_users[session_id] = user
                 break
-    print(msg)
+    # print(msg)
     return msg
+
+@app.get("/login/")
+async def login(login:str, password:str):
+    return await asyncio.get_event_loop().run_in_executor(executor, sync_login, login, password)
 
 
 
@@ -269,6 +273,7 @@ async def register(username:str, ddescription:str, course:str, full_name:str, em
     print(waiting_verification)
     await send_email(email, username, token)
     return {"message": "Waiting verification"}
+
 @app.get("/verify/", response_class=HTMLResponse)
 async def verify(token:str):
     if token in waiting_verification:
@@ -450,9 +455,7 @@ def gen_matches(user_id:int):
 def generate_matches_sync(session_id:str):
     if session_id.encode('utf-8') in active_users:
         user = active_users[session_id.encode('utf-8')]
-        print(user)
-        temp = gen_matches(user.id)
-        print(temp)
+        temp = await gen_matches(user.id)
         return sorted(temp, key=lambda x: x['match_coef'], reverse=True)
     return {"message": "User not found"}
 
@@ -506,9 +509,3 @@ async def swipe_right(session_id:str, user_id:int):
     if db_wrapper.get_like_id(db, user2_id, user1_id) is not None:
         db_wrapper.delete_like(db, db_wrapper.get_like_id(db, user2_id, user1_id))
     return {"message": "Disliked"}
-
-
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000, reload=False)

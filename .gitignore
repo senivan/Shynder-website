@@ -26,4 +26,3 @@ Pipfile.lock
 # Database
 chat_logs/
 shynder.db
-

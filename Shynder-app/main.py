@@ -279,6 +279,13 @@ async def register(username:str, ddescription:str, course:str, full_name:str, em
     await send_email(email, username, token)
     return {"message": "Waiting verification"}
 
+def embed_message_block(html:str, type:str):
+    if type == "ver_message":
+        html = html.replace("<customtag></customtag>", '<div style="color:#3c763d;background-color: #dff0d8;border-color: #d6e9c6">Пошту верифіковано</div>')
+    elif type == "res_message":
+        html = html.replace("<customtag></customtag>", '<div style="color:#3c763d;background-color: #dff0d8;border-color: #d6e9c6">Пароль змінено</div>')
+    return html
+
 @app.get("/verify/", response_class=HTMLResponse)
 async def verify(token:str):
     if token in waiting_verification:
@@ -288,6 +295,7 @@ async def verify(token:str):
     html = ""
     with open("static/login/login_page.html", "r", encoding="utf-8") as file:
         html = '\n'.join(file.readlines())
+    html = embed_message_block(html, type="ver_message")
     return HTMLResponse(content=html)
 
 
@@ -358,7 +366,7 @@ async def reset_password(token:str):
             html_con = '\n'.join(file.readlines())
         return HTMLResponse(content=html_con)
 
-@app.get("/change_password/")
+@app.get("/change_password/", response_class=HTMLResponse)
 async def change_password(token:str, new_password:str):
     if token in waiting_reset:
         db = get_db().__next__()
@@ -366,7 +374,11 @@ async def change_password(token:str, new_password:str):
         print(isinstance(hash_bcr(new_password), bytes))
         db_wrapper.update_user(db, waiting_reset[token].id, ppassword=hash_bcr(new_password))
         del waiting_reset[token]
-    return {"message": "Success"}
+    html = ""
+    with open("static/login/login_page.html", "r", encoding="utf-8") as file:
+        html = '\n'.join(file.readlines())
+    html = embed_message_block(html, type="ver_message")
+    return HTMLResponse(content=html)
 
 
 def gen_matches(user_id:int):

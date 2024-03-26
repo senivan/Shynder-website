@@ -12,12 +12,12 @@ Workflow:
 
 ## API Endpoints
 - `/`: Login page
-- '/login/': login user, returns session id. Query parameters: `username`, `password`
-- '/logout/': logout user, returns session id. Query parameters: `session_id`
-- '/register/': register user, sends email with verification link. Query parameters: `username`, `password`, `email`, `full_name`, `test_answers` 
-- '/verify/': verify user email. Query parameters: `token`
-- '/profile/': get user profile. Query parameters: `session_id`
-- '/home': home page.
+- `/login/`: login user, returns session id. Query parameters: `username`, `password`
+- `/logout/`: logout user, returns session id. Query parameters: `session_id`
+- `/register/`: register user, sends email with verification link. Query parameters: `username`, `password`, `email`, `full_name`, `test_answers` 
+- `/verify/`: verify user email. Query parameters: `token`
+- `/profile/`: get user profile. Query parameters: `session_id`
+- `/home`: home page.
 - `/get_avtive_user/`: get active user. Query parameters: `session_id`
 - `/update_user/`: update user profile. Query parameters: `session_id`, `username`, `password`, `full_name`, `test_answers`
 - `/delete_user/`: delete user. Query parameters: `session_id`

@@ -607,6 +607,9 @@ function register() {
     };
 
     sub_interests.forEach(function(interest){
+      console.log(interest);
+      console.log(interest_dict[interest.name]);
+      console.log(interest.value)
       interest_dict[interest.name].push(interest.value);
     })
 

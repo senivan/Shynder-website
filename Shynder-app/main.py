@@ -265,7 +265,7 @@ async def register(username:str, ddescription:str, course:str, full_name:str, em
         return {"message":"Not UCU mail"}
     if db_wrapper.get_user_by_email(db, email) is not None:
         return {"message":"User already exists"}
-    # db_wrapper.create_user(db, schemas.UserCreate(username=username, ddescription=ddescription, age=age, email=email, ppassword=hash_bcr(ppassword), test_results=test_results))
+    # db_wrapper.create_user(db, schemas.UserCreate(username=username, ddescription=ddedscription, age=age, email=email, ppassword=hash_bcr(ppassword), test_results=test_results))
     user = schemas.UserCreate(username=username, ddescription=ddescription, course=cs, full_name=full_name, email=email, ppassword=hash_bcr(ppassword), test_results=test_results)
     token = str(hash_bcr(email + str(random.randint(0, 1000000))))
     waiting_verification[token] = user

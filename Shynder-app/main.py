@@ -259,7 +259,6 @@ async def profile(email:str=""):
 
 @app.get("/register/")
 async def register(username:str, ddescription:str, course:str, full_name:str, email:str, ppassword:str, test_results:str = ""):
-    print(username, ddescription, course, full_name, email, ppassword, test_results)
     db = get_db().__next__()
     cs = str_to_course_number(course)
     if not ("ucu.edu.ua" in email):
@@ -270,7 +269,6 @@ async def register(username:str, ddescription:str, course:str, full_name:str, em
     user = schemas.UserCreate(username=username, ddescription=ddescription, course=cs, full_name=full_name, email=email, ppassword=hash_bcr(ppassword), test_results=test_results)
     token = str(hash_bcr(email + str(random.randint(0, 1000000))))
     waiting_verification[token] = user
-    print(waiting_verification)
     await send_email(email, username, token)
     return {"message": "Waiting verification"}
 
@@ -455,7 +453,7 @@ def gen_matches(user_id:int):
 def generate_matches_sync(session_id:str):
     if session_id.encode('utf-8') in active_users:
         user = active_users[session_id.encode('utf-8')]
-        temp = await gen_matches(user.id)
+        temp = gen_matches(user.id)
         return sorted(temp, key=lambda x: x['match_coef'], reverse=True)
     return {"message": "User not found"}
 

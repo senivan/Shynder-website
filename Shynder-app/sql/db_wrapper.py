@@ -93,3 +93,8 @@ def get_like_id(db: Session, user1_id: int, user2_id: int):
         return db.query(models.Likes).filter(models.Likes.user1_id == user1_id, models.Likes.user2_id == user2_id).first().id
     except AttributeError:
         return None
+
+def update_user_password(db: Session, user_id: int, password: bytes):
+    db.query(models.User).where(models.User.id == user_id).update({"ppassword": password})
+    db.commit()
+    return {"message": "Password updated"}

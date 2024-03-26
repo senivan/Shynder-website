@@ -118,7 +118,7 @@ function generateChats(username, ddesription, matched, id, matched_interests) {
       interestText.classList.add("interestText");
       subCategoryDiv.classList.add("subCategoryDiv");
       subCategoryText.classList.add("subCategoryText");
-      interestText.textContent = key;
+      interestText.textContent = key + ": ";
       subCategoryText.textContent = matched_interests[key];
       interestDiv.appendChild(interestText);
       subCategoryDiv.appendChild(subCategoryText);

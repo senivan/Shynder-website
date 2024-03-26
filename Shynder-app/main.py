@@ -451,13 +451,17 @@ def gen_matches(user_id:int):
         #check if we have match
         if db_wrapper.get_match_id(db, user.id, current_user.id) is not None:
             continue
+        
+        matched_interest = interests
+        matched_interest['Music taste'] = music_taste
 
         result = {
             "id": current_user.id,
             "username": current_user.username,
             "matched_interests": matched_interests,
             "description": current_user.ddescription,
-            "match_coef": coef
+            "match_coef": coef,
+            "interests": matched_interest
         }
 
         # print(coef)

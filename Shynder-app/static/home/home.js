@@ -44,10 +44,11 @@ function toggleMenu() {
 function get_matches(){
   fetch('/gen_matches/?session_id=' + user_cook).then(response => response.json()).then(data => {
     // matches.push(data);
+    console.log(data);
     data.forEach(function (match) {
       console.log(match);
       matches.push(match);
-      generateChats(match.username, match.description, match.matched_interests, match.id);
+      generateChats(match.username, match.description, match.matched_interests, match.id, match.interests);
       match_counter ++;
     });
   });
@@ -72,7 +73,7 @@ function go_logout(){
 
 const page = document.querySelector(".homepage");
 
-function generateChats(username, ddesription, matched, id) {
+function generateChats(username, ddesription, matched, id, matched_interests) {
   const nameDiv = document.createElement("div");
   const descriptionDiv = document.createElement("div");
   const matchDiv = document.createElement("div");
@@ -80,10 +81,14 @@ function generateChats(username, ddesription, matched, id) {
   const crossButtonDiv = document.createElement("div");
   const name = document.createElement("span");
   const description = document.createElement("span");
-  const match = document.createElement("span");
+  const interestDiv = document.createElement("div");
+  const interestText = document.createElement("span");
+  const subCategoryDiv = document.createElement("div");
+  const subCategoryText = document.createElement("span");
   const heartButton = document.createElement("div");
   const crossButton = document.createElement("div");
   const rectangle = document.createElement("div");
+  
   rectangle.classList.add("card");
   nameDiv.classList.add("usernameDiv");
   descriptionDiv.classList.add("descriptionDiv");
@@ -93,17 +98,40 @@ function generateChats(username, ddesription, matched, id) {
   heartButton.classList.add("likeText");
   crossButton.classList.add("crossText");
   name.classList.add("username");
-  match.classList.add("matchText");
   description.classList.add("descriptionText");
-  name.textContent = username; // Replace with actual name
-  description.textContent = ddesription; // Replace with actual description
-  match.textContent = matched; // Replace with actual match
+  interestDiv.classList.add("interestDiv");
+  interestText.classList.add("interestText");
+  subCategoryDiv.classList.add("subCategoryDiv");
+  subCategoryText.classList.add("subCategoryText");
+  name.textContent = username;
+  description.textContent = ddesription;
+  for (const key in matched_interests) {
+    if (matched_interests.hasOwnProperty(key)) {
+      if (matched_interests[key].length === 0) {
+        continue;
+      }
+      const interestDiv = document.createElement("div");
+      const subCategoryDiv = document.createElement("div");
+      const interestText = document.createElement("span");
+      const subCategoryText = document.createElement("span");
+      interestDiv.classList.add("interestDiv");
+      interestText.classList.add("interestText");
+      subCategoryDiv.classList.add("subCategoryDiv");
+      subCategoryText.classList.add("subCategoryText");
+      interestText.textContent = key + ": ";
+      subCategoryText.textContent = matched_interests[key];
+      interestDiv.appendChild(interestText);
+      subCategoryDiv.appendChild(subCategoryText);
+      interestDiv.appendChild(subCategoryDiv);
+      matchDiv.appendChild(interestDiv);
+    }
+  }
   heartButton.textContent = "❤️";
   crossButton.textContent = "❌";
   // rectangle.attributes["data-id"] = id;
   nameDiv.appendChild(name);
   descriptionDiv.appendChild(description);
-  matchDiv.appendChild(match);
+  // matchDiv.appendChild(match);
   heartButtonDiv.appendChild(heartButton);
   crossButtonDiv.appendChild(crossButton);
   rectangle.appendChild(nameDiv);

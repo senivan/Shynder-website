@@ -374,71 +374,48 @@ async def change_password(token:str, new_password:str):
     return HTMLResponse(content=html)
 
 
+
 def gen_matches(user_id:int):
     db = get_db().__next__()
     user = db_wrapper.get_user(db, user_id)
     test_results = TestAnswers(user.test_results)
-    match_with = test_results.answers['match_with']
+    match_with = set(test_results.answers['match_with'])
     matches = [] # list of matches that function will return
-    interests = test_results.answers['interests'] # list of currect user interests
-    music_taste = test_results.answers['music_taste'] # list of currect user music taste
+    interests = set(test_results.answers['interests']) # list of currect user interests
+    music_taste = set(test_results.answers['music_taste']) # list of currect user music taste
+
+    user_likes = set(like.user1_id for like in db_wrapper.get_likes(db, user_id))
+
     for current_user in db_wrapper.get_all_users(db):
         coef = 0
         current_user_test_results = TestAnswers(current_user.test_results)
-        current_user_interests = current_user_test_results.answers['interests']
-        current_user_music_taste = current_user_test_results.answers['music_taste']
-        current_user_match_with = current_user_test_results.answers['match_with']
+        current_user_interests = set(current_user_test_results.answers['interests'])
+        current_user_music_taste = set(current_user_test_results.answers['music_taste'])
+        current_user_match_with = set(current_user_test_results.answers['match_with'])
+
         if current_user.id == user.id:
             continue
-        if current_user.course not in [str_to_course_number(course) for course in match_with]:
+        if not match_with.intersection(current_user_match_with):
             continue
-        if user.course not in [str_to_course_number(course) for course in current_user_match_with]:
+        if not current_user_match_with.intersection(match_with):
             continue
-        matched_interests = {}
-
-        # match general interests
-        for interest in interests:
-            if len(current_user_interests[interest]) != 0:
-                coef += 0.5
-                matched_interests[interest] = []
-        
-        matched_interests['Music taste'] = []
-        
-        # match music taste
-        for music in music_taste:
-            if music == "Не слухаю":
-                continue
-            if music in current_user_music_taste:
-                coef += 1
-                # matched_interests.append(f"Mus.taste:{music}")
-                matched_interests['Music taste'].append(music)
-        
-        # match subinterests
-        for interest in interests:
-            for subinterest in interests[interest]:
-                if subinterest in current_user_interests[interest]:
-                    coef += 1
-                    # matched_interests.append(subinterest)
-                    matched_interests[interest].append(subinterest)
-        
-        #check if current likes us
-        try:
-            if user.id in [like.user1_id for like in db_wrapper.get_likes(db, current_user.id)]:
-                coef *= 1.3
-                matched_interests['Liked'] = True
-            
-            #check if we like current
-            if current_user.id in [like.user1_id for like in db_wrapper.get_likes(db, user.id)]:
-                continue
-        except TypeError:
-            pass
-        #check if we have match
         if db_wrapper.get_match_id(db, user.id, current_user.id) is not None:
             continue
-        
-        # matched_interest = interests
-        # matched_interest['Music taste'] = music_taste
 
+        matched_interests = {interest: [] for interest in interests.intersection(current_user_interests)}
+        coef += 0.5 * len(matched_interests)
+
+        matched_interests['Music taste'] = list(music_taste.intersection(current_user_music_taste))
+        coef += len(matched_interests['Music taste'])
+
+        for interest in interests.intersection(current_user_interests):
+            matched_interests[interest] = list(set(test_results.answers[interest]).intersection(current_user_test_results.answers[interest]))
+            coef += len(matched_interests[interest])
+        
+        if user.id in user_likes:
+            coef *= 1.3
+            matched_interests['Liked'] = True
+        
         result = {
             "id": current_user.id,
             "username": current_user.username,
@@ -447,10 +424,11 @@ def gen_matches(user_id:int):
             "match_coef": coef,
             "interests": matched_interests
         }
-
-        # print(coef)
         matches.append(result)
     return matches
+        
+
+
 
 # def dict_serialize(dictionary):
 #     result = {}

@@ -82,7 +82,7 @@ class TestAnswers:
     def from_json(json_str:str):
         return json.loads(json_str)
     
-course_dct = {1: "1 курс", 2: "2 курс", 3: "3 курс", 4: "4 курс", 5: "Магістр", 6: "Аспірант", 7: "Працівник"}
+course_dct = {"1 курс": 1, "2 курс": 2, "3 курс": 3, "4 курс": 4, "Магістр": 5, "Аспірант": 6, "Працівник": 7}
 def str_to_course_number(course:str):
     return course_dct[course]
 class ConnectionManager:
@@ -499,10 +499,12 @@ async def swipe_left(session_id:str, user_id:int):
     db = get_db().__next__()
     user2_id = user_id
     user1_id = active_users[session_id.encode('utf-8')].id
-    if await db_wrapper.get_match_id(db, user1_id, user2_id) is not None:
+    match_id = await db_wrapper.get_match_id(db, user1_id, user2_id)
+    if match_id is not None:
         return {"message": "match already exists"}
-    if await db_wrapper.get_like_id(db, user2_id, user1_id) is not None:
-        await db_wrapper.delete_like(db, await db_wrapper.get_like_id(db, user2_id, user1_id))
+    like_id = await db_wrapper.get_like_id(db, user2_id, user1_id)
+    if like_id is not None:
+        await db_wrapper.delete_like(db, like_id)
         await db_wrapper.create_match(db, schemas.MatchCreate(user1_id=user1_id, user2_id=user2_id))
         return {"message": "Matched"}
     await db_wrapper.create_like(db, schemas.LikeCreate(user1_id=user1_id, user2_id=user2_id))
@@ -513,6 +515,7 @@ async def swipe_right(session_id:str, user_id:int):
     db = get_db().__next__()
     user2_id = user_id
     user1_id = active_users[session_id.encode('utf-8')].id
-    if await db_wrapper.get_like_id(db, user2_id, user1_id) is not None:
-        await db_wrapper.delete_like(db, await db_wrapper.get_like_id(db, user2_id, user1_id))
+    like_id = await db_wrapper.get_like_id(db, user2_id, user1_id)
+    if like_id is not None:
+        await db_wrapper.delete_like(db,like_id)
     return {"message": "Disliked"}

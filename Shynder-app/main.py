@@ -476,7 +476,7 @@ async def generate_matches(session_id:str):
 @app.get("/match/")
 async def match(user1_id:int, user2_id:int):
     db = get_db().__next__()
-    await db_wrapper.create_match(db, schemas.MatchCreate(user1_id=user1_id, user2_id=user2_id))
+    db_wrapper.create_match(db, schemas.MatchCreate(user1_id=user1_id, user2_id=user2_id))
     return {"message": "Success"}
 
 @app.websocket("/chats_websocket/")
@@ -504,10 +504,10 @@ async def swipe_left(session_id:str, user_id:int):
         return {"message": "match already exists"}
     like_id = db_wrapper.get_like_id(db, user2_id, user1_id)
     if like_id is not None:
-        await db_wrapper.delete_like(db, like_id)
-        await db_wrapper.create_match(db, schemas.MatchCreate(user1_id=user1_id, user2_id=user2_id))
+        db_wrapper.delete_like(db, like_id)
+        db_wrapper.create_match(db, schemas.MatchCreate(user1_id=user1_id, user2_id=user2_id))
         return {"message": "Matched"}
-    await db_wrapper.create_like(db, schemas.LikeCreate(user1_id=user1_id, user2_id=user2_id))
+    db_wrapper.create_like(db, schemas.LikeCreate(user1_id=user1_id, user2_id=user2_id))
     return {"message": "Liked"}
 
 @app.get("/swipe_right/")

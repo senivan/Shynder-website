@@ -50,7 +50,7 @@ executor = ThreadPoolExecutor()
 
 def load_html():
     global HTML_CHATS, HTML_HOME, HTML_LOGIN, HTML_REGISTER, HTML_REGISTERED, HTML_PROFILE, HTML_RESET_PASS, HTML_FORGOT, HTML_RST
-    with open("./static/chats/chats_page.html", "r", encoding="utf-8") as file:
+    with open("./static/chats/chats.html", "r", encoding="utf-8") as file:
         HTML_CHATS = file.read()
     with open("./static/home/home.html", "r", encoding="utf-8") as file:
         HTML_HOME = file.read()
@@ -58,15 +58,15 @@ def load_html():
         HTML_LOGIN = file.read()
     with open("./static/login/registration_page.html", "r", encoding="utf-8") as file:
         HTML_REGISTER = file.read()
-    with open("./static/redirect_pages/registered.html", "r", encoding="utf-8") as file:
+    with open("./static/redirect_pages/registred.html", "r", encoding="utf-8") as file:
         HTML_REGISTERED = file.read()
-    with open("./static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
+    with open("static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
         HTML_PROFILE = file.read()
-    with open("./static/redirect_pages/reset_pass.html", "r", encoding="utf-8") as file:
+    with open("static/redirect_pages/reset_pass.html", "r", encoding="utf-8") as file:
         HTML_RESET_PASS = file.read()
-    with open("./static/reset/reset.html", "r", encoding="utf-8") as file:
+    with open("static/reset/reset.html", "r", encoding="utf-8") as file:
         HTML_RST = file.read()
-    with open("./static/reset/forgot.html", "r", encoding="utf-8") as file:
+    with open("static/reset/forgot.html", "r", encoding="utf-8") as file:
         HTML_FORGOT = file.read()
 
 load_html()

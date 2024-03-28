@@ -10,7 +10,7 @@
   font-family: rubik;
 }
 body{
-  background-color: #ccbcf4;
+  background-color: #fdfdfd;
   font-family: rubik;
 }
 .closeIcon {
@@ -106,7 +106,7 @@ font-weight: 500;
 }
 .homepagedesctop {
   width: 100%;
-  height: 1024px;
+  height: 100%;
   display: flex;
   overflow: hidden;
   position: relative;

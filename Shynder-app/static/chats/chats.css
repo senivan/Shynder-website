@@ -319,7 +319,7 @@ border-radius: 50%;
 float: left;
 } */
 
-@media only screen and (max-height: 768px) {
+@media only screen and (max-width: 500px) {
   .hamburger {
     z-index: 100;
     top: 10px;

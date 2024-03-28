@@ -381,7 +381,7 @@ font-weight: 500;
   font-weight: bold;
 }
 
-@media only screen and (max-height: 768px) {
+@media only screen and (max-width: 500px) {
   .hamburger {
     position: fixed;
     z-index: 100;

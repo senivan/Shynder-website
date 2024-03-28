@@ -33,7 +33,7 @@ from fastapi import WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 import bcrypt
-from mail_wrapper import *
+from mail_wrapper import send_email
 from sql import models, schemas, db_wrapper
 from sql.database import SessionLocal, engine
 
@@ -47,6 +47,29 @@ waiting_verification = {}
 waiting_reset = {}
 app.mount('/static', StaticFiles(directory='static', html=True), name='static')
 executor = ThreadPoolExecutor()
+
+def load_html():
+    global HTML_CHATS, HTML_HOME, HTML_LOGIN, HTML_REGISTER, HTML_REGISTERED, HTML_PROFILE, HTML_RESET_PASS, HTML_FORGOT, HTML_RST
+    with open("./static/chats/chats_page.html", "r", encoding="utf-8") as file:
+        HTML_CHATS = file.read()
+    with open("./static/home/home.html", "r", encoding="utf-8") as file:
+        HTML_HOME = file.read()
+    with open("./static/login/login_page.html", "r", encoding="utf-8") as file:
+        HTML_LOGIN = file.read()
+    with open("./static/login/registration_page.html", "r", encoding="utf-8") as file:
+        HTML_REGISTER = file.read()
+    with open("./static/redirect_pages/registered.html", "r", encoding="utf-8") as file:
+        HTML_REGISTERED = file.read()
+    with open("./static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
+        HTML_PROFILE = file.read()
+    with open("./static/redirect_pages/reset_pass.html", "r", encoding="utf-8") as file:
+        HTML_RESET_PASS = file.read()
+    with open("./static/reset/reset.html", "r", encoding="utf-8") as file:
+        HTML_RST = file.read()
+    with open("./static/reset/forgot.html", "r", encoding="utf-8") as file:
+        HTML_FORGOT = file.read()
+
+load_html()
 
 class TestAnswers:
     def __init__(self, answers:str):
@@ -136,6 +159,11 @@ class ConnectionManager:
     async def process_data(self, message: 'Message', websocket: WebSocket):
         await asyncio.get_event_loop().run_in_executor(executor, self.sync_process_data, message, websocket)
 
+
+def sync_read_file(file:str):
+    with open(file, "r", encoding="utf-8") as file:
+        return file.read()
+
 class Message:
     def __init__(self, sender:str, receiver:str, messege:str,time, command:str = ""):
         self.sender = sender
@@ -162,10 +190,7 @@ def get_db():
         db.close()
 @app.get("/", response_class=HTMLResponse)
 async def root():
-    html_con = ""
-    with open("static/login/login_page.html", "r", encoding="utf-8") as file:
-        html_con = file.read()
-    return html_con
+    return HTMLResponse(content=HTML_LOGIN)
 
 @app.get("/favicon.ico")
 async def favicon():
@@ -214,27 +239,28 @@ async def login(login:str, password:str):
 
 @app.get("/home/", response_class=HTMLResponse)
 async def home():
-    with open("static/home/home.html", "r", encoding="utf-8") as file:
-        html_con = file.read()
-    return html_con
+    # with open("static/home/home.html", "r", encoding="utf-8") as file:
+    #     html_con = file.read()
+    return HTMLResponse(content=HTML_HOME)
 
 @app.get("/logout/", response_class=HTMLResponse)
 async def logout(session_id:str):
     if session_id in active_users:
         del active_users[session_id]
-    with open("static/login/login_page.html", "r", encoding="utf-8") as file:
-        html_con = file.read()
-    return html_con
+    # with open("static/login/login_page.html", "r", encoding="utf-8") as file:
+    #     html_con = file.read()
+    return HTMLResponse(content=HTML_LOGIN)
 
-def embed_user_into_profile_html(email:str):
-    with open("static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
-        html_con = file.read()
+async def embed_user_into_profile_html(email:str):
+    # with open("static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
+    #     html_con = file.read()
+    html_con = HTML_PROFILE
     html_con = html_con.replace("<user_email></user_email>", f'<user_email class="user">{email}</user_email>')
     return html_con
 
 @app.get("/profile/", response_class=HTMLResponse)
 async def profile(email:str=""):
-    html_con = embed_user_into_profile_html(email)
+    html_con = await embed_user_into_profile_html(email)
     return HTMLResponse(content=html_con)
 
 @app.get("/register/")
@@ -247,7 +273,7 @@ async def register(username:str, ddescription:str, course:str, full_name:str, em
         return {"message":"User already exists"}
     # print(isinstance(ppassword, str))
     # print(isinstance(hash_bcr(ppassword), bytes))
-    user = schemas.UserCreate(username=username, ddescription=ddescription, course=cs, full_name=full_name, email=email, ppassword=hash_bcr(ppassword), test_results=test_results)
+    user = schemas.UserCreate(username=username, ddescription=ddescription, course=cs, full_name=full_name, email=email, ppassword= hash_bcr(ppassword), test_results=test_results)
     token = str(hash_bcr(email + str(random.randint(0, 1000000))))
     waiting_verification[token] = user
     await send_email(email, username, token)
@@ -266,9 +292,9 @@ async def verify(token:str):
         db = get_db().__next__()
         db_wrapper.create_user(db, waiting_verification[token])
         del waiting_verification[token]
-    html = ""
-    with open("static/login/login_page.html", "r", encoding="utf-8") as file:
-        html = file.read()
+    html = HTML_LOGIN
+    # with open("static/login/login_page.html", "r", encoding="utf-8") as file:
+    #     html = file.read()
     html = embed_message_block(html, type="ver_message")
     return HTMLResponse(content=html)
 
@@ -287,9 +313,9 @@ async def update_user(session_id:str, username:str, ddescription:str, course:str
         cs = str_to_course_number(course)
         db_wrapper.update_user(db, user.id, username=username, ddescription=ddescription, course=cs, email=email, test_results=test_results)
         active_users[session_id.encode('utf-8')] = db_wrapper.get_user_by_email(db, email)
-    with open("static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
-        html_con = file.read()
-    return html_con
+    # with open("static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
+    #     html_con = file.read()
+    return HTML_PROFILE
 
 @app.get("/delete_user/", response_class=HTMLResponse)
 async def delete_user(session_id:str):
@@ -297,15 +323,10 @@ async def delete_user(session_id:str):
         db = get_db().__next__()
         db_wrapper.delete_user(db, active_users[session_id.encode('utf-8')].id)
         del active_users[session_id.encode('utf-8')]
-    with open("static/login/login_page.html", "r", encoding="utf-8") as file:
-        html_con = file.read()
-    return html_con
+    # with open("static/login/login_page.html", "r", encoding="utf-8") as file:
+    #     html_con = file.read()
+    return HTML_LOGIN
 
-# @app.get("/temp/", response_class=HTMLResponse)
-# async def temp():
-#     with open("./static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
-#         html_con = '\n'.join(file.readlines())
-#     return html_con
 
 @app.get("/get_all_active_users/")
 async def get_all_active_users():
@@ -314,13 +335,11 @@ async def get_all_active_users():
 @app.get("/get_user_by_email/")
 async def get_user_by_email(email:str):
     db = get_db().__next__()
-    return db_wrapper.get_user_by_email(db, email)
+    return await db_wrapper.get_user_by_email(db, email)
 
 @app.get("/chats_page/", response_class=HTMLResponse)
 async def chats_page():
-    with open("static/chats/chats.html", "r", encoding="utf-8") as file:
-        html_con = file.read()
-    return html_con
+    return HTML_CHATS
 
 @app.get("/forgot_password/")
 async def forgot_password(email:str):
@@ -336,21 +355,22 @@ async def forgot_password(email:str):
 @app.get("/reset_password/", response_class=HTMLResponse)
 async def reset_password(token:str):
     if token in waiting_reset:
-        with open("static/reset/reset.html", "r", encoding="utf-8") as file:
-            html_con = file.read()
-        return HTMLResponse(content=html_con)
+        # with open("static/reset/reset.html", "r", encoding="utf-8") as file:
+        #     html_con = file.read()
+        return HTMLResponse(content=HTML_RST)
 
 @app.get("/change_password/", response_class=HTMLResponse)
 async def change_password(token:str, new_password:str):
     if token in waiting_reset:
         db = get_db().__next__()
-        print(isinstance(new_password, str))
-        print(isinstance(hash_bcr(new_password), bytes))
-        db_wrapper.update_user(db, waiting_reset[token].id, ppassword=hash_bcr(new_password))
+        # print(isinstance(new_password, str))
+        # print(isinstance(hash_bcr(new_password), bytes))
+        await db_wrapper.update_user(db, waiting_reset[token].id, ppassword=hash_bcr(new_password))
         del waiting_reset[token]
-    html = ""
-    with open("static/login/login_page.html", "r", encoding="utf-8") as file:
-        html = file.read()
+    # html = ""
+    # with open("static/login/login_page.html", "r", encoding="utf-8") as file:
+    #     html = file.read()
+    html = HTML_LOGIN
     html = embed_message_block(html, type="ver_message")
     return HTMLResponse(content=html)
 

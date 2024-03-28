@@ -416,32 +416,38 @@ def gen_matches(user_id:int):
             print("Oopsie we dont match with user")
             continue
 
-        matched_interests = []
+        matched_interests = {}
 
         # match general interests
         for interest in interests:
             if len(current_user_interests[interest]) != 0:
                 coef += 0.5
-                matched_interests.append(interest)
+                matched_interests[interest] = []
+        
+        matched_interests['Music taste'] = []
         
         # match music taste
         for music in music_taste:
+            if music == "Не слухаю":
+                continue
             if music in current_user_music_taste:
                 coef += 1
-                matched_interests.append(f"Mus.taste:{music}")
+                # matched_interests.append(f"Mus.taste:{music}")
+                matched_interests['Music taste'].append(music)
         
         # match subinterests
         for interest in interests:
             for subinterest in interests[interest]:
                 if subinterest in current_user_interests[interest]:
                     coef += 1
-                    matched_interests.append(subinterest)
+                    # matched_interests.append(subinterest)
+                    matched_interests[interest].append(subinterest)
         
         #check if current likes us
         try:
             if user.id in [like.user1_id for like in db_wrapper.get_likes(db, current_user.id)]:
                 coef *= 1.3
-                matched_interests.append("Вподобав вас")
+                matched_interests['Liked'] = True
             
             #check if we like current
             if current_user.id in [like.user1_id for like in db_wrapper.get_likes(db, user.id)]:
@@ -452,8 +458,8 @@ def gen_matches(user_id:int):
         if db_wrapper.get_match_id(db, user.id, current_user.id) is not None:
             continue
         
-        matched_interest = interests
-        matched_interest['Music taste'] = music_taste
+        # matched_interest = interests
+        # matched_interest['Music taste'] = music_taste
 
         result = {
             "id": current_user.id,
@@ -461,7 +467,7 @@ def gen_matches(user_id:int):
             "matched_interests": matched_interests,
             "description": current_user.ddescription,
             "match_coef": coef,
-            "interests": matched_interest
+            "interests": matched_interests
         }
 
         # print(coef)

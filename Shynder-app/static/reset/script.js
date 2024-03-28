@@ -30,7 +30,8 @@ function submit_email(){
     }
     fetch('/forgot_password/?email='+email).then(response => response.json()).then(data => {
        if (data['message'] == "Success"){
-            alert("На вашу пошту було відправлено лист з інструкціями по відновленню паролю");
+            // alert("На вашу пошту було відправлено лист з інструкціями по відновленню паролю");
+            window.location.href = '/static/rediret_pages/reset_pass.html';
        } else {
             alert("Перевірте правильність введення пошти");
        }

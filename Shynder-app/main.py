@@ -40,7 +40,7 @@ from sql.database import SessionLocal, engine
 
 
 models.Base.metadata.create_all(bind=engine)
-app = FastAPI(openapi_url="")
+app = FastAPI()
 
 active_users = {}
 waiting_verification = {}
@@ -60,20 +60,8 @@ class TestAnswers:
         return json.loads(json_str)
     
 def str_to_course_number(course:str):
-    if course == "1 курс":
-        return 1
-    elif course == "2 курс":
-        return 2
-    elif course == "3 курс":
-        return 3
-    elif course == "4 курс":
-        return 4
-    elif course == "Магістр":
-        return 5
-    elif course == "Аспірант":
-        return 6
-    elif course == "Працівник":
-        return 7
+    dct = {"1 курс": 1, "2 курс": 2, "3 курс": 3, "4 курс": 4, "Магістр": 5, "Аспірант": 6, "Працівник": 7}
+    return dct[course]
 class ConnectionManager:
     def __init__(self):
         self.active_sockets = {}

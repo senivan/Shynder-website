@@ -268,12 +268,12 @@ async def register(username:str, ddescription:str, course:str, full_name:str, em
     cs = str_to_course_number(course)
     if not ("ucu.edu.ua" in email):
         return {"message":"Not UCU mail"}
-    if db_wrapper.get_user_by_email(db, email) is not None:
+    if await db_wrapper.get_user_by_email(db, email) is not None:
         return {"message":"User already exists"}
     # print(isinstance(ppassword, str))
     # print(isinstance(hash_bcr(ppassword), bytes))
-    user = schemas.UserCreate(username=username, ddescription=ddescription, course=cs, full_name=full_name, email=email, ppassword= hash_bcr(ppassword), test_results=test_results)
-    token = str(hash_bcr(email + str(random.randint(0, 1000000))))
+    user = schemas.UserCreate(username=username, ddescription=ddescription, course=cs, full_name=full_name, email=email, ppassword= await hash_bcr(ppassword), test_results=test_results)
+    token = str(await hash_bcr(email + str(random.randint(0, 1000000))))
     waiting_verification[token] = user
     await send_email(email, username, token)
     return {"message": "Waiting verification"}
@@ -289,12 +289,12 @@ def embed_message_block(html:str, type:str):
 async def verify(token:str):
     if token in waiting_verification:
         db = get_db().__next__()
-        db_wrapper.create_user(db, waiting_verification[token])
+        await db_wrapper.create_user(db, waiting_verification[token])
         del waiting_verification[token]
     html = HTML_LOGIN
     # with open("static/login/login_page.html", "r", encoding="utf-8") as file:
     #     html = file.read()
-    html = embed_message_block(html, type="ver_message")
+    html = await embed_message_block(html, type="ver_message")
     return HTMLResponse(content=html)
 
 
@@ -310,8 +310,8 @@ async def update_user(session_id:str, username:str, ddescription:str, course:str
         db = get_db().__next__()
         user = active_users[session_id.encode('utf-8')]
         cs = str_to_course_number(course)
-        db_wrapper.update_user(db, user.id, username=username, ddescription=ddescription, course=cs, email=email, test_results=test_results)
-        active_users[session_id.encode('utf-8')] = db_wrapper.get_user_by_email(db, email)
+        await db_wrapper.update_user(db, user.id, username=username, ddescription=ddescription, course=cs, email=email, test_results=test_results)
+        active_users[session_id.encode('utf-8')] = await db_wrapper.get_user_by_email(db, email)
     # with open("static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
     #     html_con = file.read()
     return HTML_PROFILE
@@ -320,7 +320,7 @@ async def update_user(session_id:str, username:str, ddescription:str, course:str
 async def delete_user(session_id:str):
     if session_id.encode('utf-8') in active_users:
         db = get_db().__next__()
-        db_wrapper.delete_user(db, active_users[session_id.encode('utf-8')].id)
+        await db_wrapper.delete_user(db, active_users[session_id.encode('utf-8')].id)
         del active_users[session_id.encode('utf-8')]
     # with open("static/login/login_page.html", "r", encoding="utf-8") as file:
     #     html_con = file.read()
@@ -343,10 +343,10 @@ async def chats_page():
 @app.get("/forgot_password/")
 async def forgot_password(email:str):
     db = get_db().__next__()
-    user = db_wrapper.get_user_by_email(db, email)
+    user = await db_wrapper.get_user_by_email(db, email)
     if user is None:
         return {"message": "User not found"}
-    token = str(hash_bcr(email + str(random.randint(0, 1000000))))
+    token = str(await hash_bcr(email + str(random.randint(0, 1000000))))
     waiting_reset[token] = user
     await send_email(email, user.username, token, type="reset")
     return {"message": "Success"}
@@ -476,7 +476,7 @@ async def generate_matches(session_id:str):
 @app.get("/match/")
 async def match(user1_id:int, user2_id:int):
     db = get_db().__next__()
-    db_wrapper.create_match(db, schemas.MatchCreate(user1_id=user1_id, user2_id=user2_id))
+    await db_wrapper.create_match(db, schemas.MatchCreate(user1_id=user1_id, user2_id=user2_id))
     return {"message": "Success"}
 
 @app.websocket("/chats_websocket/")
@@ -487,25 +487,25 @@ async def chats_websocket(websocket: WebSocket, session_id:str):
 @app.get("/get_match/")
 async def get_match(match_id:int):
     db = get_db().__next__()
-    return db_wrapper.get_match(db, match_id)
+    return await db_wrapper.get_match(db, match_id)
 
 @app.get("/get_user_by_id/")
 async def get_user_by_id(user_id:int):
     db = get_db().__next__()
-    return db_wrapper.get_user(db, user_id)
+    return await db_wrapper.get_user(db, user_id)
 
 @app.get("/swipe_left/")
 async def swipe_left(session_id:str, user_id:int):
     db = get_db().__next__()
     user2_id = user_id
     user1_id = active_users[session_id.encode('utf-8')].id
-    if db_wrapper.get_match_id(db, user1_id, user2_id) is not None:
+    if await db_wrapper.get_match_id(db, user1_id, user2_id) is not None:
         return {"message": "match already exists"}
-    if db_wrapper.get_like_id(db, user2_id, user1_id) is not None:
-        db_wrapper.delete_like(db, db_wrapper.get_like_id(db, user2_id, user1_id))
-        db_wrapper.create_match(db, schemas.MatchCreate(user1_id=user1_id, user2_id=user2_id))
+    if await db_wrapper.get_like_id(db, user2_id, user1_id) is not None:
+        await db_wrapper.delete_like(db, await db_wrapper.get_like_id(db, user2_id, user1_id))
+        await db_wrapper.create_match(db, schemas.MatchCreate(user1_id=user1_id, user2_id=user2_id))
         return {"message": "Matched"}
-    db_wrapper.create_like(db, schemas.LikeCreate(user1_id=user1_id, user2_id=user2_id))
+    await db_wrapper.create_like(db, schemas.LikeCreate(user1_id=user1_id, user2_id=user2_id))
     return {"message": "Liked"}
 
 @app.get("/swipe_right/")
@@ -513,6 +513,6 @@ async def swipe_right(session_id:str, user_id:int):
     db = get_db().__next__()
     user2_id = user_id
     user1_id = active_users[session_id.encode('utf-8')].id
-    if db_wrapper.get_like_id(db, user2_id, user1_id) is not None:
-        db_wrapper.delete_like(db, db_wrapper.get_like_id(db, user2_id, user1_id))
+    if await db_wrapper.get_like_id(db, user2_id, user1_id) is not None:
+        await db_wrapper.delete_like(db, await db_wrapper.get_like_id(db, user2_id, user1_id))
     return {"message": "Disliked"}

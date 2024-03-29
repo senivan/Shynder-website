@@ -381,8 +381,10 @@ def gen_matches(user_id:int):
     test_results = TestAnswers(user.test_results)
     match_with = set(test_results.answers['match_with'])
     matches = [] # list of matches that function will return
-    interests = set(test_results.answers['interests']) # list of currect user interests
+    # interests = set(test_results.answers['interests']) # list of currect user interests
     music_taste = set(test_results.answers['music_taste']) # list of currect user music taste
+    general_interests = set(test_results.answers['interests'].keys())
+    specific_interests = test_results.answers['interests']
 
     # user_likes = 
     user_likes = set(like.user2_id for like in db_wrapper.get_likes(db, user_id, type="user1"))
@@ -390,9 +392,11 @@ def gen_matches(user_id:int):
     for current_user in db_wrapper.get_all_users(db):
         coef = 0
         current_user_test_results = TestAnswers(current_user.test_results)
-        current_user_interests = set(current_user_test_results.answers['interests'])
+        # current_user_interests = set(current_user_test_results.answers['interests'])
         current_user_music_taste = set(current_user_test_results.answers['music_taste'])
         current_user_match_with = set(current_user_test_results.answers['match_with'])
+        current_user_gen_interests = set(current_user_test_results.answers['interests'].keys())
+        current_user_specific_interests = current_user_test_results.answers['interests']
         print(current_user.email)
         if current_user.id == user.id:
             continue
@@ -405,18 +409,16 @@ def gen_matches(user_id:int):
         if db_wrapper.get_match_id(db, user.id, current_user.id) is not None:
             continue
 
-        matched_interests = {interest: [] for interest in interests.intersection(current_user_interests)}
+        matched_interests = {interest: [] for interest in general_interests.intersection(current_user_gen_interests)}
         coef += 0.5 * len(matched_interests)
 
+        for interest in general_interests.intersection(current_user_gen_interests):
+            matched_interests[interest] = list(set(specific_interests[interest]).intersection(set(current_user_specific_interests[interest])))
+            coef += len(matched_interests[interest])
+
+        
         matched_interests['Music taste'] = list(music_taste.intersection(current_user_music_taste))
         coef += len(matched_interests['Music taste'])
-
-        for interest in interests.intersection(current_user_interests):
-            try:
-                matched_interests[interest] = list(set(test_results.answers[interest]).intersection(current_user_test_results.answers[interest]))
-                coef += len(matched_interests[interest])
-            except KeyError:
-                continue
 
         result = {
             "id": current_user.id,
@@ -427,7 +429,8 @@ def gen_matches(user_id:int):
             "interests": matched_interests
         }
         matches.append(result)
-    return matches
+        return matches
+    # return matches
         
 
 

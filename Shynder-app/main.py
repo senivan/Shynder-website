@@ -219,7 +219,7 @@ def sync_login(login:str, password:str):
         msg = {"message": "User not found"}
     if user in active_users.values():
         flag = False
-        msg = {"message": "Success", "session_id": [key for key in active_users if active_users[key] == user][0].decode('utf-8')}
+        msg = {"message": "Success", "session_id": [key for key in active_users if active_users[key] == user][0]}
     if flag:
         while True:
             session_id = hash_bcr(login) + hash_bcr(str(random.randint(0, 1000000)))
@@ -232,7 +232,7 @@ def sync_login(login:str, password:str):
 
 @app.get("/login/")
 async def login(login:str, password:str):
-    return await asyncio.get_event_loop().run_in_executor(executor, sync_login, login, password)
+    return sync_login(login, password)
 
 
 
@@ -393,7 +393,7 @@ def gen_matches(user_id:int):
         current_user_interests = set(current_user_test_results.answers['interests'])
         current_user_music_taste = set(current_user_test_results.answers['music_taste'])
         current_user_match_with = set(current_user_test_results.answers['match_with'])
-
+        print(current_user.email)
         if current_user.id == user.id:
             continue
         if current_user.id in user_likes:
@@ -412,8 +412,11 @@ def gen_matches(user_id:int):
         coef += len(matched_interests['Music taste'])
 
         for interest in interests.intersection(current_user_interests):
-            matched_interests[interest] = list(set(test_results.answers[interest]).intersection(current_user_test_results.answers[interest]))
-            coef += len(matched_interests[interest])
+            try:
+                matched_interests[interest] = list(set(test_results.answers[interest]).intersection(current_user_test_results.answers[interest]))
+                coef += len(matched_interests[interest])
+            except KeyError:
+                continue
 
         result = {
             "id": current_user.id,
@@ -486,6 +489,13 @@ async def swipe_left(session_id:str, user_id:int):
         return {"message": "Matched"}
     db_wrapper.create_like(db, schemas.LikeCreate(user1_id=user1_id, user2_id=user2_id))
     return {"message": "Liked"}
+
+@app.get("/delete_all_likes/")
+async def delete_all_likes():
+    db = get_db().__next__()
+    db.query(models.Likes).delete()
+    db.commit()
+    return {"message": "Success"}
 
 @app.get("/swipe_right/")
 async def swipe_right(session_id:str, user_id:int):

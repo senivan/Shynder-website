@@ -9,6 +9,11 @@ class MatchCreate(MatchBase):
 
 class Match(MatchBase):
     id : int
+
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        return self
     class Config:
         orm_mode = True
 
@@ -27,6 +32,11 @@ class UserCreate(UserBase):
 class User(UserBase):
     id : int
     matches : list[Match] = []
+
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        return self
     class Config:
         orm_mode = True
 
@@ -40,5 +50,10 @@ class LikeCreate(LikeBase):
 
 class Like(LikeBase):
     id : int
+
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        return self
     class Config:
         orm_mode = True

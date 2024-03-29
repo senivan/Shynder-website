@@ -28,21 +28,21 @@ def get_all_matches(db: Session, user_id:int):
     return db.query(models.Match).where(models.Match.user1_id == user_id).all() + db.query(models.Match).where(models.Match.user2_id == user_id).all()
 
 def create_user(db: Session, user: schemas.UserCreate):
-    db_user = models.User(**user.dict())
+    db_user = models.User(user.model_dump())
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
     return db_user
 
 def create_match(db: Session, match: schemas.MatchCreate):
-    db_match = models.Match(**match.dict())
+    db_match = models.Match(match.model_dump())
     db.add(db_match)
     db.commit()
     db.refresh(db_match)
     return db_match
 
 def create_like(db: Session, like: schemas.LikeCreate):
-    db_like = models.Likes(**like.dict())
+    db_like = models.Likes(like.model_dump())
     db.add(db_like)
     db.commit()
     db.refresh(db_like)

@@ -268,7 +268,7 @@ async def register(username:str, ddescription:str, course:str, full_name:str, em
     cs = str_to_course_number(course)
     if not ("ucu.edu.ua" in email):
         return {"message":"Not UCU mail"}
-    if await db_wrapper.get_user_by_email(db, email) is not None:
+    if db_wrapper.get_user_by_email(db, email) is not None:
         return {"message":"User already exists"}
     # print(isinstance(ppassword, str))
     # print(isinstance(hash_bcr(ppassword), bytes))
@@ -289,7 +289,7 @@ def embed_message_block(html:str, type:str):
 async def verify(token:str):
     if token in waiting_verification:
         db = get_db().__next__()
-        await db_wrapper.create_user(db, waiting_verification[token])
+        db_wrapper.create_user(db, waiting_verification[token])
         del waiting_verification[token]
     html = HTML_LOGIN
     # with open("static/login/login_page.html", "r", encoding="utf-8") as file:
@@ -310,8 +310,8 @@ async def update_user(session_id:str, username:str, ddescription:str, course:str
         db = get_db().__next__()
         user = active_users[session_id.encode('utf-8')]
         cs = str_to_course_number(course)
-        await db_wrapper.update_user(db, user.id, username=username, ddescription=ddescription, course=cs, email=email, test_results=test_results)
-        active_users[session_id.encode('utf-8')] = await db_wrapper.get_user_by_email(db, email)
+        db_wrapper.update_user(db, user.id, username=username, ddescription=ddescription, course=cs, email=email, test_results=test_results)
+        active_users[session_id.encode('utf-8')] = db_wrapper.get_user_by_email(db, email)
     # with open("static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
     #     html_con = file.read()
     return HTML_PROFILE
@@ -320,7 +320,7 @@ async def update_user(session_id:str, username:str, ddescription:str, course:str
 async def delete_user(session_id:str):
     if session_id.encode('utf-8') in active_users:
         db = get_db().__next__()
-        await db_wrapper.delete_user(db, active_users[session_id.encode('utf-8')].id)
+        db_wrapper.delete_user(db, active_users[session_id.encode('utf-8')].id)
         del active_users[session_id.encode('utf-8')]
     # with open("static/login/login_page.html", "r", encoding="utf-8") as file:
     #     html_con = file.read()
@@ -334,7 +334,7 @@ async def get_all_active_users():
 @app.get("/get_user_by_email/")
 async def get_user_by_email(email:str):
     db = get_db().__next__()
-    return await db_wrapper.get_user_by_email(db, email)
+    return db_wrapper.get_user_by_email(db, email)
 
 @app.get("/chats_page/", response_class=HTMLResponse)
 async def chats_page():
@@ -343,7 +343,7 @@ async def chats_page():
 @app.get("/forgot_password/")
 async def forgot_password(email:str):
     db = get_db().__next__()
-    user = await db_wrapper.get_user_by_email(db, email)
+    user = db_wrapper.get_user_by_email(db, email)
     if user is None:
         return {"message": "User not found"}
     token = str(await hash_bcr(email + str(random.randint(0, 1000000))))
@@ -364,7 +364,7 @@ async def change_password(token:str, new_password:str):
         db = get_db().__next__()
         # print(isinstance(new_password, str))
         # print(isinstance(hash_bcr(new_password), bytes))
-        await db_wrapper.update_user(db, waiting_reset[token].id, ppassword=hash_bcr(new_password))
+        db_wrapper.update_user(db, waiting_reset[token].id, ppassword=hash_bcr(new_password))
         del waiting_reset[token]
     # html = ""
     # with open("static/login/login_page.html", "r", encoding="utf-8") as file:
@@ -494,5 +494,5 @@ async def swipe_right(session_id:str, user_id:int):
     user1_id = active_users[session_id.encode('utf-8')].id # user1_id is the one who is swiping
     like_id = db_wrapper.get_like_id(db, user2_id, user1_id)
     if like_id is not None:
-        await db_wrapper.delete_like(db,like_id)
+        db_wrapper.delete_like(db,like_id)
     return {"message": "Disliked"}

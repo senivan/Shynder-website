@@ -397,7 +397,6 @@ def gen_matches(user_id:int):
         current_user_match_with = set(current_user_test_results.answers['match_with'])
         current_user_gen_interests = set(current_user_test_results.answers['interests'].keys())
         current_user_specific_interests = current_user_test_results.answers['interests']
-        print(current_user.email)
         if current_user.id == user.id:
             continue
         if current_user.id in user_likes:
@@ -446,7 +445,8 @@ def generate_matches_sync(session_id:str):
     if session_id.encode('utf-8') in active_users:
         user = active_users[session_id.encode('utf-8')]
         temp = gen_matches(user.id)
-        return sorted(temp, key=lambda x: x['match_coef'], reverse=True)
+        # return sorted(temp, key=lambda x: x['match_coef'], reverse=True)
+        return temp
     return {"message": "User not found"}
 
 @app.get("/gen_matches/")

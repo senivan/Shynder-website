@@ -384,7 +384,8 @@ def gen_matches(user_id:int):
     interests = set(test_results.answers['interests']) # list of currect user interests
     music_taste = set(test_results.answers['music_taste']) # list of currect user music taste
 
-    user_likes = set(like.user1_id for like in db_wrapper.get_likes(db, user_id))
+    # user_likes = 
+    user_likes = set(like.user2_id for like in db_wrapper.get_likes(db, user_id, type="user1"))
 
     for current_user in db_wrapper.get_all_users(db):
         coef = 0
@@ -394,6 +395,8 @@ def gen_matches(user_id:int):
         current_user_match_with = set(current_user_test_results.answers['match_with'])
 
         if current_user.id == user.id:
+            continue
+        if current_user.id in user_likes:
             continue
         if not match_with.intersection(current_user_match_with):
             continue
@@ -411,11 +414,7 @@ def gen_matches(user_id:int):
         for interest in interests.intersection(current_user_interests):
             matched_interests[interest] = list(set(test_results.answers[interest]).intersection(current_user_test_results.answers[interest]))
             coef += len(matched_interests[interest])
-        
-        if user.id in user_likes:
-            coef *= 1.3
-            matched_interests['Liked'] = True
-        
+
         result = {
             "id": current_user.id,
             "username": current_user.username,
@@ -491,8 +490,8 @@ async def swipe_left(session_id:str, user_id:int):
 @app.get("/swipe_right/")
 async def swipe_right(session_id:str, user_id:int):
     db = get_db().__next__()
-    user2_id = user_id
-    user1_id = active_users[session_id.encode('utf-8')].id
+    user2_id = user_id # user2_id is the one who is being swiped
+    user1_id = active_users[session_id.encode('utf-8')].id # user1_id is the one who is swiping
     like_id = db_wrapper.get_like_id(db, user2_id, user1_id)
     if like_id is not None:
         await db_wrapper.delete_like(db,like_id)

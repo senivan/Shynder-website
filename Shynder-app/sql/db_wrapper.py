@@ -12,7 +12,7 @@ def get_user_matches(db: Session, user_id: int):
 def get_all_users(db:Session):
     return db.query(models.User).all()
 
-def get_likes(db: Session, like_id: int):
+def get_like(db: Session, like_id: int):
     return db.query(models.Likes).where(models.Likes.id == like_id).first()
 
 def get_user_by_email(db: Session, email: str):
@@ -98,3 +98,10 @@ def update_user_password(db: Session, user_id: int, password: str):
     db.query(models.User).where(models.User.id == user_id).update({"ppassword": password})
     db.commit()
     return {"message": "Password updated"}
+
+def get_likes(db: Session, user_id: int, type: str = ""):
+    if type == "user1":
+        return db.query(models.Likes).where(models.Likes.user1_id == user_id).all()
+    elif type == "user2":
+        return db.query(models.Likes).where(models.Likes.user2_id == user_id).all()
+    return (db.query(models.Likes).where(models.Likes.user1_id == user_id).all() + db.query(models.Likes).where(models.Likes.user2_id == user_id).all())

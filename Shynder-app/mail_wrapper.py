@@ -12,14 +12,21 @@ conf = ConnectionConfig(
     MAIL_STARTTLS=False
 )
 
+def load_html():
+    global HTML_VERIFY
+    global HTML_RESET
+    with open("./static/email/verify.html", "r") as file:
+        HTML_VERIFY = file.read()
+    with open("./static/email/reset.html", "r") as file:
+        HTML_RESET = file.read()
+
+load_html()
+
 async def send_email(email: str, username: str, token:str, type:str = "verify"):
     if type == "verify":
-        body = ""
-        with open("./static/email/verify.html", "r") as file:
-            body = file.read()
+        body = HTML_VERIFY
         body = body.replace("[USERNAME]", username)
         body = body.replace("[TOKEN]", token)
-        print(body)
         message = MessageSchema(
             subject="Shynder Verification",
             recipients=[email],
@@ -29,12 +36,9 @@ async def send_email(email: str, username: str, token:str, type:str = "verify"):
         fm = FastMail(conf)
         await fm.send_message(message)
     elif type == "reset":
-        body = ""
-        with open("./static/email/reset.html", "r") as file:
-            body = file.read()
+        body = HTML_RESET
         body = body.replace("[USERNAME]", username)
         body = body.replace("[TOKEN]", token)
-        print(body)
         message = MessageSchema(
             subject="Shynder Password Reset",
             recipients=[email],

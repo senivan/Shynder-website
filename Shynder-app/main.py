@@ -33,20 +33,43 @@ from fastapi import WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 import bcrypt
-from mail_wrapper import *
+from mail_wrapper import send_email
 from sql import models, schemas, db_wrapper
 from sql.database import SessionLocal, engine
 
 
 
 models.Base.metadata.create_all(bind=engine)
-app = FastAPI(openapi_url="")
+app = FastAPI()
 
 active_users = {}
 waiting_verification = {}
 waiting_reset = {}
 app.mount('/static', StaticFiles(directory='static', html=True), name='static')
 executor = ThreadPoolExecutor()
+
+def load_html():
+    global HTML_CHATS, HTML_HOME, HTML_LOGIN, HTML_REGISTER, HTML_REGISTERED, HTML_PROFILE, HTML_RESET_PASS, HTML_FORGOT, HTML_RST
+    with open("./static/chats/chats.html", "r", encoding="utf-8") as file:
+        HTML_CHATS = file.read()
+    with open("./static/home/home.html", "r", encoding="utf-8") as file:
+        HTML_HOME = file.read()
+    with open("./static/login/login_page.html", "r", encoding="utf-8") as file:
+        HTML_LOGIN = file.read()
+    with open("./static/login/registration_page.html", "r", encoding="utf-8") as file:
+        HTML_REGISTER = file.read()
+    with open("./static/redirect_pages/registred.html", "r", encoding="utf-8") as file:
+        HTML_REGISTERED = file.read()
+    with open("static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
+        HTML_PROFILE = file.read()
+    with open("static/redirect_pages/reset_pass.html", "r", encoding="utf-8") as file:
+        HTML_RESET_PASS = file.read()
+    with open("static/reset/reset.html", "r", encoding="utf-8") as file:
+        HTML_RST = file.read()
+    with open("static/reset/forgot.html", "r", encoding="utf-8") as file:
+        HTML_FORGOT = file.read()
+
+load_html()
 
 class TestAnswers:
     def __init__(self, answers:str):
@@ -59,21 +82,9 @@ class TestAnswers:
     def from_json(json_str:str):
         return json.loads(json_str)
     
+course_dct = {"1 курс": 1, "2 курс": 2, "3 курс": 3, "4 курс": 4, "Магістр": 5, "Аспірант": 6, "Працівник": 7}
 def str_to_course_number(course:str):
-    if course == "1 курс":
-        return 1
-    elif course == "2 курс":
-        return 2
-    elif course == "3 курс":
-        return 3
-    elif course == "4 курс":
-        return 4
-    elif course == "Магістр":
-        return 5
-    elif course == "Аспірант":
-        return 6
-    elif course == "Працівник":
-        return 7
+    return course_dct[course]
 class ConnectionManager:
     def __init__(self):
         self.active_sockets = {}
@@ -81,7 +92,6 @@ class ConnectionManager:
         await websocket.accept()
         user = active_users[session_id.encode('utf-8')]
         self.active_sockets[websocket] = (user, session_id)
-        print("Accepted connection")
         await self.handle_user(websocket)
     async def close_connection(self, websocket: WebSocket):
         await websocket.close()
@@ -89,11 +99,9 @@ class ConnectionManager:
     async def send_personal_message(self, message: str, websocket: WebSocket):
         await websocket.send_text(message)
     async def handle_user(self, websocket: WebSocket):
-        print("Handling user")
         try:
             while True:
                 data = await websocket.receive_text()
-                print(data)
                 message = Message.from_json(data)
                 await self.process_data(message, websocket) 
         except WebSocketDisconnect:
@@ -102,18 +110,12 @@ class ConnectionManager:
     def sync_process_data(self, message: 'Message', websocket: WebSocket):
         if message.command == "send":
             receiver = db_wrapper.get_user_by_email(get_db().__next__(), message.receiver)
-            # print(receiver.email)
-            # print(receiver.id, self.active_sockets[websocket][0].id)
             match_id = db_wrapper.get_match_id(get_db().__next__(), self.active_sockets[websocket][0].id, receiver.id)
             if match_id is None:
                 raise ValueError("Match not found")
-            # print(self.active_sockets)
-            # print(receiver.email)
-            # print(f"Receivers: {[self.active_sockets[socket][0].email for socket in self.active_sockets]}")
             if receiver.email in [self.active_sockets[socket][0].email for socket in self.active_sockets]:
                 for socket in self.active_sockets:
                     if self.active_sockets[socket][0].email == receiver.email:
-                        # print(self.active_sockets[socket][0].email, receiver.email)
                         self.send_personal_message(message.to_json(), socket)
                         break
             try:
@@ -125,7 +127,6 @@ class ConnectionManager:
                 file.close()
         elif message.command == "get_all":
             match_id = db_wrapper.get_match_id(get_db().__next__(), self.active_sockets[websocket][0].id, db_wrapper.get_user_by_email(get_db().__next__(), message.receiver).id)
-            print(match_id)
             try:
                 with open("chat_logs/" + str(match_id) + ".txt", "r") as file:
                     for line in file.readlines():
@@ -140,7 +141,6 @@ class ConnectionManager:
                     date = datetime.date(int(message.time.split(" ")[0].split(":")[0]), int(message.time.split(" ")[0].split(":")[1]), int(message.time.split(" ")[0].split(":")[2]))
                     current_date = datetime.date.today()
                     if not(current_date - date < datetime.timedelta(days=28)):
-                        print("line not deleted")
                         lines.append(line)
             with open("chat_logs/" + str(match_id) + ".txt", "w") as file:
                 for line in lines:
@@ -157,6 +157,11 @@ class ConnectionManager:
     
     async def process_data(self, message: 'Message', websocket: WebSocket):
         await asyncio.get_event_loop().run_in_executor(executor, self.sync_process_data, message, websocket)
+
+
+def sync_read_file(file:str):
+    with open(file, "r", encoding="utf-8") as file:
+        return file.read()
 
 class Message:
     def __init__(self, sender:str, receiver:str, messege:str,time, command:str = ""):
@@ -184,10 +189,7 @@ def get_db():
         db.close()
 @app.get("/", response_class=HTMLResponse)
 async def root():
-    html_con = ""
-    with open("static/login/login_page.html", "r", encoding="utf-8") as file:
-        html_con = '\n'.join(file.readlines())
-    return html_con
+    return HTMLResponse(content=HTML_LOGIN)
 
 @app.get("/favicon.ico")
 async def favicon():
@@ -236,30 +238,28 @@ async def login(login:str, password:str):
 
 @app.get("/home/", response_class=HTMLResponse)
 async def home():
-    with open("static/home/home.html", "r", encoding="utf-8") as file:
-        html_con = '\n'.join(file.readlines())
-    return html_con
+    # with open("static/home/home.html", "r", encoding="utf-8") as file:
+    #     html_con = file.read()
+    return HTMLResponse(content=HTML_HOME)
 
 @app.get("/logout/", response_class=HTMLResponse)
 async def logout(session_id:str):
     if session_id in active_users:
         del active_users[session_id]
-    with open("static/login/login_page.html", "r", encoding="utf-8") as file:
-        html_con = '\n'.join(file.readlines())
-    return html_con
+    # with open("static/login/login_page.html", "r", encoding="utf-8") as file:
+    #     html_con = file.read()
+    return HTMLResponse(content=HTML_LOGIN)
 
-def embed_user_into_profile_html(email:str):
-    with open("static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
-        html_con = '\n'.join(file.readlines())
+async def embed_user_into_profile_html(email:str):
+    # with open("static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
+    #     html_con = file.read()
+    html_con = HTML_PROFILE
     html_con = html_con.replace("<user_email></user_email>", f'<user_email class="user">{email}</user_email>')
     return html_con
 
 @app.get("/profile/", response_class=HTMLResponse)
 async def profile(email:str=""):
-    html_con = embed_user_into_profile_html(email)
-    # with open("./static/user_profile/profile.html", "r", encoding="utf-8") as file:
-    #     html_con = '\n'.join(file.readlines())
-    # print(html_con)
+    html_con = await embed_user_into_profile_html(email)
     return HTMLResponse(content=html_con)
 
 @app.get("/register/")
@@ -268,13 +268,12 @@ async def register(username:str, ddescription:str, course:str, full_name:str, em
     cs = str_to_course_number(course)
     if not ("ucu.edu.ua" in email):
         return {"message":"Not UCU mail"}
-    if db_wrapper.get_user_by_email(db, email) is not None:
+    if await db_wrapper.get_user_by_email(db, email) is not None:
         return {"message":"User already exists"}
-    # db_wrapper.create_user(db, schemas.UserCreate(username=username, ddescription=ddedscription, age=age, email=email, ppassword=hash_bcr(ppassword), test_results=test_results))
-    print(isinstance(ppassword, str))
-    print(isinstance(hash_bcr(ppassword), bytes))
-    user = schemas.UserCreate(username=username, ddescription=ddescription, course=cs, full_name=full_name, email=email, ppassword=hash_bcr(ppassword), test_results=test_results)
-    token = str(hash_bcr(email + str(random.randint(0, 1000000))))
+    # print(isinstance(ppassword, str))
+    # print(isinstance(hash_bcr(ppassword), bytes))
+    user = schemas.UserCreate(username=username, ddescription=ddescription, course=cs, full_name=full_name, email=email, ppassword= await hash_bcr(ppassword), test_results=test_results)
+    token = str(await hash_bcr(email + str(random.randint(0, 1000000))))
     waiting_verification[token] = user
     await send_email(email, username, token)
     return {"message": "Waiting verification"}
@@ -290,12 +289,12 @@ def embed_message_block(html:str, type:str):
 async def verify(token:str):
     if token in waiting_verification:
         db = get_db().__next__()
-        db_wrapper.create_user(db, waiting_verification[token])
+        await db_wrapper.create_user(db, waiting_verification[token])
         del waiting_verification[token]
-    html = ""
-    with open("static/login/login_page.html", "r", encoding="utf-8") as file:
-        html = '\n'.join(file.readlines())
-    html = embed_message_block(html, type="ver_message")
+    html = HTML_LOGIN
+    # with open("static/login/login_page.html", "r", encoding="utf-8") as file:
+    #     html = file.read()
+    html = await embed_message_block(html, type="ver_message")
     return HTMLResponse(content=html)
 
 
@@ -311,27 +310,22 @@ async def update_user(session_id:str, username:str, ddescription:str, course:str
         db = get_db().__next__()
         user = active_users[session_id.encode('utf-8')]
         cs = str_to_course_number(course)
-        db_wrapper.update_user(db, user.id, username=username, ddescription=ddescription, course=cs, email=email, test_results=test_results)
-        active_users[session_id.encode('utf-8')] = db_wrapper.get_user_by_email(db, email)
-    with open("static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
-        html_con = '\n'.join(file.readlines())
-    return html_con
+        await db_wrapper.update_user(db, user.id, username=username, ddescription=ddescription, course=cs, email=email, test_results=test_results)
+        active_users[session_id.encode('utf-8')] = await db_wrapper.get_user_by_email(db, email)
+    # with open("static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
+    #     html_con = file.read()
+    return HTML_PROFILE
 
 @app.get("/delete_user/", response_class=HTMLResponse)
 async def delete_user(session_id:str):
     if session_id.encode('utf-8') in active_users:
         db = get_db().__next__()
-        db_wrapper.delete_user(db, active_users[session_id.encode('utf-8')].id)
+        await db_wrapper.delete_user(db, active_users[session_id.encode('utf-8')].id)
         del active_users[session_id.encode('utf-8')]
-    with open("static/login/login_page.html", "r", encoding="utf-8") as file:
-        html_con = '\n'.join(file.readlines())
-    return html_con
+    # with open("static/login/login_page.html", "r", encoding="utf-8") as file:
+    #     html_con = file.read()
+    return HTML_LOGIN
 
-# @app.get("/temp/", response_class=HTMLResponse)
-# async def temp():
-#     with open("./static/user_profile/sudo_profile.html", "r", encoding="utf-8") as file:
-#         html_con = '\n'.join(file.readlines())
-#     return html_con
 
 @app.get("/get_all_active_users/")
 async def get_all_active_users():
@@ -340,21 +334,19 @@ async def get_all_active_users():
 @app.get("/get_user_by_email/")
 async def get_user_by_email(email:str):
     db = get_db().__next__()
-    return db_wrapper.get_user_by_email(db, email)
+    return await db_wrapper.get_user_by_email(db, email)
 
 @app.get("/chats_page/", response_class=HTMLResponse)
 async def chats_page():
-    with open("static/chats/chats.html", "r", encoding="utf-8") as file:
-        html_con = '\n'.join(file.readlines())
-    return html_con
+    return HTML_CHATS
 
 @app.get("/forgot_password/")
 async def forgot_password(email:str):
     db = get_db().__next__()
-    user = db_wrapper.get_user_by_email(db, email)
+    user = await db_wrapper.get_user_by_email(db, email)
     if user is None:
         return {"message": "User not found"}
-    token = str(hash_bcr(email + str(random.randint(0, 1000000))))
+    token = str(await hash_bcr(email + str(random.randint(0, 1000000))))
     waiting_reset[token] = user
     await send_email(email, user.username, token, type="reset")
     return {"message": "Success"}
@@ -362,104 +354,66 @@ async def forgot_password(email:str):
 @app.get("/reset_password/", response_class=HTMLResponse)
 async def reset_password(token:str):
     if token in waiting_reset:
-        with open("static/reset/reset.html", "r", encoding="utf-8") as file:
-            html_con = '\n'.join(file.readlines())
-        return HTMLResponse(content=html_con)
+        # with open("static/reset/reset.html", "r", encoding="utf-8") as file:
+        #     html_con = file.read()
+        return HTMLResponse(content=HTML_RST)
 
 @app.get("/change_password/", response_class=HTMLResponse)
 async def change_password(token:str, new_password:str):
     if token in waiting_reset:
         db = get_db().__next__()
-        print(isinstance(new_password, str))
-        print(isinstance(hash_bcr(new_password), bytes))
-        db_wrapper.update_user(db, waiting_reset[token].id, ppassword=hash_bcr(new_password))
+        # print(isinstance(new_password, str))
+        # print(isinstance(hash_bcr(new_password), bytes))
+        await db_wrapper.update_user(db, waiting_reset[token].id, ppassword=hash_bcr(new_password))
         del waiting_reset[token]
-    html = ""
-    with open("static/login/login_page.html", "r", encoding="utf-8") as file:
-        html = '\n'.join(file.readlines())
+    # html = ""
+    # with open("static/login/login_page.html", "r", encoding="utf-8") as file:
+    #     html = file.read()
+    html = HTML_LOGIN
     html = embed_message_block(html, type="ver_message")
     return HTMLResponse(content=html)
+
 
 
 def gen_matches(user_id:int):
     db = get_db().__next__()
     user = db_wrapper.get_user(db, user_id)
     test_results = TestAnswers(user.test_results)
-    match_with = test_results.answers['match_with']
+    match_with = set(test_results.answers['match_with'])
     matches = [] # list of matches that function will return
-    interests = test_results.answers['interests'] # list of currect user interests
-    music_taste = test_results.answers['music_taste'] # list of currect user music taste
-    # print(match_with, interests, music_taste, '\n\n\n')
+    interests = set(test_results.answers['interests']) # list of currect user interests
+    music_taste = set(test_results.answers['music_taste']) # list of currect user music taste
+
+    # user_likes = 
+    user_likes = set(like.user2_id for like in db_wrapper.get_likes(db, user_id, type="user1"))
+
     for current_user in db_wrapper.get_all_users(db):
-        print(current_user.email)
-        #if user not in match_with then we dont try to match with him 
-        # if user.course not in match_with:
-        #     continue
         coef = 0
         current_user_test_results = TestAnswers(current_user.test_results)
-        print(current_user_test_results.answers)
-        current_user_interests = current_user_test_results.answers['interests']
-        current_user_music_taste = current_user_test_results.answers['music_taste']
-        current_user_match_with = current_user_test_results.answers['match_with']
-        print("User: ",user.course, match_with)
-        print("Current user: ", current_user.course, current_user_match_with)
+        current_user_interests = set(current_user_test_results.answers['interests'])
+        current_user_music_taste = set(current_user_test_results.answers['music_taste'])
+        current_user_match_with = set(current_user_test_results.answers['match_with'])
+
         if current_user.id == user.id:
-            print("Cant match with yourself")
             continue
-
-        #if user1 not in match_with then we dont try to match with him
-        if current_user.course not in [str_to_course_number(course) for course in match_with]:
-            print("Oopsie user doesnt match with us")
+        if current_user.id in user_likes:
             continue
-        print([str_to_course_number(course) for course in current_user_match_with], user.course)
-        if user.course not in [str_to_course_number(course) for course in current_user_match_with]:
-            print("Oopsie we dont match with user")
+        if not match_with.intersection(current_user_match_with):
             continue
-
-        matched_interests = {}
-
-        # match general interests
-        for interest in interests:
-            if len(current_user_interests[interest]) != 0:
-                coef += 0.5
-                matched_interests[interest] = []
-        
-        matched_interests['Music taste'] = []
-        
-        # match music taste
-        for music in music_taste:
-            if music == "Не слухаю":
-                continue
-            if music in current_user_music_taste:
-                coef += 1
-                # matched_interests.append(f"Mus.taste:{music}")
-                matched_interests['Music taste'].append(music)
-        
-        # match subinterests
-        for interest in interests:
-            for subinterest in interests[interest]:
-                if subinterest in current_user_interests[interest]:
-                    coef += 1
-                    # matched_interests.append(subinterest)
-                    matched_interests[interest].append(subinterest)
-        
-        #check if current likes us
-        try:
-            if user.id in [like.user1_id for like in db_wrapper.get_likes(db, current_user.id)]:
-                coef *= 1.3
-                matched_interests['Liked'] = True
-            
-            #check if we like current
-            if current_user.id in [like.user1_id for like in db_wrapper.get_likes(db, user.id)]:
-                continue
-        except TypeError:
-            pass
-        #check if we have match
+        if not current_user_match_with.intersection(match_with):
+            continue
         if db_wrapper.get_match_id(db, user.id, current_user.id) is not None:
             continue
-        
-        # matched_interest = interests
-        # matched_interest['Music taste'] = music_taste
+
+        matched_interests = {interest: [] for interest in interests.intersection(current_user_interests)}
+        coef += 0.5 * len(matched_interests)
+
+        matched_interests['Music taste'] = list(music_taste.intersection(current_user_music_taste))
+        coef += len(matched_interests['Music taste'])
+
+        for interest in interests.intersection(current_user_interests):
+            matched_interests[interest] = list(set(test_results.answers[interest]).intersection(current_user_test_results.answers[interest]))
+            coef += len(matched_interests[interest])
 
         result = {
             "id": current_user.id,
@@ -469,10 +423,11 @@ def gen_matches(user_id:int):
             "match_coef": coef,
             "interests": matched_interests
         }
-
-        # print(coef)
         matches.append(result)
     return matches
+        
+
+
 
 # def dict_serialize(dictionary):
 #     result = {}
@@ -503,7 +458,7 @@ async def match(user1_id:int, user2_id:int):
 
 @app.websocket("/chats_websocket/")
 async def chats_websocket(websocket: WebSocket, session_id:str):
-    print("Accepted connection")
+    # print("Accepted connection")
     await manager.accept_connection(websocket, session_id)
 
 @app.get("/get_match/")
@@ -521,10 +476,12 @@ async def swipe_left(session_id:str, user_id:int):
     db = get_db().__next__()
     user2_id = user_id
     user1_id = active_users[session_id.encode('utf-8')].id
-    if db_wrapper.get_match_id(db, user1_id, user2_id) is not None:
+    match_id = db_wrapper.get_match_id(db, user1_id, user2_id)
+    if match_id is not None:
         return {"message": "match already exists"}
-    if db_wrapper.get_like_id(db, user2_id, user1_id) is not None:
-        db_wrapper.delete_like(db, db_wrapper.get_like_id(db, user2_id, user1_id))
+    like_id = db_wrapper.get_like_id(db, user2_id, user1_id)
+    if like_id is not None:
+        db_wrapper.delete_like(db, like_id)
         db_wrapper.create_match(db, schemas.MatchCreate(user1_id=user1_id, user2_id=user2_id))
         return {"message": "Matched"}
     db_wrapper.create_like(db, schemas.LikeCreate(user1_id=user1_id, user2_id=user2_id))
@@ -533,8 +490,9 @@ async def swipe_left(session_id:str, user_id:int):
 @app.get("/swipe_right/")
 async def swipe_right(session_id:str, user_id:int):
     db = get_db().__next__()
-    user2_id = user_id
-    user1_id = active_users[session_id.encode('utf-8')].id
-    if db_wrapper.get_like_id(db, user2_id, user1_id) is not None:
-        db_wrapper.delete_like(db, db_wrapper.get_like_id(db, user2_id, user1_id))
+    user2_id = user_id # user2_id is the one who is being swiped
+    user1_id = active_users[session_id.encode('utf-8')].id # user1_id is the one who is swiping
+    like_id = db_wrapper.get_like_id(db, user2_id, user1_id)
+    if like_id is not None:
+        await db_wrapper.delete_like(db,like_id)
     return {"message": "Disliked"}

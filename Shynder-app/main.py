@@ -259,7 +259,7 @@ async def embed_user_into_profile_html(email:str):
 
 @app.get("/profile/", response_class=HTMLResponse)
 async def profile(email:str=""):
-    html_con = await embed_user_into_profile_html(email)
+    html_con = embed_user_into_profile_html(email)
     return HTMLResponse(content=html_con)
 
 @app.get("/register/", response_class=HTMLResponse)
@@ -276,8 +276,6 @@ async def register(username:str, ddescription:str, course:str, full_name:str, em
     token = str(hash_bcr(email + str(random.randint(0, 1000000))))
     waiting_verification[token] = user
     await send_email(email, username, token)
-    print(HTML_REGISTERED)
-    print("Email sent")
     return HTMLResponse(content=HTML_REGISTERED, status_code=200)
 
 def embed_message_block(html:str, type:str):
@@ -296,7 +294,7 @@ async def verify(token:str):
     html = HTML_LOGIN
     # with open("static/login/login_page.html", "r", encoding="utf-8") as file:
     #     html = file.read()
-    html = await embed_message_block(html, type="ver_message")
+    html = embed_message_block(html, type="ver_message")
     return HTMLResponse(content=html)
 
 

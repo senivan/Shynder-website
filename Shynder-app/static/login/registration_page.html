@@ -637,15 +637,15 @@ function register() {
     console.log(name, username, email, password,desc, confirmPassword, interest_dict, music_taste_list, match_with_list, my_course);
   if (name === '' || username === '' || email === '' || password === '' || confirmPassword === '') {
     alert('Заповніть всі поля');
-  } else if (password !== confirmPassword) {
+  } else if (password != confirmPassword) {
     alert('Паролі не співпадають');
   } else {
     // alert('На пошту ' + email + ' відправлено лист з підтвердженням реєстрації. Перейдіть за посиланням у листі для завершення реєстрації.');
     fetch('/register/?username='+username+'&email='+email+'&ppassword='+password+'&full_name='+name+"&ddescription="+desc+"&test_results="+JSON.stringify(test_answers)+"&course="+my_course).then(response => response.json()).then(data => {
       // alert(data);
-      console.log(data);
+      // console.log(data);
+      window.location.href = "/static/redirect_pages/registred.html";
     });
-    window.location.href = "/static/redirect_pages/redgistred.html";
 
 
   

@@ -262,21 +262,21 @@ async def profile(email:str=""):
     html_con = embed_user_into_profile_html(email)
     return HTMLResponse(content=html_con)
 
-@app.get("/register/")
+@app.get("/register/", response_class=HTMLResponse)
 async def register(username:str, ddescription:str, course:str, full_name:str, email:str, ppassword:str, test_results:str = ""):
     db = get_db().__next__()
     cs = str_to_course_number(course)
     if not ("ucu.edu.ua" in email):
-        return {"message":"Not UCU mail"}
+        return HTMLResponse(content=HTML_REGISTER)
     if db_wrapper.get_user_by_email(db, email) is not None:
-        return {"message":"User already exists"}
+        return HTMLResponse(content=HTML_REGISTER)
     # print(isinstance(ppassword, str))
     # print(isinstance(hash_bcr(ppassword), bytes))
     user = schemas.UserCreate(username=username, ddescription=ddescription, course=cs, full_name=full_name, email=email, ppassword= hash_bcr(ppassword), test_results=test_results)
     token = str(hash_bcr(email + str(random.randint(0, 1000000))))
     waiting_verification[token] = user
     await send_email(email, username, token)
-    return HTML_REGISTERED
+    return HTMLResponse(content=HTML_REGISTERED)
 
 def embed_message_block(html:str, type:str):
     if type == "ver_message":

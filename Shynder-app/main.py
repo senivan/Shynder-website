@@ -420,6 +420,30 @@ def gen_matches(user_id:int):
             matched_interests[interest] = list(set(specific_interests[interest]).intersection(set(current_user_specific_interests[interest])))
             coef += len(matched_interests[interest])
 
+        matched_interests['Спорт'] = matched_interests['1']
+        matched_interests['Книги'] = matched_interests['2']
+        matched_interests['Фільми'] = matched_interests['3']
+        matched_interests['Рукоділля'] = matched_interests['4']
+        matched_interests['Подорожі'] = matched_interests['5']
+        matched_interests['Настільні-Ігри'] = matched_interests['6']
+        matched_interests['Компʼтерні-Ігри'] = matched_interests['7']
+        matched_interests['Кулінарія'] = matched_interests['8']
+        matched_interests['Програмування'] = matched_interests['9']
+        matched_interests['Мистецтво'] = matched_interests['10']
+        matched_interests['Музика'] = matched_interests['11']
+
+        del matched_interests['1']
+        del matched_interests['2']
+        del matched_interests['3']
+        del matched_interests['4']
+        del matched_interests['5']
+        del matched_interests['6']
+        del matched_interests['7']
+        del matched_interests['8']
+        del matched_interests['9']
+        del matched_interests['10']
+        del matched_interests['11']
+
         
         matched_interests['Music taste'] = list(music_taste.intersection(current_user_music_taste))
         coef += len(matched_interests['Music taste'])

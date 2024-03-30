@@ -46,7 +46,7 @@ function get_matches(){
     // matches.push(data);
     console.log(data);
     matches.push(data);
-    generateChats(match.username, match.description, "", match.id, match.matched_interests);
+    generateChats(data.username, data.description, "", data.id, data.matched_interests);
     match_counter ++;
   });
 }

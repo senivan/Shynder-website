@@ -430,6 +430,8 @@ def gen_matches(user_id:int):
         matched_interests['Мистецтво'] = matched_interests['10']
         matched_interests['Музика'] = matched_interests['11']
 
+        print(matched_interests)
+
         del matched_interests['1']
         del matched_interests['2']
         del matched_interests['3']

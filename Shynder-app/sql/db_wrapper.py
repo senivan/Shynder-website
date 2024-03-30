@@ -15,6 +15,9 @@ def get_all_users(db:Session):
 def get_like(db: Session, like_id: int):
     return db.query(models.Likes).where(models.Likes.id == like_id).first()
 
+def get_dislike(db: Session, dislike_id: int):
+    return db.query(models.Dislike).where(models.Dislike.id == dislike_id).first()
+
 def get_user_by_email(db: Session, email: str):
     return db.query(models.User).where(models.User.email == email).first()
 
@@ -48,6 +51,13 @@ def create_like(db: Session, like: schemas.LikeCreate):
     db.refresh(db_like)
     return db_like
 
+def create_dislike(db: Session, dislike: schemas.DislikeCreate):
+    db_dislike = models.Dislike(**dislike.dict())
+    db.add(db_dislike)
+    db.commit()
+    db.refresh(db_dislike)
+    return db_dislike
+
 def delete_match(db: Session, match_id: int):
     db.query(models.Match).where(models.Match.id == match_id).delete()
     db.commit()
@@ -62,6 +72,12 @@ def delete_like(db: Session, like_id: int):
     db.query(models.Likes).where(models.Likes.id == like_id).delete()
     db.commit()
     return {"message": "Like deleted"}
+
+def delete_dislike(db: Session, dislike_id: int):
+    db.query(models.Dislike).where(models.Dislike.id == dislike_id).delete()
+    db.commit()
+    return {"message": "Dislike deleted"}
+
 
 def update_user(db: Session, user_id: int, **kwargs):
     db.query(models.User).where(models.User.id == user_id).update(kwargs)
@@ -78,6 +94,11 @@ def update_like(db: Session, like_id: int, **kwargs):
     db.commit()
     return {"message": "Like updated"}
 
+def update_dislike(db: Session, dislike_id: int, **kwargs):
+    db.query(models.Dislike).where(models.Dislike.id == dislike_id).update(kwargs)
+    db.commit()
+    return {"message": "Dislike updated"}
+
 def get_match_id(db: Session, user1_id: int, user2_id: int):
     try:
         return db.query(models.Match).filter(models.Match.user1_id == user1_id, models.Match.user2_id == user2_id).first().id
@@ -93,6 +114,12 @@ def get_like_id(db: Session, user1_id: int, user2_id: int):
     except AttributeError:
         return None
 
+def get_dislike_id(db: Session, user1_id: int, user2_id: int):
+    try:
+        return db.query(models.Dislike).filter(models.Dislike.user1_id == user1_id, models.Dislike.user2_id == user2_id).first().id
+    except AttributeError:
+        return None
+
 def update_user_password(db: Session, user_id: int, password: str):
     db.query(models.User).where(models.User.id == user_id).update({"ppassword": password})
     db.commit()
@@ -104,3 +131,10 @@ def get_likes(db: Session, user_id: int, type: str = ""):
     elif type == "user2":
         return db.query(models.Likes).where(models.Likes.user2_id == user_id).all()
     return (db.query(models.Likes).where(models.Likes.user1_id == user_id).all() + db.query(models.Likes).where(models.Likes.user2_id == user_id).all())
+
+def get_dislikes(db: Session, user_id: int, type: str = ""):
+    if type == "user1":
+        return db.query(models.Dislike).where(models.Dislike.user1_id == user_id).all()
+    elif type == "user2":
+        return db.query(models.Dislike).where(models.Dislike.user2_id == user_id).all()
+    return (db.query(models.Dislike).where(models.Dislike.user1_id == user_id).all() + db.query(models.Dislike).where(models.Dislike.user2_id == user_id).all())

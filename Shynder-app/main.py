@@ -388,6 +388,7 @@ def gen_matches(user_id:int):
 
     # user_likes = 
     user_likes = set(like.user2_id for like in db_wrapper.get_likes(db, user_id, type="user1"))
+    user_dislikes = set(dislike.user2_id for dislike in db_wrapper.get_dislikes(db, user_id, type="user1"))
 
     for current_user in db_wrapper.get_all_users(db):
         coef = 0
@@ -400,6 +401,8 @@ def gen_matches(user_id:int):
         if current_user.id == user.id:
             continue
         if current_user.id in user_likes:
+            continue
+        if current_user.id in user_dislikes:
             continue
         if not match_with.intersection(current_user_match_with):
             continue
@@ -493,19 +496,20 @@ async def swipe_left(session_id:str, user_id:int):
     db_wrapper.create_like(db, schemas.LikeCreate(user1_id=user1_id, user2_id=user2_id))
     return {"message": "Liked"}
 
-@app.get("/delete_all_likes/")
-async def delete_all_likes():
-    db = get_db().__next__()
-    db.query(models.Likes).delete()
-    db.commit()
-    return {"message": "Success"}
-
 @app.get("/swipe_right/")
 async def swipe_right(session_id:str, user_id:int):
+    # db = get_db().__next__()
+    # user2_id = user_id # user2_id is the one who is being swiped
+    # user1_id = active_users[session_id.encode('utf-8')].id # user1_id is the one who is swiping
+    # like_id = db_wrapper.get_like_id(db, user2_id, user1_id)
+    # if like_id is not None:
+    #     db_wrapper.delete_like(db,like_id)
+    # return {"message": "Disliked"}
     db = get_db().__next__()
-    user2_id = user_id # user2_id is the one who is being swiped
-    user1_id = active_users[session_id.encode('utf-8')].id # user1_id is the one who is swiping
+    user2_id = user_id
+    user1_id = active_users[session_id.encode('utf-8')].id
     like_id = db_wrapper.get_like_id(db, user2_id, user1_id)
     if like_id is not None:
-        db_wrapper.delete_like(db,like_id)
+        db_wrapper.delete_like(db, like_id)
+    db_wrapper.create_dislike(db, schemas.DislikeCreate(user1_id=user1_id, user2_id=user2_id))
     return {"message": "Disliked"}

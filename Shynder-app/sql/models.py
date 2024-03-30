@@ -48,3 +48,21 @@ class Likes(Base):
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+
+class Dislike(Base):
+    """
+    Dislike model.
+    """
+
+    __tablename__ = "Dislikes"
+    id = Column(Integer, primary_key=True)
+    user1_id = Column(Integer, ForeignKey("Users.id"), nullable=False)
+    user2_id = Column(Integer, ForeignKey("Users.id"), nullable=False)
+    user1 = relationship("User", back_populates="dislikes", foreign_keys=[user1_id])
+    user2 = relationship("User", back_populates="dislikes", foreign_keys=[user2_id])
+
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+

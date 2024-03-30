@@ -45,12 +45,9 @@ function get_matches(){
   fetch('/gen_matches/?session_id=' + user_cook).then(response => response.json()).then(data => {
     // matches.push(data);
     console.log(data);
-    data.forEach(function (match) {
-      console.log(match);
-      matches.push(match);
-      generateChats(match.username, match.description, match.matched_interests, match.id, match.interests);
-      match_counter ++;
-    });
+    matches.push(data);
+    generateChats(match.username, match.description, "", match.id, match.matched_interests);
+    match_counter ++;
   });
 }
 

@@ -453,12 +453,10 @@ def gen_matches(user_id:int):
             "username": current_user.username,
             "matched_interests": matched_interests,
             "description": current_user.ddescription,
-            "match_coef": coef,
-            "interests": matched_interests
+            "match_coef": coef
         }
         print(result)
-        matches.append(result)
-        return matches
+        return result
     # return matches
         
 

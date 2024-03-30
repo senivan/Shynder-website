@@ -273,7 +273,7 @@ async def register(username:str, ddescription:str, course:str, full_name:str, em
     # print(isinstance(ppassword, str))
     # print(isinstance(hash_bcr(ppassword), bytes))
     user = schemas.UserCreate(username=username, ddescription=ddescription, course=cs, full_name=full_name, email=email, ppassword= hash_bcr(ppassword), test_results=test_results)
-    token = str(await hash_bcr(email + str(random.randint(0, 1000000))))
+    token = str(hash_bcr(email + str(random.randint(0, 1000000))))
     waiting_verification[token] = user
     await send_email(email, username, token)
     return {"message": "Waiting verification"}

@@ -644,7 +644,8 @@ function register() {
     fetch('/register/?username='+username+'&email='+email+'&ppassword='+password+'&full_name='+name+"&ddescription="+desc+"&test_results="+JSON.stringify(test_answers)+"&course="+my_course).then(response => response.json()).then(data => {
       // alert(data);
       // console.log(data);
-      window.location.href = "/static/redirect_pages/registred.html";
+      alert("")
+      // window.location.href = "/static/redirect_pages/registred.html";
     });
 
 

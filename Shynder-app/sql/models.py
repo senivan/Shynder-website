@@ -18,6 +18,7 @@ class User(Base):
     test_results = Column(String, nullable=False)
     matches = relationship("Match", back_populates="user1", foreign_keys='Match.user1_id')
     likes = relationship("Likes", back_populates="user1", foreign_keys='Likes.user1_id')
+    dislikes = relationship("Dislike", back_populates="user1", foreign_keys='Dislike.user1_id')
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 

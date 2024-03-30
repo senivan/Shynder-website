@@ -262,7 +262,7 @@ async def profile(email:str=""):
     html_con = embed_user_into_profile_html(email)
     return HTMLResponse(content=html_con)
 
-@app.get("/register/", response_class=HTMLResponse)
+@app.get("/register/")
 async def register(username:str, ddescription:str, course:str, full_name:str, email:str, ppassword:str, test_results:str = ""):
     db = get_db().__next__()
     cs = str_to_course_number(course)

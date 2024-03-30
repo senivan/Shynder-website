@@ -388,6 +388,7 @@ def gen_matches(user_id:int):
 
     # user_likes = 
     user_likes = set(like.user2_id for like in db_wrapper.get_likes(db, user_id, type="user1"))
+    user_dislikes = set(dislike.user2_id for dislike in db_wrapper.get_dislikes(db, user_id, type="user1"))
 
     for current_user in db_wrapper.get_all_users(db):
         coef = 0
@@ -400,6 +401,8 @@ def gen_matches(user_id:int):
         if current_user.id == user.id:
             continue
         if current_user.id in user_likes:
+            continue
+        if current_user.id in user_dislikes:
             continue
         if not match_with.intersection(current_user_match_with):
             continue

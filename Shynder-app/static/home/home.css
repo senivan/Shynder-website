@@ -126,7 +126,7 @@ font-weight: 500;
   position: absolute;
   align-items: flex-start;
   flex-shrink: 0;
-  background-color: #fdfdfd;
+  background-color: black;
 }
 
 .usernameDiv {

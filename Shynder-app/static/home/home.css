@@ -94,13 +94,11 @@ font-weight: 500;
 .card {
   position: absolute;
   left: 38%;
-  /* top: 7%; */
-  margin-top: 300px;
+  top: 7%;
   width: 28%;
   height: 68%;
   border-radius: 15px;
   background-color: #CCBCF4; 
-  border: 1px solid #6f59aa;
 }   
 
 .container{
@@ -111,7 +109,7 @@ font-weight: 500;
   height: 100%;
   display: flex;
   overflow: hidden;
-  position: relative;
+  /* position: relative; */
   align-items: flex-start;
   flex-shrink: 0;
   background-color: #f9f9fa;
@@ -126,7 +124,7 @@ font-weight: 500;
   position: absolute;
   align-items: flex-start;
   flex-shrink: 0;
-  background-color: black;
+  background-color: #fdfdfd;
 }
 
 .usernameDiv {

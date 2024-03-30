@@ -222,6 +222,6 @@ menuItems.forEach(function (menuItem) {
 
 
 hamburger.addEventListener("click", toggleMenu);
-// get_matches();
+get_matches();
 
 

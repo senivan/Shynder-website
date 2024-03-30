@@ -276,6 +276,8 @@ async def register(username:str, ddescription:str, course:str, full_name:str, em
     token = str(hash_bcr(email + str(random.randint(0, 1000000))))
     waiting_verification[token] = user
     await send_email(email, username, token)
+    print(HTML_REGISTERED)
+    print("Email sent")
     return HTMLResponse(content=HTML_REGISTERED, status_code=200)
 
 def embed_message_block(html:str, type:str):

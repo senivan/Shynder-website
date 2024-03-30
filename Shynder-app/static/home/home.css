@@ -109,7 +109,7 @@ font-weight: 500;
   height: 100%;
   display: flex;
   overflow: hidden;
-  position: relative;
+  /* position: relative; */
   align-items: flex-start;
   flex-shrink: 0;
   background-color: #f9f9fa;

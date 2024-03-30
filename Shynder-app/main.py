@@ -259,7 +259,7 @@ async def embed_user_into_profile_html(email:str):
 
 @app.get("/profile/", response_class=HTMLResponse)
 async def profile(email:str=""):
-    html_con = embed_user_into_profile_html(email)
+    html_con = await embed_user_into_profile_html(email)
     return HTMLResponse(content=html_con)
 
 @app.get("/register/", response_class=HTMLResponse)

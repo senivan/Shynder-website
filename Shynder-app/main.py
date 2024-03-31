@@ -90,8 +90,10 @@ class ConnectionManager:
         self.active_sockets = {}
     async def accept_connection(self, websocket: WebSocket, session_id: str):
         await websocket.accept()
+        print("Accepted connection")
         user = active_users[session_id.encode('utf-8')]
         self.active_sockets[websocket] = (user, session_id)
+        print("Session id is here")
         await self.handle_user(websocket)
     async def close_connection(self, websocket: WebSocket):
         await websocket.close()

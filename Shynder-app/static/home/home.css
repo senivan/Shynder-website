@@ -93,10 +93,10 @@ font-weight: 500;
 
 .card {
   position: absolute;
-  left: 38%;
+  left: 36%;
   top: 7%;
   width: 28%;
-  height: 68%;
+  height: 80%;
   border-radius: 15px;
   background-color: #CCBCF4; 
 }   
@@ -131,7 +131,7 @@ font-weight: 500;
   gap: 10px;
   top: 1.5%;
   left: 3%;
-  width: 94%;
+  width: 92%;
   height: 22%;
   display: flex;
   padding: 1%;
@@ -144,23 +144,23 @@ font-weight: 500;
 }
 .username {
   color: #6F59AA;
-  width: 300px;
-  height: auto;
+  /* width: 300px; */
+  /* height: auto; */
   font-size: 20px;
-  font-style: Medium;
+  /* font-style: Medium; */
   text-align: center;
   font-family: rubik;
   font-weight: 500;
-  line-height: normal;
+  /* line-height: normal;
   font-stretch: normal;
-  text-decoration: none;
+  text-decoration: none; */
   
 }
 .matchDiv {
   gap: 10px;
-  top: 51.5%;
+  top: 53.5%;
   left: 2.8%;
-  width: 94%;
+  width: 92%;
   height: 25%;
   padding: 1%;
   position: absolute;
@@ -187,9 +187,9 @@ font-weight: 500;
 }
 .descriptionDiv {
   gap: 10px;
-  top: 25%;
+  top: 26%;
   left: 2.8%;
-  width: 94%;
+  width: 92%;
   height: 25%;
   /* display: flex; */
   padding: 1%;
@@ -219,7 +219,7 @@ font-weight: 500;
   border-radius: 100px;
   background-color: white;
   position: absolute;
-  top: 81%;
+  top: 83%;
   left: 6%;
 }
 
@@ -240,7 +240,7 @@ font-weight: 500;
   border-radius: 100px;
   background-color: white;
   position: absolute;
-  top: 81%;
+  top: 83%;
   right: 6%;
 }
 
@@ -381,7 +381,7 @@ font-weight: 500;
   font-weight: bold;
 }
 
-@media only screen and (max-width: 500px) {
+@media (max-device-width: 500px) {
   .hamburger {
     position: fixed;
     z-index: 100;
@@ -399,13 +399,14 @@ font-weight: 500;
   }
   .closeIcon {
     display: none;
+    width: 95%;
   }
   
   .menu {
     position: fixed;
     transform: translateX(-100%);
     transition: transform 0.2s;
-    top: 0px;
+    top: 150px;
     left: 0;
     right: 0;
     bottom: 0;
@@ -432,8 +433,8 @@ font-weight: 500;
   }
   
   .menuItem{
-  padding: 20px;
-  font-size: 20px;
+  padding: 40px;
+  font-size: 40px;
   border-bottom: 1px solid #6f59aa;
   text-align: center;
   cursor: pointer;
@@ -447,8 +448,15 @@ font-weight: 500;
     left: 10%;
     top: 11%;
     width: 78%;
-    height: 57%;
+    height: 84%;
     border-radius: 15px;
     background-color: #CCBCF4; 
+  }
+
+  .username{
+    color: #6F59AA;
+    font-size: 40px;
+    font-family: rubik;
+    font-weight: 500;
   }
 }

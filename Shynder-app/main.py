@@ -90,8 +90,10 @@ class ConnectionManager:
         self.active_sockets = {}
     async def accept_connection(self, websocket: WebSocket, session_id: str):
         await websocket.accept()
+        print("Accepted connection")
         user = active_users[session_id.encode('utf-8')]
         self.active_sockets[websocket] = (user, session_id)
+        print("Session id is here")
         await self.handle_user(websocket)
     async def close_connection(self, websocket: WebSocket):
         await websocket.close()
@@ -107,7 +109,7 @@ class ConnectionManager:
         except WebSocketDisconnect:
             self.close_connection(websocket)
 
-    def sync_process_data(self, message: 'Message', websocket: WebSocket):
+    async def process_data(self, message: 'Message', websocket: WebSocket):
         if message.command == "send":
             receiver = db_wrapper.get_user_by_email(get_db().__next__(), message.receiver)
             match_id = db_wrapper.get_match_id(get_db().__next__(), self.active_sockets[websocket][0].id, receiver.id)
@@ -116,7 +118,7 @@ class ConnectionManager:
             if receiver.email in [self.active_sockets[socket][0].email for socket in self.active_sockets]:
                 for socket in self.active_sockets:
                     if self.active_sockets[socket][0].email == receiver.email:
-                        self.send_personal_message(message.to_json(), socket)
+                        await self.send_personal_message(message.to_json(), socket)
                         break
             try:
                 with open("chat_logs/" + str(match_id) + ".txt", "a") as file:
@@ -130,7 +132,7 @@ class ConnectionManager:
             try:
                 with open("chat_logs/" + str(match_id) + ".txt", "r") as file:
                     for line in file.readlines():
-                        self.send_personal_message(line, websocket)
+                        await self.send_personal_message(line, websocket)
             except FileNotFoundError:
                 file = open("chat_logs/" + str(match_id) + ".txt", "w")
                 file.close()
@@ -153,10 +155,10 @@ class ConnectionManager:
             for match in matches:
                 res_matches.append(match.as_dict())
                 res_matches[-1]['command'] = "get_all_matches"
-            self.send_personal_message(json.dumps(res_matches), websocket)
+            await self.send_personal_message(json.dumps(res_matches), websocket)
     
-    async def process_data(self, message: 'Message', websocket: WebSocket):
-        await asyncio.get_event_loop().run_in_executor(executor, self.sync_process_data, message, websocket)
+    # async def process_data(self, message: 'Message', websocket: WebSocket):
+    #     await asyncio.get_event_loop().run_in_executor(executor, self.sync_process_data, message, websocket)
 
 
 def sync_read_file(file:str):
@@ -492,7 +494,7 @@ async def match(user1_id:int, user2_id:int):
 
 @app.websocket("/chats_websocket/")
 async def chats_websocket(websocket: WebSocket, session_id:str):
-    # print("Accepted connection")
+    print("Accepted connection")
     await manager.accept_connection(websocket, session_id)
 
 @app.get("/get_match/")

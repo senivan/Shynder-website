@@ -90,10 +90,8 @@ class ConnectionManager:
         self.active_sockets = {}
     async def accept_connection(self, websocket: WebSocket, session_id: str):
         await websocket.accept()
-        print("Accepted connection")
         user = active_users[session_id.encode('utf-8')]
         self.active_sockets[websocket] = (user, session_id)
-        print("Session id is here")
         await self.handle_user(websocket)
     async def close_connection(self, websocket: WebSocket):
         await websocket.close()
@@ -136,17 +134,17 @@ class ConnectionManager:
             except FileNotFoundError:
                 file = open("chat_logs/" + str(match_id) + ".txt", "w")
                 file.close()
-            with open("chat_logs/" + str(match_id) + ".txt", "r") as file:
-                lines = []
-                for line in file:
-                    message = Message.from_json(line)
-                    date = datetime.date(int(message.time.split(" ")[0].split(":")[0]), int(message.time.split(" ")[0].split(":")[1]), int(message.time.split(" ")[0].split(":")[2]))
-                    current_date = datetime.date.today()
-                    if not(current_date - date < datetime.timedelta(days=28)):
-                        lines.append(line)
-            with open("chat_logs/" + str(match_id) + ".txt", "w") as file:
-                for line in lines:
-                    file.write(line)
+            # with open("chat_logs/" + str(match_id) + ".txt", "r") as file:
+            #     lines = []
+            #     for line in file:
+            #         message = Message.from_json(line)
+            #         date = datetime.date(int(message.time.split(" ")[0].split(":")[0]), int(message.time.split(" ")[0].split(":")[1]), int(message.time.split(" ")[0].split(":")[2]))
+            #         current_date = datetime.date.today()
+            #         if not (current_date - date < datetime.timedelta(days=28)):
+            #             lines.append(line)
+            # with open("chat_logs/" + str(match_id) + ".txt", "w") as file:
+            #     for line in lines:
+            #         file.write(line)
 
         elif message.command == "get_all_matches":
             print(self.active_sockets[websocket][0].id)

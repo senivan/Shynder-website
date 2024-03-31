@@ -494,7 +494,7 @@ async def match(user1_id:int, user2_id:int):
 
 @app.websocket("/chats_websocket/")
 async def chats_websocket(websocket: WebSocket, session_id:str):
-    # print("Accepted connection")
+    print("Accepted connection")
     await manager.accept_connection(websocket, session_id)
 
 @app.get("/get_match/")

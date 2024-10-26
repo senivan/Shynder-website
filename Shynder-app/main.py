@@ -538,3 +538,8 @@ async def swipe_right(session_id:str, user_id:int):
         db_wrapper.delete_like(db, like_id)
     db_wrapper.create_dislike(db, schemas.DislikeCreate(user1_id=user1_id, user2_id=user2_id))
     return {"message": "Disliked"}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=8000)

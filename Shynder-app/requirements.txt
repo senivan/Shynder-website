@@ -3,3 +3,4 @@ uvicorn
 bcrypt
 sqlalchemy
 pydantic
+fastapi-mail
